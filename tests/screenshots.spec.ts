@@ -214,3 +214,44 @@ test('screenshots stage C: physics subject, worked solution, written question, c
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${DIR}/33-physics-capstone.png`, fullPage: true });
 });
+
+test('screenshots stage D: chemistry subject, worked solution with \\ce equations, written question, capstone', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
+  await page.getByRole('button', { name: /الكيمياء Chemistry/ }).click();
+  await expect(page.getByText('الثرموداينمك').first()).toBeVisible();
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${DIR}/40-chemistry-subject.png`, fullPage: true });
+
+  // worked-solution lesson: Hess cycle with \ce equations, steps revealed
+  await page.getByRole('button', { name: /أمثلة محلولة/ }).click();
+  await expect(page.getByText('المثال ١ — الحرارة بالحرارة النوعية للماء')).toBeVisible();
+  for (let i = 0; i < 4; i++) {
+    const next = page.getByTestId('solution-next').first();
+    if ((await next.count()) === 0) break;
+    await next.click();
+  }
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/41-chemistry-solution.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+  await expect(page.getByText('الثرموداينمك').first()).toBeVisible();
+
+  // written question with the model answer + rubric revealed
+  await page.getByRole('button', { name: /اختبار الفصل/ }).click();
+  for (let i = 0; i < 10; i++) {
+    await page.getByTestId('quiz-option-1').click();
+    await page.getByTestId('quiz-next').click();
+  }
+  await page.getByTestId('written-answer').fill('حرارة المحلول موجبة لأن q = mcΔT تعطي 4184 جول، وإشارة انثالبي التفاعل معكوسة، وبعد القسمة على المولات الناتج طارد للحرارة');
+  await page.getByTestId('written-reveal').click();
+  await expect(page.getByText('مفتاح التصحيح')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/42-chemistry-written.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+
+  // chemistry capstone intro (145 marks, ترك 45, branch structure)
+  await page.getByRole('button', { name: /ابدأ الامتحان الشامل/ }).click();
+  await expect(page.getByText('الامتحان الوزاري الشامل — الكيمياء')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/43-chemistry-capstone.png`, fullPage: true });
+});

@@ -1,7 +1,8 @@
-/* Uruk Academy — original minimal SVG line diagrams for the Physics book.
-   Every figure here is drawn from scratch in the platform palette (lapis,
-   gold, teal) as simple line art: no textbook figure is copied or traced.
-   Referenced from content by key via LessonSection.diagram. */
+/* Uruk Academy — original minimal SVG line diagrams for the Physics and
+   Chemistry books. Every figure here is drawn from scratch in the platform
+   palette (lapis, gold, teal) as simple line art: no textbook figure is
+   copied or traced. Referenced from content by key via
+   LessonSection.diagram. */
 
 const L = '#0e2a57'; // lapis-800
 const L6 = '#1d56b4'; // lapis-600
@@ -265,6 +266,89 @@ const ART: Record<string, React.ReactNode> = {
       <Label x={118} y={170}>T½</Label>
       <Label x={185} y={170}>2T½</Label>
       <Label x={292} y={170}>t</Label>
+    </>
+  ),
+  /* Hess cycle: direct route vs two-step route between the same states */
+  'hess-cycle': (
+    <>
+      <rect x="118" y="16" width="84" height="24" rx="5" fill="none" stroke={L} strokeWidth="1.8" />
+      <Label x={160} y={32}>متفاعلات</Label>
+      <rect x="22" y="128" width="84" height="24" rx="5" fill="none" stroke={L} strokeWidth="1.8" />
+      <Label x={64} y={144}>حالة وسطية</Label>
+      <rect x="214" y="128" width="84" height="24" rx="5" fill="none" stroke={L} strokeWidth="1.8" />
+      <Label x={256} y={144}>نواتج</Label>
+      <line x1="128" y1="46" x2="72" y2="122" stroke={T} strokeWidth="2" />
+      <path d="M72 122 l-3 -10 M72 122 l-9 -5" stroke={T} strokeWidth="2" fill="none" />
+      <line x1="110" y1="140" x2="208" y2="140" stroke={T} strokeWidth="2" />
+      <path d="M208 140 l-10 -3 M208 140 l-10 3" stroke={T} strokeWidth="2" fill="none" />
+      <line x1="196" y1="42" x2="252" y2="122" stroke={G} strokeWidth="2.2" />
+      <path d="M252 122 l-11 -4 M252 122 l-2 -11" stroke={G} strokeWidth="2.2" fill="none" />
+      <Label x={66} y={88} color={T}>ΔH₂</Label>
+      <Label x={160} y={132} color={T}>ΔH₃</Label>
+      <Label x={246} y={80} color={G}>ΔH₁</Label>
+      <Label x={160} y={176} color={INK}>ΔH₁ = ΔH₂ + ΔH₃</Label>
+    </>
+  ),
+  /* Galvanic (voltaic) cell: Zn anode, Cu cathode, salt bridge, voltmeter */
+  'galvanic-cell': (
+    <>
+      <path d="M40 78 L40 158 L128 158 L128 78" fill="none" stroke={INK} strokeWidth="1.8" />
+      <path d="M192 78 L192 158 L280 158 L280 78" fill="none" stroke={INK} strokeWidth="1.8" />
+      <line x1="40" y1="104" x2="128" y2="104" stroke={L6} strokeWidth="1.4" strokeDasharray="4 3" />
+      <line x1="192" y1="104" x2="280" y2="104" stroke={L6} strokeWidth="1.4" strokeDasharray="4 3" />
+      <rect x="72" y="46" width="12" height="86" fill={L} />
+      <rect x="236" y="46" width="12" height="86" fill={G} />
+      <path d="M118 96 L118 62 Q118 44 160 44 Q202 44 202 62 L202 96" fill="none" stroke={T} strokeWidth="2.4" />
+      <polyline points="78,46 78,26 148,26" fill="none" stroke={INK} strokeWidth="1.8" />
+      <polyline points="242,26 172,26" fill="none" stroke={INK} strokeWidth="1.8" />
+      <circle cx="160" cy="26" r="11" fill="#fff" stroke={INK} strokeWidth="1.8" />
+      <Label x={160} y={30}>V</Label>
+      <path d="M96 20 l10 0 M101 15 l6 5 l-6 5" stroke={G} strokeWidth="2" fill="none" />
+      <Label x={112} y={14} color={G}>e⁻</Label>
+      <Label x={78} y={176}>Zn — أنود (−)</Label>
+      <Label x={242} y={176}>Cu — كاثود (+)</Label>
+      <Label x={160} y={88} color={T}>جسر ملحي</Label>
+      <Label x={84} y={118}>Zn²⁺</Label>
+      <Label x={236} y={118}>Cu²⁺</Label>
+    </>
+  ),
+  /* Electrolytic cell driven by a DC source */
+  'electrolysis-cell': (
+    <>
+      <path d="M86 84 L86 162 L234 162 L234 84" fill="none" stroke={INK} strokeWidth="1.8" />
+      <line x1="86" y1="110" x2="234" y2="110" stroke={L6} strokeWidth="1.4" strokeDasharray="4 3" />
+      <rect x="116" y="52" width="10" height="82" fill={L} />
+      <rect x="194" y="52" width="10" height="82" fill={G} />
+      <polyline points="121,52 121,30 146,30" fill="none" stroke={INK} strokeWidth="1.8" />
+      <polyline points="199,52 199,30 174,30" fill="none" stroke={INK} strokeWidth="1.8" />
+      <line x1="146" y1="22" x2="146" y2="38" stroke={INK} strokeWidth="4" />
+      <line x1="152" y1="26" x2="168" y2="26" stroke={INK} strokeWidth="2" />
+      <line x1="152" y1="34" x2="168" y2="34" stroke={INK} strokeWidth="2" />
+      <line x1="174" y1="22" x2="174" y2="38" stroke={INK} strokeWidth="2" />
+      <Label x={160} y={12}>مصدر تيار مستمر</Label>
+      <Label x={121} y={150}>كاثود (−)</Label>
+      <Label x={199} y={150}>أنود (+)</Label>
+      <Label x={104} y={100} color={L6}>أيونات +</Label>
+      <Label x={216} y={100} color={L6}>أيونات −</Label>
+      <path d="M136 122 l14 0 M145 117 l6 5 l-6 5" stroke={T} strokeWidth="1.8" fill="none" />
+      <path d="M184 122 l-14 0 M175 117 l-6 5 l6 5" stroke={T} strokeWidth="1.8" fill="none" />
+      <Label x={160} y={178}>محلول إلكتروليتي</Label>
+    </>
+  ),
+  /* Strong acid – strong base titration curve with equivalence point */
+  'titration-curve': (
+    <>
+      <line x1="52" y1="162" x2="300" y2="162" stroke={INK} strokeWidth="1.6" />
+      <line x1="52" y1="162" x2="52" y2="20" stroke={INK} strokeWidth="1.6" />
+      <path d="M56 148 C 110 146, 138 142, 152 128 C 162 118, 164 108, 166 92 C 168 70, 172 48, 190 40 C 220 28, 262 27, 296 27" fill="none" stroke={L6} strokeWidth="2.4" />
+      <line x1="52" y1="95" x2="167" y2="95" stroke={INK} strokeWidth="1.1" strokeDasharray="3 3" />
+      <line x1="167" y1="162" x2="167" y2="95" stroke={INK} strokeWidth="1.1" strokeDasharray="3 3" />
+      <circle cx="167" cy="95" r="3.5" fill={G} />
+      <Label x={30} y={28}>pH</Label>
+      <Label x={30} y={99}>7</Label>
+      <Label x={167} y={176}>حجم القاعدة عند التكافؤ</Label>
+      <Label x={238} y={88} color={G}>نقطة التكافؤ</Label>
+      <Label x={250} y={152}>حجم القاعدة المضافة</Label>
     </>
   ),
 };

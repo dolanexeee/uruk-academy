@@ -1,0 +1,151 @@
+import { test, expect, type Page } from '@playwright/test';
+import { chemChapter1 } from '../src/content/chemistry/k1';
+
+/* Stage D — the Chemistry book (the eight chapters of the current print).
+   Mirrors tests/stage-c.spec.ts: tests click the recorded correct option
+   from the content data itself, so full-flow scores stay deterministic
+   no matter where each key sits among the options. */
+
+async function openChemistrySubject(page: Page) {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
+  await page.getByRole('button', { name: /الكيمياء Chemistry/ }).click();
+  await expect(page.getByText('الثرموداينمك').first()).toBeVisible();
+}
+
+test('chemistry subject: eight chapters listed, chapter 1 expanded with four lessons', async ({ page }) => {
+  await openChemistrySubject(page);
+  await expect(page.getByText('8 فصول')).toBeVisible();
+  await expect(page.getByText('الكيمياء الحياتية').first()).toBeVisible();
+  await expect(page.getByText('الاتزان الأيوني').first()).toBeVisible();
+  // Chapter 1 (initially open) offers the four science-book lesson kinds
+  await expect(page.getByRole('button', { name: /المفهوم — النظام والحرارة والانثالبي/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /أمثلة محلولة/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /قوانين وخلاصة الفصل/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /تمارين متدرجة/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /اختبار الفصل/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^الامتحان/ }).first()).toBeVisible();
+});
+
+test('worked solution: \\ce equations render with KaTeX (no errors), steps reveal, final answer carries its unit', async ({ page }) => {
+  await openChemistrySubject(page);
+  await page.getByRole('button', { name: /أمثلة محلولة/ }).click();
+  await expect(page.getByText('المثال ١ — الحرارة بالحرارة النوعية للماء')).toBeVisible();
+  await expect(page.locator('.katex').first()).toBeVisible();
+  const katexBefore = await page.locator('.katex').count();
+  expect(katexBefore).toBeGreaterThan(2);
+  await expect(page.getByTestId('solution-final').first()).toHaveCount(0);
+  for (let i = 0; i < 12; i++) {
+    const next = page.getByTestId('solution-next').first();
+    if ((await next.count()) === 0 || !(await next.isVisible().catch(() => false))) break;
+    await next.click();
+    if ((await page.getByTestId('solution-final').count()) > 0) break;
+  }
+  await expect(page.getByTestId('solution-final').first()).toBeVisible();
+  await expect(page.getByTestId('solution-final').first()).toContainText('62.76');
+  expect(await page.locator('.katex').count()).toBeGreaterThan(katexBefore);
+  // mhchem must render every equation on the page without a single error box
+  await expect(page.locator('.katex-error')).toHaveCount(0);
+});
+
+test('written flow (quiz): write → reveal model answer → self-mark rubric → score stored honestly', async ({ page }) => {
+  await openChemistrySubject(page);
+  await page.getByRole('button', { name: /اختبار الفصل/ }).click();
+  await expect(page.getByText('السؤال 1 من 12')).toBeVisible();
+  // 10 MCQs — click each question's recorded correct option (10/10)
+  for (let i = 0; i < 10; i++) {
+    await page.getByTestId(`quiz-option-${chemChapter1.quiz[i].answer}`).click();
+    await page.getByTestId('quiz-next').click();
+  }
+  // Written question 11: the model answer is hidden until requested
+  await expect(page.getByText(/اكتب حلك هنا/)).toBeVisible();
+  await page.getByTestId('written-answer').fill('حلي: حرارة المحلول موجبة 4184 جول والانثالبي سالبة لأن التفاعل طارد');
+  await page.getByTestId('written-reveal').click();
+  await expect(page.getByText('الحل النموذجي')).toBeVisible();
+  await expect(page.getByText('مفتاح التصحيح')).toBeVisible();
+  // self-mark: two points earned, one missed => 2 of 3
+  await page.getByTestId('rubric-yes-0').click();
+  await page.getByTestId('rubric-yes-1').click();
+  await page.getByTestId('rubric-no-2').click();
+  await page.getByTestId('written-confirm').click();
+  await page.getByTestId('quiz-next').click();
+  // Written question 12 (الشرحية): full marks
+  await page.getByTestId('written-answer').fill('دالة الحالة يتوقف تغيّرها على الحالتين فقط لا على المسار، ولذلك يصح قانون هيس، والحرارة والشغل ليستا دالتي حالة');
+  await page.getByTestId('written-reveal').click();
+  await page.getByTestId('rubric-yes-0').click();
+  await page.getByTestId('rubric-yes-1').click();
+  await page.getByTestId('rubric-yes-2').click();
+  await page.getByTestId('written-confirm').click();
+  await page.getByTestId('quiz-next').click();
+  // finish: 10 (MCQ) + 2 + 3 = 15 of 16
+  await expect(page.getByText('نتيجتك في اختبار الفصل')).toBeVisible();
+  const raw = await page.evaluate(() => window.localStorage.getItem('uruk-academy-v1'));
+  const stored = JSON.parse(raw!);
+  expect(stored.quizBest['km6-c1']).toMatchObject({ score: 15, total: 16 });
+});
+
+test('written flow (exam): chapter exam mixes MCQ + written, report self-marking updates the stored score', async ({ page }) => {
+  await openChemistrySubject(page);
+  await page.getByRole('button', { name: /^الامتحان/ }).first().click();
+  await expect(page.getByText('الامتحان الوزاري — الثرموداينمك')).toBeVisible();
+  await page.getByTestId('exam-start').click();
+  // 4 MCQs answered correctly (20 marks), then 4 written questions
+  for (let i = 0; i < 4; i++) {
+    await page.getByTestId(`exam-option-${chemChapter1.exam[i].answer}`).click();
+    await page.getByTestId('exam-next').click();
+  }
+  for (let i = 0; i < 3; i++) {
+    await page.getByTestId('written-answer').fill('حل مكتوب بخطوات');
+    await page.getByTestId('exam-next').click();
+  }
+  await page.getByTestId('written-answer').fill('حل مكتوب بخطوات');
+  await page.getByRole('button', { name: 'إنهاء وتسليم' }).click();
+  await expect(page.getByText('تقرير الامتحان')).toBeVisible();
+  // self-mark the first written question's first three rubric points => stored best updates
+  const firstWritten = chemChapter1.exam[4];
+  const n = Math.min(3, firstWritten.rubric?.length ?? 0);
+  const gained = (firstWritten.rubric ?? []).slice(0, n).reduce((s, r) => s + r.marks, 0);
+  for (let i = 0; i < n; i++) {
+    await page.getByTestId(`rubric-yes-${i}`).first().click();
+  }
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const s = JSON.parse(window.localStorage.getItem('uruk-academy-v1')!);
+        return s.examBest['km6-c1']?.score ?? -1;
+      }),
+    )
+    .toBe(20 + gained);
+});
+
+test('chemistry capstone: faithful وزاري paper — 19 written items, 145 marks, ترك 45, per-chapter report', async ({ page }) => {
+  await openChemistrySubject(page);
+  await page.getByRole('button', { name: /ابدأ الامتحان الشامل/ }).click();
+  await expect(page.getByText('الامتحان الوزاري الشامل — الكيمياء')).toBeVisible();
+  await expect(page.getByText(/تترك منها ما مجموعه 45 درجة/)).toBeVisible();
+  await page.getByTestId('exam-start').click();
+  await expect(page.getByText(/السؤال الأول — فرع أ/)).toBeVisible();
+  // walk the whole paper: all 19 items are written branches (no MCQ block in the chemistry paper)
+  for (let i = 0; i < 18; i++) {
+    await page.getByTestId('written-answer').fill('حل مكتوب بخطوات كاملة');
+    await page.getByTestId('exam-next').click();
+  }
+  await page.getByTestId('written-answer').fill('حل مكتوب بخطوات كاملة');
+  await page.getByRole('button', { name: 'إنهاء وتسليم' }).click();
+  await expect(page.getByText('تقرير الامتحان')).toBeVisible();
+  await expect(page.getByText('الفصل ١ — الثرموداينمك', { exact: true })).toBeVisible();
+  await expect(page.getByText('الفصل ٨ — الكيمياء الحياتية', { exact: true })).toBeVisible();
+  await expect(page.getByText('من 145')).toBeVisible();
+});
+
+test('chapter smoke: complete a thermodynamics lesson, progress persists under the chemistry id', async ({ page }) => {
+  await openChemistrySubject(page);
+  await page.getByRole('button', { name: /المفهوم — النظام والحرارة والانثالبي/ }).click();
+  await expect(page.getByText('النظام والمحيط والكون — والأنظمة الثلاثة')).toBeVisible();
+  await page.getByTestId('complete-lesson').click();
+  await expect(page.getByText('أنجزت هذا الدرس')).toBeVisible();
+  await page.getByRole('button', { name: /المنهج/ }).click();
+  await expect(page.getByText('1/4 دروس منجزة')).toHaveCount(1);
+  const raw = await page.evaluate(() => window.localStorage.getItem('uruk-academy-v1'));
+  expect(raw).toContain('kc1-l1');
+});

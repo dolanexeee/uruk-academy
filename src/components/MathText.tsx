@@ -1,11 +1,15 @@
 import { useMemo } from 'react';
 import katex from 'katex';
+import 'katex/dist/contrib/mhchem';
 
 /* MathText — renders a content string that may embed KaTeX formulas:
    $…$ inline and $$…$$ display. Formulas become LTR islands inside the
    RTL Arabic flow; plain text passes through untouched (so every English
    string in the app renders exactly as before). Rendering is fully
-   client-side from the bundled KaTeX — it works in the offline PWA. */
+   client-side from the bundled KaTeX — it works in the offline PWA.
+   mhchem (bundled inside the katex package, precached with the bundle)
+   provides \ce{...} for the Chemistry book's balanced equations —
+   decision + headless verification in research/chemistry-structure.md §5. */
 
 const SEGMENT = /(\$\$[^$]+?\$\$|\$[^$]+?\$)/g;
 

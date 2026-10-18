@@ -1,10 +1,11 @@
 /* Uruk Academy — curriculum map.
-   Three complete books are live: «English for Iraq» (Phase 2: all 8 units,
+   Four complete books are live: «English for Iraq» (Phase 2: all 8 units,
    two revision hubs, full-book capstone), «Mathematics» for the
    Scientific branch (Stage A: all chapters, chapter capstones and the
-   full وزاري mock) and «Physics» (Stage C: the nine chapters of the
-   revised book, chapter exams and the full وزاري mock). Every other
-   subject stays honestly badged «قريبًا».
+   full وزاري mock), «Physics» (Stage C: the nine chapters of the
+   revised book, chapter exams and the full وزاري mock) and «Chemistry»
+   (Stage D: the eight chapters of the current print, chapter exams and
+   the full وزاري mock). Every other subject stays honestly badged «قريبًا».
    Views are book-agnostic: they render any Book through the registry
    below and never hardcode a subject. */
 
@@ -19,6 +20,7 @@ import { unit4, unit8 } from './revisions';
 import { capstoneExam } from './capstone';
 import { mathChapters, mathCapstone } from './math';
 import { physicsChapters, physicsCapstone } from './physics';
+import { chemistryChapters, chemistryCapstone } from './chemistry';
 
 export const contentUnits: Unit[] = [unit1, unit2, unit3, unit5, unit6, unit7];
 export const revisionUnits: Unit[] = [unit4, unit8];
@@ -35,6 +37,8 @@ export const ABOUT_SOURCES = `محتوى هذه الأكاديمية مُشتق 
 export const MATH_ABOUT_SOURCES = `محتوى الرياضيات في هذه الأكاديمية مبني على بنية الكتاب المدرسي الرسمي «الرياضيات للصف السادس الإعدادي — الفرع العلمي» الصادر عن وزارة التربية في جمهورية العراق (الفصول الستة وبنيتها الموثّقة في CONTENT.md). كل الشروحات والأمثلة والمسائل مكتوبة ومحلولَة بأسلوبنا الخاص ولم تُنسخ تمارين الكتاب حرفيًا، أما صيغ الامتحانات فتحاكي الورقة الوزارية الرسمية في بنيتها ودرجاتها. أكاديمية أوروك مشروع تعليمي مفتوح المصدر لا يتبع لوزارة التربية.`;
 
 export const PHYSICS_ABOUT_SOURCES = `محتوى الفيزياء في هذه الأكاديمية مبني على بنية الكتاب المدرسي الرسمي «الفيزياء للصف السادس الإعدادي — الفرع العلمي» الصادر عن وزارة التربية في جمهورية العراق بطبعتها المنقّحة الحالية ذات الفصول التسعة (دُمجت فيها الفيزياء الحديثة مع النظرية النسبية في فصل واحد — والبنية موثّقة في CONTENT.md وملف البحث المرافق). كل الشروحات والأمثلة والمسائل مكتوبة ومحلولَة بأسلوبنا الخاص ولم تُنسخ تمارين الكتاب أو أسئلة الامتحانات حرفيًا، والحسابات كلها بالثوابت نفسها التي تطبعها أوراق الوزارة، أما صيغ الامتحانات فتحاكي الورقة الوزارية الرسمية في بنيتها ودرجاتها. أكاديمية أوروك مشروع تعليمي مفتوح المصدر لا يتبع لوزارة التربية.`;
+
+export const CHEMISTRY_ABOUT_SOURCES = `محتوى الكيمياء في هذه الأكاديمية مبني على بنية الكتاب المدرسي الرسمي «الكيمياء للصف السادس العلمي» الصادر عن وزارة التربية في جمهورية العراق (الفصول الثمانية للطبعة الحالية — والبنية موثّقة في CONTENT.md وملف البحث المرافق). كل الشروحات والأمثلة والمسائل مكتوبة ومحلولَة بأسلوبنا الخاص ولم تُنسخ تمارين الكتاب أو أسئلة الامتحانات حرفيًا، والمعادلات الكيميائية كلها موزونة، والحسابات بالثوابت نفسها التي تطبعها أوراق الوزارة، أما صيغ الامتحانات فتحاكي الورقة الوزارية الرسمية في بنيتها ودرجاتها. أكاديمية أوروك مشروع تعليمي مفتوح المصدر لا يتبع لوزارة التربية.`;
 
 const englishBook: Book = {
   subjectId: 'en6',
@@ -78,7 +82,21 @@ const physicsBook: Book = {
   aboutSources: PHYSICS_ABOUT_SOURCES,
 };
 
-export const books: Book[] = [englishBook, mathBook, physicsBook];
+const chemistryBook: Book = {
+  subjectId: 'chem6',
+  units: chemistryChapters,
+  contentUnits: chemistryChapters,
+  capstone: chemistryCapstone,
+  unitWord: 'الفصل',
+  unitsPlural: 'فصول',
+  vocabSuffix: 'قانونًا وتعريفًا',
+  cardNoun: 'قانون',
+  capstoneBlurb:
+    'محاكاة أمينة للورقة الوزارية الحقيقية: ستة أسئلة مرقّمة بفروعها — مسائل وشرحيات — كما في الامتحان الرسمي وبدرجاته ومدته، بمعادلات موزونة وحلول نموذجية ومفاتيح تصحيح، والتقرير يفصّل نتيجتك في كل فصل.',
+  aboutSources: CHEMISTRY_ABOUT_SOURCES,
+};
+
+export const books: Book[] = [englishBook, mathBook, physicsBook, chemistryBook];
 export const bookBySubjectId = (id: string): Book | undefined => books.find((b) => b.subjectId === id);
 
 export const allBooksUnits: Unit[] = books.flatMap((b) => b.units);
@@ -113,6 +131,7 @@ export function examSpecForUnit(u: Unit): ExamSpec {
   }
   const isMath = book?.subjectId === 'math6';
   const isPhysics = book?.subjectId === 'phys6';
+  const isChemistry = book?.subjectId === 'chem6';
   return {
     id: u.id,
     titleAr: `الامتحان الوزاري — ${u.titleAr}`,
@@ -120,12 +139,14 @@ export function examSpecForUnit(u: Unit): ExamSpec {
       ? `Mathematics · Sixth Preparatory · Chapter ${u.number}`
       : isPhysics
         ? `Physics · Sixth Preparatory · Chapter ${u.number}`
-        : `English for Iraq · Sixth Preparatory · Unit ${u.number}`,
+        : isChemistry
+          ? `Chemistry · Sixth Preparatory · Chapter ${u.number}`
+          : `English for Iraq · Sixth Preparatory · Unit ${u.number}`,
     minutes: u.examMinutes,
     questions: u.exam,
     groupBy: 'skill',
     backLabel: `العودة إلى ${book?.unitWord ?? 'الوحدة'}`,
-    introNote: isMath || isPhysics
+    introNote: isMath || isPhysics || isChemistry
       ? 'ورقة بأسلوب الوزاري من هذا الفصل وحده: أسئلة اختيارية تُصحَّح فورًا بعد التسليم، وأسئلة مقالية تقارن فيها حلك بالحل النموذجي وتصحّح لنفسك بمفتاح التصحيح — كما يجب أن تتدرب للامتحان الحقيقي.'
       : undefined,
   };
@@ -199,7 +220,24 @@ export const subjects: Subject[] = [
       { number: 9, titleAr: 'الفيزياء النووية', titleEn: 'Nuclear Physics', status: 'live' },
     ],
   },
-  { id: 'chem6', titleAr: 'الكيمياء', titleEn: 'Chemistry', grade: 'السادس الإعدادي', status: 'soon', blurb: '', units: [] },
+  {
+    id: 'chem6',
+    titleAr: 'الكيمياء',
+    titleEn: 'Chemistry',
+    grade: 'السادس الإعدادي',
+    status: 'live',
+    blurb: 'كتاب الكيمياء للسادس العلمي كاملًا بطبعتها الحالية: ثمانية فصول — شرح بالمفهوم، وأمثلة محلولة خطوة بخطوة بمعادلات موزونة، ومسائل وشرحيات مقالية بحلول نموذجية ومفاتيح تصحيح، وامتحان وزاري شامل يحاكي الورقة الرسمية.',
+    units: [
+      { number: 1, titleAr: 'الثرموداينمك', titleEn: 'Thermodynamics', status: 'live' },
+      { number: 2, titleAr: 'الاتزان الكيميائي', titleEn: 'Chemical Equilibrium', status: 'live' },
+      { number: 3, titleAr: 'الاتزان الأيوني', titleEn: 'Ionic Equilibrium', status: 'live' },
+      { number: 4, titleAr: 'تفاعلات التأكسد والاختزال والكيمياء الكهربائية', titleEn: 'Redox & Electrochemistry', status: 'live' },
+      { number: 5, titleAr: 'الكيمياء التناسقية', titleEn: 'Coordination Chemistry', status: 'live' },
+      { number: 6, titleAr: 'طرائق التحليل الكيميائي', titleEn: 'Analytical Methods', status: 'live' },
+      { number: 7, titleAr: 'الكيمياء العضوية للهيدروكاربونات المعوّضة', titleEn: 'Organic Chemistry', status: 'live' },
+      { number: 8, titleAr: 'الكيمياء الحياتية', titleEn: 'Biochemistry', status: 'live' },
+    ],
+  },
   { id: 'bio6', titleAr: 'الأحياء', titleEn: 'Biology', grade: 'السادس الإعدادي', status: 'soon', blurb: '', units: [] },
   { id: 'ar6', titleAr: 'اللغة العربية', titleEn: 'Arabic', grade: 'السادس الإعدادي', status: 'soon', blurb: '', units: [] },
 ];
