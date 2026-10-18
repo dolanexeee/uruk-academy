@@ -132,3 +132,44 @@ test('screenshots p2.1: U3 grammar with reported speech + wish, U5 grammar with 
   await page.waitForTimeout(300);
   await page.screenshot({ path: `${DIR}/15-u7-grammar-p21.png`, fullPage: true });
 });
+
+test('screenshots stage A: math subject, worked solution, written question, capstone', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
+  await page.getByRole('button', { name: /الرياضيات Mathematics/ }).click();
+  await expect(page.getByText('الأعداد المركبة').first()).toBeVisible();
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${DIR}/20-math-subject-stageA.png`, fullPage: true });
+
+  // worked-solution lesson with steps revealed
+  await page.getByRole('button', { name: /أمثلة محلولة/ }).click();
+  await expect(page.getByText('المثال ١ — ضرب وقسمة')).toBeVisible();
+  for (let i = 0; i < 4; i++) {
+    const next = page.getByTestId('solution-next').first();
+    if ((await next.count()) === 0) break;
+    await next.click();
+  }
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/21-math-lesson-solution.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+  await expect(page.getByText('الأعداد المركبة').first()).toBeVisible();
+
+  // written question with the model answer + rubric revealed
+  await page.getByRole('button', { name: /اختبار الفصل/ }).click();
+  for (let i = 0; i < 10; i++) {
+    await page.getByTestId('quiz-option-1').click();
+    await page.getByTestId('quiz-next').click();
+  }
+  await page.getByTestId('written-answer').fill('وسّعت القوس أولًا ثم ضربت البسط والمقام في مرافق المقام');
+  await page.getByTestId('written-reveal').click();
+  await expect(page.getByText('مفتاح التصحيح')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/22-written-question.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+
+  // math capstone intro
+  await page.getByRole('button', { name: /ابدأ الامتحان الشامل/ }).click();
+  await expect(page.getByText('الامتحان الوزاري الشامل — الرياضيات')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/23-math-capstone.png`, fullPage: true });
+});

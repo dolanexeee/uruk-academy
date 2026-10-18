@@ -3,6 +3,8 @@ import type { ExamSpec, QuizQuestion } from '../content/types';
 import { unitByNumber } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
 import { ProgressRing, pct } from '../components/ui';
+import MathText from '../components/MathText';
+import { ModelAnswer, RubricMarking } from '../components/Written';
 import {
   IconCheck,
   IconX,
@@ -21,22 +23,40 @@ interface Props {
   onFinish: (score: number, total: number, perGroup: Record<string, { score: number; total: number }>) => void;
 }
 
-const skillLabel: Record<string, string> = { reading: 'الاستيعاب القرائي', grammar: 'القواعد', vocab: 'المفردات' };
-const skillOrder = ['reading', 'grammar', 'vocab'];
+const skillLabel: Record<string, string> = {
+  reading: 'الاستيعاب القرائي',
+  grammar: 'القواعد',
+  vocab: 'المفردات',
+  concept: 'المفاهيم',
+  compute: 'المهارات الحسابية',
+  apply: 'التطبيقات',
+};
+const skillOrder = ['reading', 'grammar', 'vocab', 'concept', 'compute', 'apply'];
 
 export default function Exam({ state, spec, onBack, onFinish }: Props) {
   const questions = useMemo(() => spec.questions, [spec]);
   const totalMarks = useMemo(() => questions.reduce((a, q) => a + q.marks, 0), [questions]);
+  const hasWritten = useMemo(() => questions.some((q) => q.type === 'written'), [questions]);
   const [phase, setPhase] = useState<'intro' | 'run' | 'report'>('intro');
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  /** Written questions: the student's free-text answers (run phase). */
+  const [writtenText, setWrittenText] = useState<Record<string, string>>({});
+  /** Written questions: report-phase self-marking, per rubric point. */
+  const [selfFlags, setSelfFlags] = useState<Record<string, (boolean | null)[]>>({});
   const [idx, setIdx] = useState(0);
   const [left, setLeft] = useState(spec.minutes * 60);
   const submitted = useRef(false);
 
   const best = state.examBest[spec.id];
 
+  const writtenEarned = (q: QuizQuestion): number => {
+    const flags = selfFlags[q.id] ?? [];
+    return (q.rubric ?? []).reduce((a, p, i) => a + (flags[i] ? p.marks : 0), 0);
+  };
+
   const groupKey = (q: QuizQuestion) => (spec.groupBy === 'unit' ? `unit-${q.unit ?? 0}` : q.skill);
   const groupLabel = (key: string) => {
+    if (spec.groupLabels?.[key]) return spec.groupLabels[key];
     if (spec.groupBy === 'unit') {
       const n = Number(key.replace('unit-', ''));
       return unitByNumber(n)?.titleAr ?? `الوحدة ${n}`;
@@ -48,7 +68,9 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
     if (spec.groupBy === 'unit') {
       return present.sort((a, b) => Number(a.replace('unit-', '')) - Number(b.replace('unit-', '')));
     }
-    return skillOrder.filter((k) => present.includes(k));
+    const known = skillOrder.filter((k) => present.includes(k));
+    const rest = present.filter((k) => !skillOrder.includes(k));
+    return [...known, ...rest];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions, spec.groupBy]);
 
@@ -59,10 +81,9 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
       const k = groupKey(q);
       perGroup[k] ??= { score: 0, total: 0 };
       perGroup[k].total += q.marks;
-      if (answers[q.id] === q.answer) {
-        score += q.marks;
-        perGroup[k].score += q.marks;
-      }
+      const earned = q.type === 'written' ? writtenEarned(q) : answers[q.id] === q.answer ? q.marks : 0;
+      score += earned;
+      perGroup[k].score += earned;
     }
     return { score, perGroup };
   }
@@ -74,6 +95,15 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
     onFinish(score, totalMarks, perGroup);
     setPhase('report');
   }
+
+  /* After submission, every self-marking change re-stores the exam result
+     so the saved score always reflects the completed self-assessment. */
+  useEffect(() => {
+    if (phase !== 'report') return;
+    const { score, perGroup } = grade();
+    onFinish(score, totalMarks, perGroup);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selfFlags, phase]);
 
   useEffect(() => {
     if (phase !== 'run') return;
@@ -93,7 +123,9 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
 
   const mm = String(Math.floor(left / 60)).padStart(2, '0');
   const ss = String(left % 60).padStart(2, '0');
-  const answeredCount = Object.keys(answers).length;
+  const answeredCount =
+    Object.keys(answers).length +
+    questions.filter((q) => q.type === 'written' && (writtenText[q.id] ?? '').trim().length > 0).length;
 
   /* ------------------------------ intro ------------------------------ */
   if (phase === 'intro') {
@@ -126,6 +158,9 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
           </div>
           <ul className="mt-5 space-y-2 text-[14px] leading-7 text-ink-900/90">
             <li className="flex gap-2"><span className="mt-[9px] h-2 w-2 shrink-0 rotate-45 bg-gold-500" />{spec.introNote ?? 'ثلاثة أقسام بأسلوب الورقة الوزارية: استيعاب قرائي، وقواعد، ومفردات — والدرجات ظاهرة لكل قسم.'}</li>
+            {hasWritten && (
+              <li className="flex gap-2"><span className="mt-[9px] h-2 w-2 shrink-0 rotate-45 bg-gold-500" />في هذا الامتحان أسئلة مقالية: اكتب حلك كاملًا في موضعه، وبعد التسليم سيظهر لك الحل النموذجي ومفتاح التصحيح لتصحّح لنفسك نقطةً نقطة — لا تصحيح آليًا مزعومًا هنا.</li>
+            )}
             <li className="flex gap-2"><span className="mt-[9px] h-2 w-2 shrink-0 rotate-45 bg-gold-500" />لا تصحيح فوريًا أثناء الامتحان؛ النتيجة والتقرير الكامل بتصحيح كل سؤال بعد التسليم فقط.</li>
             <li className="flex gap-2"><span className="mt-[9px] h-2 w-2 shrink-0 rotate-45 bg-gold-500" />عند انتهاء الوقت يُسلَّم الامتحان تلقائيًا بما أجبت عنه.</li>
           </ul>
@@ -135,7 +170,7 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
             </p>
           )}
           <button
-            onClick={() => { submitted.current = false; setAnswers({}); setIdx(0); setLeft(spec.minutes * 60); setPhase('run'); }}
+            onClick={() => { submitted.current = false; setAnswers({}); setWrittenText({}); setSelfFlags({}); setIdx(0); setLeft(spec.minutes * 60); setPhase('run'); }}
             data-testid="exam-start"
             className="press font-display mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold-500 py-3.5 text-[16px] font-black text-lapis-950 shadow"
           >
@@ -177,8 +212,57 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
         </div>
 
         <h3 className="font-display mt-6 text-lg font-black text-cream-50 lg:mx-auto lg:max-w-3xl">تصحيح الأسئلة سؤالًا سؤالًا</h3>
+        {hasWritten && (
+          <p className="pop mt-4 rounded-2xl border border-gold-500/40 bg-gold-200/40 px-4 py-3 text-[13.5px] font-semibold leading-6 text-gold-700 lg:mx-auto lg:max-w-3xl">
+            في هذا الامتحان أسئلة مقالية لا يصحّحها إلا أنت: قارن حلك بالحل النموذجي وعلّم كل نقطة في مفتاح
+            التصحيح — نتيجتك النهائية أعلاه تتحدّث فورًا وتُحفظ بعد اكتمال تصحيحك الذاتي.
+          </p>
+        )}
         <div className="mt-3 space-y-3">
           {questions.map((q, i) => {
+            if (q.type === 'written') {
+              const flags = selfFlags[q.id] ?? (q.rubric ?? []).map(() => null);
+              const decided = flags.every((f) => f !== null);
+              const earned = writtenEarned(q);
+              const myText = (writtenText[q.id] ?? '').trim();
+              return (
+                <article key={q.id} className="rise rounded-3xl border-2 border-gold-500/50 bg-cream-50 p-4 shadow lg:mx-auto lg:max-w-3xl">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[12px] font-bold text-ink-400">سؤال {i + 1} · {groupLabel(groupKey(q))} · {q.marks} درجات · سؤال مقالي</span>
+                    <span className="font-display inline-flex items-center gap-1 text-[13px] font-extrabold text-gold-700">
+                      {decided ? `تصحيح ذاتي: ${earned}/${q.marks}` : 'بانتظار تصحيحك الذاتي'}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-[14.5px] font-semibold leading-7 text-ink-900"><MathText text={q.q} /></p>
+                  <div className="mt-2 rounded-2xl bg-white/70 px-4 py-3 ring-1 ring-cream-300">
+                    <p className="text-[12px] font-bold text-ink-400">حلك الذي كتبته:</p>
+                    {myText ? (
+                      <p className="mt-1 whitespace-pre-wrap text-[14px] font-semibold leading-7 text-ink-900" dir="auto">{myText}</p>
+                    ) : (
+                      <p className="mt-1 text-[13.5px] font-semibold text-red-600">— لم تكتب حلًا لهذا السؤال —</p>
+                    )}
+                  </div>
+                  <div className="mt-3">
+                    <ModelAnswer q={q} />
+                    <RubricMarking
+                      q={q}
+                      flags={flags}
+                      onToggle={(pi, v) =>
+                        setSelfFlags((prev) => {
+                          const cur = [...(prev[q.id] ?? (q.rubric ?? []).map(() => null))] as (boolean | null)[];
+                          cur[pi] = v;
+                          return { ...prev, [q.id]: cur };
+                        })
+                      }
+                    />
+                  </div>
+                  <p className="mt-3 flex gap-1.5 text-[13.5px] leading-6 text-ink-600">
+                    <span className="mt-0.5 shrink-0 text-gold-600"><IconBulb size={16} /></span>
+                    <span><MathText text={q.explain} /></span>
+                  </p>
+                </article>
+              );
+            }
             const mine = answers[q.id];
             const ok = mine === q.answer;
             return (
@@ -189,24 +273,24 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
                     {ok ? <><IconCheck size={15} /> صحيح</> : <><IconX size={15} /> خطأ</>}
                   </span>
                 </div>
-                <p className="mt-2 text-[14.5px] font-semibold leading-7 text-ink-900">{q.q}</p>
-                {q.qEn && <p className="en paper-quote mt-1 rounded-xl px-3 py-2 text-[14.5px] font-semibold leading-6 text-lapis-900" dir="ltr">{q.qEn}</p>}
+                <p className="mt-2 text-[14.5px] font-semibold leading-7 text-ink-900"><MathText text={q.q} /></p>
+                {q.qEn && <p className="en paper-quote mt-1 rounded-xl px-3 py-2 text-[14.5px] font-semibold leading-6 text-lapis-900" dir="ltr"><MathText text={q.qEn} /></p>}
                 <div className="mt-2 space-y-1 text-[13.5px] leading-6">
                   <p>
                     <span className="font-bold text-ink-600">إجابتك: </span>
                     <span className={ok ? 'text-tealdeep-600 font-semibold' : 'text-red-600 font-semibold'}>
-                      {mine === undefined ? '— لم تُجب —' : q.options[mine]}
+                      {mine === undefined ? '— لم تُجب —' : <MathText text={q.options[mine]} />}
                     </span>
                   </p>
                   {!ok && (
                     <p>
                       <span className="font-bold text-ink-600">الإجابة الصحيحة: </span>
-                      <span className="font-semibold text-tealdeep-600">{q.options[q.answer]}</span>
+                      <span className="font-semibold text-tealdeep-600"><MathText text={q.options[q.answer]} /></span>
                     </p>
                   )}
                   <p className="flex gap-1.5 text-ink-600">
                     <span className="mt-0.5 shrink-0 text-gold-600"><IconBulb size={16} /></span>
-                    <span>{q.explain}</span>
+                    <span><MathText text={q.explain} /></span>
                   </p>
                 </div>
               </article>
@@ -242,21 +326,24 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
 
       {/* navigator */}
       <div className="mt-4 flex flex-wrap gap-1.5 lg:mx-auto lg:w-full lg:max-w-3xl">
-        {questions.map((qq, i) => (
-          <button
-            key={qq.id}
-            onClick={() => setIdx(i)}
-            className={`press h-8 w-8 rounded-full text-[12.5px] font-bold ${
-              i === idx
-                ? 'bg-gold-500 text-lapis-950'
-                : answers[qq.id] !== undefined
-                  ? 'bg-tealdeep-500 text-white'
-                  : 'bg-lapis-900/70 text-lapis-100 ring-1 ring-cream-100/20'
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
+        {questions.map((qq, i) => {
+          const doneQ = qq.type === 'written' ? (writtenText[qq.id] ?? '').trim().length > 0 : answers[qq.id] !== undefined;
+          return (
+            <button
+              key={qq.id}
+              onClick={() => setIdx(i)}
+              className={`press h-8 w-8 rounded-full text-[12.5px] font-bold ${
+                i === idx
+                  ? 'bg-gold-500 text-lapis-950'
+                  : doneQ
+                    ? 'bg-tealdeep-500 text-white'
+                    : 'bg-lapis-900/70 text-lapis-100 ring-1 ring-cream-100/20'
+              }`}
+            >
+              {i + 1}
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex flex-1 items-center justify-center py-4">
@@ -265,8 +352,24 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
           <span className="paper-quote rounded-full px-3 py-0.5 text-[11.5px] font-bold text-lapis-700">{spec.groupBy === 'unit' ? groupLabel(groupKey(q)) : skillLabel[q.skill]}</span>
           <span className="text-[12px] font-bold text-ink-400">السؤال {idx + 1} · {q.marks} درجات</span>
         </div>
-        <h3 className="mt-3 text-[16px] font-bold leading-8 text-ink-900">{q.q}</h3>
-        {q.qEn && <p className="en paper-quote mt-1 rounded-2xl px-4 py-3 text-[15.5px] font-semibold leading-6 text-lapis-900" dir="ltr">{q.qEn}</p>}
+        <h3 className="mt-3 text-[16px] font-bold leading-8 text-ink-900"><MathText text={q.q} /></h3>
+        {q.qEn && <p className="en paper-quote mt-1 rounded-2xl px-4 py-3 text-[15.5px] font-semibold leading-6 text-lapis-900" dir="ltr"><MathText text={q.qEn} /></p>}
+        {q.type === 'written' ? (
+          <div className="mt-4">
+            <textarea
+              value={writtenText[q.id] ?? ''}
+              onChange={(e) => setWrittenText((w) => ({ ...w, [q.id]: e.target.value }))}
+              rows={7}
+              dir="auto"
+              data-testid="written-answer"
+              placeholder="اكتب حلك هنا كاملًا وبخطواته — كأنك في قاعة الامتحان…"
+              className="w-full rounded-2xl border-2 border-cream-300 bg-white/70 px-4 py-3 text-[15px] font-semibold leading-7 outline-none focus:border-lapis-500"
+            />
+            <p className="mt-2 text-[12.5px] leading-6 text-ink-400">
+              سؤال مقالي: لن يظهر أي تصحيح الآن. بعد التسليم ستقارن حلك بالحل النموذجي وتصحّح لنفسك بمفتاح التصحيح.
+            </p>
+          </div>
+        ) : (
         <div className="mt-4 grid gap-2">
           {q.options.map((opt, i) => {
             const selected = answers[q.id] === i;
@@ -281,11 +384,12 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
                 } ${isEn ? 'en' : ''}`}
                 dir={isEn ? 'ltr' : 'rtl'}
               >
-                {opt}
+                <MathText text={opt} />
               </button>
             );
           })}
         </div>
+        )}
         <div className="mt-5 flex items-center justify-between">
           <button
             onClick={() => setIdx((i) => Math.max(0, i - 1))}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { contentUnits, allUnits, allVocab, capstone, ABOUT_SOURCES } from '../content/curriculum';
+import { books, subjects, allBooksUnits, allBooksVocab } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
 import { streak, lastStudyDay } from '../lib/store';
 import { ProgressRing, fmtDate, pct, ZigguratMark } from '../components/ui';
@@ -15,14 +15,15 @@ interface Props {
 export default function Profile({ state, onBack, onSetName, onReset }: Props) {
   const [draft, setDraft] = useState(state.name);
   const [confirmReset, setConfirmReset] = useState(false);
-  const lessonsTotal = contentUnits.reduce((a, u) => a + u.lessons.length, 0);
-  const lessonsDone = contentUnits.reduce((a, u) => a + u.lessons.filter((l) => state.lessonsDone[l.id]).length, 0);
-  const mastered = allVocab.filter((v) => (state.srs[v.id]?.box ?? 0) >= 4).length;
-  const quizBests = allUnits
+  const allContentUnits = books.flatMap((b) => b.contentUnits);
+  const lessonsTotal = allContentUnits.reduce((a, u) => a + u.lessons.length, 0);
+  const lessonsDone = allContentUnits.reduce((a, u) => a + u.lessons.filter((l) => state.lessonsDone[l.id]).length, 0);
+  const mastered = allBooksVocab.filter((v) => (state.srs[v.id]?.box ?? 0) >= 4).length;
+  const quizBests = allBooksUnits
     .map((u) => ({ unit: u, best: state.quizBest[u.id] }))
     .filter((x) => x.best);
   const quizTop = quizBests.sort((a, b) => b.best!.score / Math.max(1, b.best!.total) - a.best!.score / Math.max(1, a.best!.total))[0];
-  const capBest = state.examBest[capstone.id];
+  const subjectTitle = (id: string) => subjects.find((s) => s.id === id)?.titleAr ?? id;
 
   return (
     <div className="screen mx-auto w-full max-w-3xl px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
@@ -63,23 +64,31 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
       </section>
 
       <section className="rise rise-2 mt-4 grid grid-cols-2 gap-3">
-        <div className="rounded-3xl bg-cream-50 p-4 shadow-md">
-          <p className="text-[12px] font-bold text-ink-400">دروس كتاب الإنجليزية</p>
-          <p className="font-display mt-1 text-2xl font-black text-lapis-900">{lessonsDone}<span className="text-sm text-ink-400"> / {lessonsTotal}</span></p>
-          <div className="mt-2 space-y-1.5">
-            {contentUnits.map((u) => {
-              const d = u.lessons.filter((l) => state.lessonsDone[l.id]).length;
-              return (
-                <div key={u.id} className="flex items-center gap-2 text-[12px] leading-5 text-ink-600">
-                  <span className={d === u.lessons.length ? 'text-tealdeep-600' : 'text-ink-400'}>
-                    <IconCheck size={13} />
-                  </span>
-                  <span className="min-w-0 flex-1 truncate">{u.titleAr}</span>
-                  <span className="font-bold">{d}/{u.lessons.length}</span>
+        <div className="space-y-3">
+          {books.map((b) => {
+            const bTotal = b.contentUnits.reduce((a, u) => a + u.lessons.length, 0);
+            const bDone = b.contentUnits.reduce((a, u) => a + u.lessons.filter((l) => state.lessonsDone[l.id]).length, 0);
+            return (
+              <div key={b.subjectId} className="rounded-3xl bg-cream-50 p-4 shadow-md">
+                <p className="text-[12px] font-bold text-ink-400">دروس {subjectTitle(b.subjectId)}</p>
+                <p className="font-display mt-1 text-2xl font-black text-lapis-900">{bDone}<span className="text-sm text-ink-400"> / {bTotal}</span></p>
+                <div className="mt-2 space-y-1.5">
+                  {b.contentUnits.map((u) => {
+                    const d = u.lessons.filter((l) => state.lessonsDone[l.id]).length;
+                    return (
+                      <div key={u.id} className="flex items-center gap-2 text-[12px] leading-5 text-ink-600">
+                        <span className={d === u.lessons.length ? 'text-tealdeep-600' : 'text-ink-400'}>
+                          <IconCheck size={13} />
+                        </span>
+                        <span className="min-w-0 flex-1 truncate">{u.titleAr}</span>
+                        <span className="font-bold">{d}/{u.lessons.length}</span>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
         <div className="space-y-3">
           <div className="rounded-3xl bg-cream-50 p-4 shadow-md">
@@ -91,8 +100,8 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
             <p className="mt-1 text-[12px] text-ink-600">آخر يوم دراسة: {fmtDate(lastStudyDay(state))}</p>
           </div>
           <div className="rounded-3xl bg-cream-50 p-4 shadow-md">
-            <p className="text-[12px] font-bold text-ink-400">المفردات المتقنة (صندوق ٤+)</p>
-            <p className="font-display mt-1 text-2xl font-black text-lapis-900">{mastered}<span className="text-sm text-ink-400"> / {allVocab.length} كلمة</span></p>
+            <p className="text-[12px] font-bold text-ink-400">البطاقات المتقنة (صندوق ٤+)</p>
+            <p className="font-display mt-1 text-2xl font-black text-lapis-900">{mastered}<span className="text-sm text-ink-400"> / {allBooksVocab.length} بطاقة</span></p>
           </div>
         </div>
       </section>
@@ -103,17 +112,22 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
           <p className="font-display mt-1 text-xl font-black text-cream-50">{quizTop?.best ? `${quizTop.best.score}/${quizTop.best.total}` : '— لم يُجرَ بعد'}</p>
           {quizTop?.best && <p className="text-[11.5px] text-lapis-100/60">{fmtDate(quizTop.best.at)}</p>}
         </div>
-        <div className="rounded-3xl bg-lapis-900/70 p-4 ring-1 ring-cream-100/15">
-          <p className="text-[12px] font-bold text-lapis-100/70">أفضل امتحان وزاري شامل</p>
-          <p className="font-display mt-1 text-xl font-black text-cream-50">{capBest ? `${capBest.score}/${capBest.total}` : '— لم يُجرَ بعد'}</p>
-          {capBest && <p className="text-[11.5px] text-lapis-100/60">{fmtDate(capBest.at)}</p>}
-        </div>
+        {books.map((b) => {
+          const cb = state.examBest[b.capstone.id];
+          return (
+            <div key={b.subjectId} className="rounded-3xl bg-lapis-900/70 p-4 ring-1 ring-cream-100/15">
+              <p className="text-[12px] font-bold text-lapis-100/70">أفضل نتيجة — {b.capstone.titleAr}</p>
+              <p className="font-display mt-1 text-xl font-black text-cream-50">{cb ? `${cb.score}/${cb.total}` : '— لم يُجرَ بعد'}</p>
+              {cb && <p className="text-[11.5px] text-lapis-100/60">{fmtDate(cb.at)}</p>}
+            </div>
+          );
+        })}
       </section>
 
       <section className="rise rise-3 mt-4 rounded-3xl bg-cream-50 p-5 shadow-md">
-        <h3 className="font-display text-[15.5px] font-extrabold text-lapis-900">نتائج الوحدات</h3>
+        <h3 className="font-display text-[15.5px] font-extrabold text-lapis-900">نتائج الوحدات والفصول</h3>
         <div className="mt-3 divide-y divide-cream-300/70">
-          {allUnits.map((u) => {
+          {allBooksUnits.map((u) => {
             const qb = state.quizBest[u.id];
             const eb = state.examBest[u.id];
             return (
@@ -133,9 +147,11 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
 
       <section className="rise rise-4 mt-4 rounded-3xl bg-cream-50 p-5 shadow-md">
         <h3 className="font-display text-[15.5px] font-extrabold text-lapis-900">عن المحتوى والمصادر</h3>
-        <p className="mt-2 text-[13.5px] leading-7 text-ink-600">{ABOUT_SOURCES}</p>
+        {books.map((b) => (
+          <p key={b.subjectId} className="mt-2 text-[13.5px] leading-7 text-ink-600">{b.aboutSources}</p>
+        ))}
         <p className="mt-3 text-[12.5px] leading-6 text-ink-400">
-          أكاديمية أوروك هي المشروع الثالث في ثلاثية أوروك مفتوحة المصدر (بعد Uruk Cut وUruk OS). المرحلة الثانية: كتاب الإنجليزية كاملًا — ٢٠٢٦.
+          أكاديمية أوروك هي المشروع الثالث في ثلاثية أوروك مفتوحة المصدر (بعد Uruk Cut وUruk OS). المرحلة الثانية: كتاب الإنجليزية كاملًا، والمرحلة «أ»: محرك الأسئلة المقالية والحلول المفصّلة وكتاب الرياضيات كاملًا — ٢٠٢٦.
         </p>
       </section>
 

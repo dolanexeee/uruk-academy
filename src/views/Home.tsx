@@ -1,4 +1,4 @@
-import { subjects, contentUnits, allUnits } from '../content/curriculum';
+import { subjects, books, bookBySubjectId, allBooksUnits } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
 import { streak } from '../lib/store';
 import { ProgressRing, Chip, pct, ZigguratMark } from '../components/ui';
@@ -7,18 +7,28 @@ import { IconFlame, IconCards, IconClipboard, IconLock, IconChevronEnd } from '.
 interface Props {
   state: AcademyState;
   dueCount: number;
-  onOpenSubject: () => void;
+  onOpenSubject: (subjectId: string) => void;
   onOpenCards: () => void;
   onOpenExam: () => void;
   onOpenProfile: () => void;
 }
 
 export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOpenExam, onOpenProfile }: Props) {
-  const lessonsTotal = contentUnits.reduce((a, u) => a + u.lessons.length, 0);
-  const lessonsDone = contentUnits.reduce((a, u) => a + u.lessons.filter((l) => state.lessonsDone[l.id]).length, 0);
-  const overall = lessonsDone / lessonsTotal;
+  const bookProgress = (subjectId: string) => {
+    const b = bookBySubjectId(subjectId);
+    if (!b) return { done: 0, total: 0 };
+    const total = b.contentUnits.reduce((a, u) => a + u.lessons.length, 0);
+    const done = b.contentUnits.reduce((a, u) => a + u.lessons.filter((l) => state.lessonsDone[l.id]).length, 0);
+    return { done, total };
+  };
+  const lessonsTotal = books.reduce((a, b) => a + b.contentUnits.reduce((x, u) => x + u.lessons.length, 0), 0);
+  const lessonsDone = books.reduce(
+    (a, b) => a + b.contentUnits.reduce((x, u) => x + u.lessons.filter((l) => state.lessonsDone[l.id]).length, 0),
+    0,
+  );
+  const overall = lessonsTotal > 0 ? lessonsDone / lessonsTotal : 0;
   const days = streak(state);
-  const quizBests = allUnits.map((u) => state.quizBest[u.id]).filter(Boolean);
+  const quizBests = allBooksUnits.map((u) => state.quizBest[u.id]).filter(Boolean);
   const quizBest = quizBests.sort((a, b) => b!.score / Math.max(1, b!.total) - a!.score / Math.max(1, a!.total))[0];
   const greet = state.name ? `أهلًا بعودتك، ${state.name}` : 'أهلًا بك في أكاديمية أوروك';
 
@@ -53,9 +63,9 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
               <span className="font-display text-sm font-extrabold text-cream-50">{pct(lessonsDone, lessonsTotal)}٪</span>
             </ProgressRing>
             <div className="min-w-0 flex-1">
-              <p className="font-display text-[15px] font-bold text-cream-50">تقدّمك في كتاب الإنجليزية</p>
+              <p className="font-display text-[15px] font-bold text-cream-50">تقدّمك في الأكاديمية</p>
               <p className="mt-0.5 text-[13px] text-lapis-100">
-                أنجزت {lessonsDone} من {lessonsTotal} درسًا في {allUnits.length} وحدات
+                أنجزت {lessonsDone} من {lessonsTotal} درسًا في كتابي الإنجليزية والرياضيات
                 {quizBest ? ` · أفضل اختبار: ${quizBest.score}/${quizBest.total}` : ''}
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -85,7 +95,7 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
           </span>
           <p className="font-display mt-3 text-[15px] font-extrabold text-lapis-900">بطاقات المراجعة</p>
           <p className="mt-1 text-[12.5px] leading-5 text-ink-600">
-            {dueCount > 0 ? `${dueCount} كلمة مستحقة اليوم بنظام لايتنر` : 'لا كلمات مستحقة — أحسنت!'}
+            {dueCount > 0 ? `${dueCount} بطاقة مستحقة اليوم بنظام لايتنر` : 'لا بطاقات مستحقة — أحسنت!'}
           </p>
         </button>
         <button
@@ -96,7 +106,7 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
             <IconClipboard size={22} />
           </span>
           <p className="font-display mt-3 text-[15px] font-extrabold text-cream-50">الامتحان الوزاري الشامل</p>
-          <p className="mt-1 text-[12.5px] leading-5 text-lapis-100">محاكاة الكتاب كله: مؤقّت ودرجات وتقرير لكل وحدة</p>
+          <p className="mt-1 text-[12.5px] leading-5 text-lapis-100">محاكاة كتاب الإنجليزية كله: مؤقّت ودرجات وتقرير لكل وحدة</p>
         </button>
       </section>
 
@@ -108,12 +118,13 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
         </div>
 
         <div className="mt-3 grid gap-3 lg:grid-cols-2 lg:gap-4">
-          {subjects.map((s, i) =>
-            s.status === 'live' ? (
+          {subjects.map((s, i) => {
+            const bp = s.status === 'live' ? bookProgress(s.id) : { done: 0, total: 0 };
+            return s.status === 'live' ? (
               <button
                 key={s.id}
-                onClick={onOpenSubject}
-                className={`press rise rise-${Math.min(i + 2, 5)} w-full rounded-3xl border border-gold-500/70 bg-cream-50 p-5 text-start shadow-lg lg:col-span-2`}
+                onClick={() => onOpenSubject(s.id)}
+                className={`press rise rise-${Math.min(i + 2, 5)} w-full rounded-3xl border border-gold-500/70 bg-cream-50 p-5 text-start shadow-lg`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -127,10 +138,10 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-lapis-100">
                     <div
                       className="h-full rounded-full bg-gradient-to-l from-gold-500 to-gold-400 transition-all duration-700"
-                      style={{ width: `${pct(lessonsDone, lessonsTotal)}%` }}
+                      style={{ width: `${pct(bp.done, bp.total)}%` }}
                     />
                   </div>
-                  <span className="text-[12px] font-bold text-lapis-700">{lessonsDone}/{lessonsTotal} درسًا · الكتاب كامل</span>
+                  <span className="text-[12px] font-bold text-lapis-700">{bp.done}/{bp.total} درسًا · الكتاب كامل</span>
                 </div>
               </button>
             ) : (
@@ -148,13 +159,13 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
                 </div>
                 <Chip tone="gold">قريبًا</Chip>
               </div>
-            ),
-          )}
+            );
+          })}
         </div>
       </section>
 
       <p className="rise rise-5 mt-6 text-center text-[12px] leading-5 text-lapis-100/60">
-        أكاديمية أوروك — مشروع تعليمي مفتوح المصدر. كتاب الإنجليزية للسادس الإعدادي مكتمل هنا: ثماني وحدات وامتحان وزاري شامل.
+        أكاديمية أوروك — مشروع تعليمي مفتوح المصدر. كتابا الإنجليزية والرياضيات للسادس الإعدادي مكتملان هنا، وبقية المواد تُبنى تباعًا.
       </p>
     </div>
   );

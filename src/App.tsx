@@ -18,13 +18,22 @@ import {
   dueVocabIds,
   type AcademyState,
 } from './lib/store';
-import { allVocab, capstone, deckFor, examSpecForUnit, unitById } from './content/curriculum';
+import {
+  allBooksVocab,
+  bookBySubjectId,
+  bookOfCapstone,
+  bookOfUnit,
+  capstone,
+  deckFor,
+  examSpecForUnit,
+  unitById,
+} from './content/curriculum';
 import { ZigguratMark } from './components/ui';
 import { IconHome, IconBook, IconCards, IconUser } from './components/icons';
 
 type Route =
   | { name: 'home' }
-  | { name: 'subject' }
+  | { name: 'subject'; subjectId: string }
   | { name: 'lesson'; unitId: string; id: string }
   | { name: 'quiz'; unitId: string }
   | { name: 'cards'; deckId: string }
@@ -36,6 +45,8 @@ export default function App() {
   const [route, setRoute] = useState<Route>({ name: 'home' });
   /** Which unit the subject accordion opens on (last unit the student touched). */
   const [subjectFocus, setSubjectFocus] = useState(1);
+  /** The subject the bottom-nav «المنهج» returns to. */
+  const [lastSubjectId, setLastSubjectId] = useState('en6');
 
   function update(fn: (s: AcademyState) => void) {
     setState((prev) => {
@@ -56,7 +67,7 @@ export default function App() {
   }
 
   const dueCount = useMemo(
-    () => dueVocabIds(state, allVocab.map((v) => v.id)).length,
+    () => dueVocabIds(state, allBooksVocab.map((v) => v.id)).length,
     [state],
   );
 
@@ -65,11 +76,21 @@ export default function App() {
     window.scrollTo({ top: 0 });
   };
 
+  const goSubject = (subjectId: string) => {
+    setLastSubjectId(subjectId);
+    go({ name: 'subject', subjectId });
+  };
+
   const openUnit = (unitId: string, r: Route) => {
     const u = unitById(unitId);
     if (u) setSubjectFocus(u.number);
+    const b = bookOfUnit(unitId);
+    if (b) setLastSubjectId(b.subjectId);
     go(r);
   };
+
+  /** Back target for anything inside a unit: that unit's subject page. */
+  const backToUnitSubject = (unitId: string) => goSubject(bookOfUnit(unitId)?.subjectId ?? 'en6');
 
   const navBtn = (active: boolean) =>
     `press flex flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[11px] font-bold ${
@@ -79,14 +100,21 @@ export default function App() {
   const quizUnit = route.name === 'quiz' ? unitById(route.unitId) : undefined;
   const examSpec =
     route.name === 'exam'
-      ? route.examId === capstone.id
-        ? capstone
-        : (() => {
-            const u = unitById(route.examId);
-            return u ? examSpecForUnit(u) : capstone;
-          })()
+      ? (() => {
+          const cap = bookOfCapstone(route.examId);
+          if (cap) return cap.capstone;
+          const u = unitById(route.examId);
+          return u ? examSpecForUnit(u) : capstone;
+        })()
       : null;
   const lessonUnit = route.name === 'lesson' ? unitById(route.unitId) : undefined;
+  const subjectBook = route.name === 'subject' ? bookBySubjectId(route.subjectId) : undefined;
+  /** Where an exam's back button lands: its book's subject page. */
+  const examBackSubject = (examId: string): string => {
+    const cap = bookOfCapstone(examId);
+    if (cap) return cap.subjectId;
+    return bookOfUnit(examId)?.subjectId ?? 'en6';
+  };
 
   return (
     <div className="min-h-dvh bg-lapis-950 bg-[radial-gradient(120%_60%_at_50%_0%,#123064_0%,#0a1c40_55%,#050f26_100%)]">
@@ -94,15 +122,16 @@ export default function App() {
         <Home
           state={state}
           dueCount={dueCount}
-          onOpenSubject={() => go({ name: 'subject' })}
+          onOpenSubject={(subjectId) => goSubject(subjectId)}
           onOpenCards={() => go({ name: 'cards', deckId: 'all' })}
           onOpenExam={() => go({ name: 'exam', examId: capstone.id })}
           onOpenProfile={() => go({ name: 'profile' })}
         />
       )}
-      {route.name === 'subject' && (
+      {route.name === 'subject' && subjectBook && (
         <Subject
           state={state}
+          book={subjectBook}
           initialOpen={subjectFocus}
           onBack={() => go({ name: 'home' })}
           onOpenLesson={(unitId, id) => openUnit(unitId, { name: 'lesson', unitId, id })}
@@ -111,6 +140,8 @@ export default function App() {
           onOpenExam={(examId) => {
             const u = unitById(examId);
             if (u) setSubjectFocus(u.number);
+            const cap = bookOfCapstone(examId);
+            if (cap) setLastSubjectId(cap.subjectId);
             go({ name: 'exam', examId });
           }}
         />
@@ -121,7 +152,7 @@ export default function App() {
           state={state}
           unit={lessonUnit}
           lessonId={route.id}
-          onBack={() => go({ name: 'subject' })}
+          onBack={() => backToUnitSubject(lessonUnit.id)}
           onComplete={(id) => update((s) => storeCompleteLesson(s, id))}
           onOpenCards={() => go({ name: 'cards', deckId: lessonUnit.id })}
         />
@@ -130,10 +161,10 @@ export default function App() {
         <Quiz
           key={quizUnit.id}
           questions={quizUnit.quiz}
-          finishTitle={quizUnit.kind === 'revision' ? 'نتيجتك في اختبار المراجعة' : 'نتيجتك في اختبار الوحدة'}
-          backLabel={quizUnit.kind === 'revision' ? 'العودة إلى وحدة المراجعة' : 'العودة إلى الوحدة'}
+          finishTitle={quizUnit.kind === 'revision' ? 'نتيجتك في اختبار المراجعة' : `نتيجتك في اختبار ${bookOfUnit(quizUnit.id)?.unitWord ?? 'الوحدة'}`}
+          backLabel={quizUnit.kind === 'revision' ? 'العودة إلى وحدة المراجعة' : `العودة إلى ${bookOfUnit(quizUnit.id)?.unitWord ?? 'الوحدة'}`}
           examLabel={quizUnit.kind === 'revision' ? 'جرّب امتحان نصف الكتاب' : 'جرّب الامتحان الوزاري'}
-          onBack={() => go({ name: 'subject' })}
+          onBack={() => backToUnitSubject(quizUnit.id)}
           onFinish={(score, total) => update((s) => recordQuiz(s, quizUnit.id, score, total))}
           onOpenExam={() => go({ name: 'exam', examId: quizUnit.id })}
         />
@@ -143,7 +174,7 @@ export default function App() {
           key={route.deckId}
           state={state}
           deck={deckFor(route.deckId)}
-          onBack={() => go({ name: 'subject' })}
+          onBack={() => goSubject(route.deckId === 'all' ? lastSubjectId : (bookOfUnit(route.deckId)?.subjectId ?? lastSubjectId))}
           onEncounter={(ids) => update((s) => encounterVocab(s, ids))}
           onAnswer={(id, correct) => update((s) => srsAnswer(s, id, correct))}
         />
@@ -153,7 +184,7 @@ export default function App() {
           key={examSpec.id}
           state={state}
           spec={examSpec}
-          onBack={() => go({ name: 'subject' })}
+          onBack={() => goSubject(examBackSubject(examSpec.id))}
           onFinish={(score, total, perGroup) => update((s) => recordExam(s, examSpec.id, score, total, perGroup))}
         />
       )}
@@ -173,7 +204,7 @@ export default function App() {
           <button className={navBtn(route.name === 'home')} onClick={() => go({ name: 'home' })}>
             <IconHome size={21} /> الرئيسية
           </button>
-          <button className={navBtn(route.name === 'subject' || route.name === 'lesson')} onClick={() => go({ name: 'subject' })}>
+          <button className={navBtn(route.name === 'subject' || route.name === 'lesson')} onClick={() => goSubject(lastSubjectId)}>
             <IconBook size={21} /> المنهج
           </button>
           <span className="flex items-center px-1">

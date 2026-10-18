@@ -1,6 +1,6 @@
 import { useState, type ComponentType } from 'react';
-import { subjects, allUnits, contentUnits, allVocab, capstone, deckFor } from '../content/curriculum';
-import type { Unit } from '../content/types';
+import { subjects, deckFor } from '../content/curriculum';
+import type { Book, Unit } from '../content/types';
 import type { AcademyState } from '../lib/store';
 import { Chip, pct } from '../components/ui';
 import {
@@ -20,6 +20,7 @@ import {
 
 interface Props {
   state: AcademyState;
+  book: Book;
   initialOpen: number;
   onBack: () => void;
   onOpenLesson: (unitId: string, lessonId: string) => void;
@@ -33,12 +34,16 @@ const kindMeta: Record<string, { Icon: ComponentType<{ size?: number; className?
   grammar: { Icon: IconPen, label: 'قواعد' },
   vocab: { Icon: IconType, label: 'مفردات' },
   explain: { Icon: IconBulb, label: 'شرح' },
+  solution: { Icon: IconPen, label: 'أمثلة محلولة' },
+  laws: { Icon: IconBook, label: 'قوانين وخلاصة' },
+  practice: { Icon: IconBulb, label: 'تمارين' },
 };
 
-const totalLessons = contentUnits.reduce((a, u) => a + u.lessons.length, 0);
-
-export default function Subject({ state, initialOpen, onBack, onOpenLesson, onOpenQuiz, onOpenCards, onOpenExam }: Props) {
-  const subject = subjects[0];
+export default function Subject({ state, book, initialOpen, onBack, onOpenLesson, onOpenQuiz, onOpenCards, onOpenExam }: Props) {
+  const subject = subjects.find((s) => s.id === book.subjectId) ?? subjects[0];
+  const capstone = book.capstone;
+  const totalLessons = book.contentUnits.reduce((a, u) => a + u.lessons.length, 0);
+  const vocabCount = book.contentUnits.reduce((a, u) => a + u.vocab.length, 0);
   const [open, setOpen] = useState<number>(initialOpen);
   const capBest = state.examBest[capstone.id];
   const capMarks = capstone.questions.reduce((a, q) => a + q.marks, 0);
@@ -59,19 +64,20 @@ export default function Subject({ state, initialOpen, onBack, onOpenLesson, onOp
         </div>
         <p className="mt-2 text-[13.5px] leading-6 text-ink-600">{subject.blurb}</p>
         <div className="mt-3 flex flex-wrap gap-2">
-          <Chip tone="lapis">{allUnits.length} وحدات</Chip>
+          <Chip tone="lapis">{book.units.length} {book.unitsPlural}</Chip>
           <Chip tone="lapis">{totalLessons} درسًا</Chip>
-          <Chip tone="lapis">{allVocab.length} كلمة مفردات</Chip>
+          <Chip tone="lapis">{vocabCount} {book.vocabSuffix}</Chip>
           <Chip tone="teal">الكتاب مكتمل</Chip>
         </div>
       </header>
 
       {/* units accordion */}
       <div className="mt-5 space-y-3">
-        {allUnits.map((u) => (
+        {book.units.map((u) => (
           <UnitCard
             key={u.id}
             unit={u}
+            book={book}
             state={state}
             open={open === u.number}
             onToggle={() => setOpen(open === u.number ? 0 : u.number)}
@@ -91,12 +97,9 @@ export default function Subject({ state, initialOpen, onBack, onOpenLesson, onOp
               <IconTrophy size={24} />
             </span>
             <div className="min-w-0 flex-1">
-              <h3 className="font-display text-[18px] font-black text-cream-50">الامتحان الوزاري الشامل</h3>
-              <p className="en mt-0.5 text-[11.5px] font-semibold text-lapis-100/80" dir="ltr">Full-Book Mock Exam</p>
-              <p className="mt-2 text-[13px] leading-6 text-lapis-100/90">
-                محاكاة كاملة للورقة الوزارية من الكتاب كله: قراءة وقواعد ومفردات من كل الوحدات في امتحان واحد —
-                والتقرير النهائي يفصّل نتيجتك في كل وحدة لتعرف موضع ضعفك بالضبط.
-              </p>
+              <h3 className="font-display text-[18px] font-black text-cream-50">{capstone.titleAr}</h3>
+              <p className="en mt-0.5 text-[11.5px] font-semibold text-lapis-100/80" dir="ltr">{capstone.subtitleEn}</p>
+              <p className="mt-2 text-[13px] leading-6 text-lapis-100/90">{book.capstoneBlurb}</p>
             </div>
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -120,6 +123,7 @@ export default function Subject({ state, initialOpen, onBack, onOpenLesson, onOp
 
 function UnitCard({
   unit: u,
+  book,
   state,
   open,
   onToggle,
@@ -129,6 +133,7 @@ function UnitCard({
   onOpenExam,
 }: {
   unit: Unit;
+  book: Book;
   state: AcademyState;
   open: boolean;
   onToggle: () => void;
@@ -159,7 +164,7 @@ function UnitCard({
             <span className="font-display block truncate text-[17px] font-extrabold">{u.titleAr}</span>
             {u.titleEn && <span className="en mt-0.5 block truncate text-[12px] text-lapis-100" dir="ltr">{u.titleEn}</span>}
           </span>
-          <Chip tone="gold">{isRev ? 'مراجعة' : `الوحدة ${u.number}`}</Chip>
+          <Chip tone="gold">{isRev ? 'مراجعة' : `${book.unitWord} ${u.number}`}</Chip>
           <span className={`shrink-0 text-gold-300 transition-transform duration-300 ${open ? 'rotate-90' : ''}`}>
             <IconChevronEnd size={18} />
           </span>
@@ -215,13 +220,13 @@ function UnitCard({
           <div className="grid grid-cols-3 gap-2 border-t border-cream-300/70 bg-cream-100/50 p-3">
             <button onClick={() => onOpenQuiz(u.id)} className="press rounded-2xl bg-lapis-700 px-2 py-3 text-center text-cream-50 shadow">
               <span className="flex justify-center text-gold-300"><IconQuizMark size={21} /></span>
-              <span className="font-display mt-1 block text-[13px] font-bold">اختبار الوحدة</span>
+              <span className="font-display mt-1 block text-[13px] font-bold">اختبار {book.unitWord}</span>
               <span className="block text-[11px] text-lapis-100">{quizBest ? `الأفضل: ${quizBest.score}/${quizBest.total}` : `${u.quiz.length} سؤالًا مع الشرح`}</span>
             </button>
             <button onClick={() => onOpenCards(u.id)} className="press rounded-2xl bg-cream-50 px-2 py-3 text-center text-lapis-700 shadow ring-1 ring-cream-300">
               <span className="flex justify-center"><IconCards size={21} /></span>
               <span className="font-display mt-1 block text-[13px] font-bold text-lapis-900">البطاقات</span>
-              <span className="block text-[11px] text-ink-600">{u.vocab.length} كلمة · لايتنر</span>
+              <span className="block text-[11px] text-ink-600">{u.vocab.length} {book.cardNoun} · لايتنر</span>
             </button>
             <button onClick={() => onOpenExam(u.id)} className="press rounded-2xl bg-gold-500 px-2 py-3 text-center text-lapis-950 shadow">
               <span className="flex justify-center"><IconClipboard size={21} /></span>
@@ -241,7 +246,7 @@ function UnitCard({
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Chip tone="lapis">اختبار مراجعة: {u.quiz.length} سؤالًا</Chip>
-            <Chip tone="lapis">بطاقات مجمّعة: {deckCount} كلمة</Chip>
+            <Chip tone="lapis">بطاقات مجمّعة: {deckCount} {book.cardNoun}</Chip>
             <Chip tone="lapis">نصف الكتاب: {u.exam.length} سؤالًا · {examMarks} درجة · {u.examMinutes} دقيقة</Chip>
           </div>
           <div className="mt-4 grid grid-cols-3 gap-2">
@@ -253,7 +258,7 @@ function UnitCard({
             <button onClick={() => onOpenCards(u.id)} className="press rounded-2xl bg-cream-50 px-2 py-3 text-center text-lapis-700 shadow ring-1 ring-cream-300">
               <span className="flex justify-center"><IconCards size={21} /></span>
               <span className="font-display mt-1 block text-[13px] font-bold text-lapis-900">بطاقات المراجعة</span>
-              <span className="block text-[11px] text-ink-600">{deckCount} كلمة · لايتنر</span>
+              <span className="block text-[11px] text-ink-600">{deckCount} {book.cardNoun} · لايتنر</span>
             </button>
             <button onClick={() => onOpenExam(u.id)} className="press rounded-2xl bg-gold-500 px-2 py-3 text-center text-lapis-950 shadow">
               <span className="flex justify-center"><IconClipboard size={21} /></span>

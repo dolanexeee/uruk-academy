@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import type { QuizQuestion } from '../content/types';
 import { Chip } from '../components/ui';
+import MathText from '../components/MathText';
+import { QuizWritten } from '../components/Written';
 import {
   IconCheck,
   IconX,
@@ -24,7 +26,14 @@ interface Props {
   onOpenExam: () => void;
 }
 
-const skillLabel: Record<string, string> = { reading: 'استيعاب قراءة', grammar: 'قواعد', vocab: 'مفردات' };
+const skillLabel: Record<string, string> = {
+  reading: 'استيعاب قراءة',
+  grammar: 'قواعد',
+  vocab: 'مفردات',
+  concept: 'مفاهيم',
+  compute: 'مهارات حسابية',
+  apply: 'تطبيقات',
+};
 
 export default function Quiz({ questions: pool, finishTitle, backLabel, examLabel, onBack, onFinish, onOpenExam }: Props) {
   const questions = useMemo(() => pool, [pool]);
@@ -32,17 +41,22 @@ export default function Quiz({ questions: pool, finishTitle, backLabel, examLabe
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
+  /** Written questions: id -> self-marked earned marks, once confirmed. */
+  const [writtenDone, setWrittenDone] = useState<Record<string, number>>({});
 
   const q = questions[idx];
   const isLast = idx === questions.length - 1;
+  const isWritten = q.type === 'written';
+  const answered = isWritten ? writtenDone[q.id] !== undefined : picked !== null;
 
   function pick(i: number) {
-    if (picked !== null) return;
+    if (picked !== null || isWritten) return;
     setPicked(i);
     if (i === q.answer) setScore((s) => s + q.marks);
   }
 
   function next() {
+    if (!answered) return;
     if (isLast) {
       setFinished(true);
       onFinish(score, questions.reduce((a, x) => a + x.marks, 0));
@@ -57,6 +71,7 @@ export default function Quiz({ questions: pool, finishTitle, backLabel, examLabe
     setPicked(null);
     setScore(0);
     setFinished(false);
+    setWrittenDone({});
   }
 
   if (finished) {
@@ -112,16 +127,28 @@ export default function Quiz({ questions: pool, finishTitle, backLabel, examLabe
             </span>
           </div>
           <div className="mt-3 h-2 overflow-hidden rounded-full bg-lapis-100">
-            <div className="h-full bg-gradient-to-l from-gold-500 to-gold-400 transition-all duration-500" style={{ width: `${((idx + (picked !== null ? 1 : 0)) / questions.length) * 100}%` }} />
+            <div className="h-full bg-gradient-to-l from-gold-500 to-gold-400 transition-all duration-500" style={{ width: `${((idx + (answered ? 1 : 0)) / questions.length) * 100}%` }} />
           </div>
 
-          <h3 className="mt-4 text-[16.5px] font-bold leading-8 text-ink-900">{q.q}</h3>
+          <h3 className="mt-4 text-[16.5px] font-bold leading-8 text-ink-900"><MathText text={q.q} /></h3>
           {q.qEn && (
             <p className="en paper-quote mt-1 rounded-2xl px-4 py-3 text-[15.5px] font-semibold leading-6 text-lapis-900" dir="ltr">
-              {q.qEn}
+              <MathText text={q.qEn} />
             </p>
           )}
 
+          {isWritten ? (
+            <div className="mt-4">
+              <QuizWritten
+                key={q.id}
+                q={q}
+                onComplete={(earned) => {
+                  setWrittenDone((w) => ({ ...w, [q.id]: earned }));
+                  setScore((s) => s + earned);
+                }}
+              />
+            </div>
+          ) : (
           <div className="mt-4 grid gap-2">
             {q.options.map((opt, i) => {
               const isPicked = picked === i;
@@ -142,7 +169,7 @@ export default function Quiz({ questions: pool, finishTitle, backLabel, examLabe
                   className={`press flex w-full items-center gap-2 rounded-2xl border-2 px-4 py-3 text-start text-[15px] font-semibold leading-6 ${cls} ${isEn ? 'en' : ''}`}
                   dir={isEn ? 'ltr' : 'rtl'}
                 >
-                  <span className="flex-1">{opt}</span>
+                  <span className="flex-1"><MathText text={opt} /></span>
                   {picked !== null && isAnswer && (
                     <span className="shrink-0 text-tealdeep-600"><IconCheck size={18} /></span>
                   )}
@@ -153,15 +180,16 @@ export default function Quiz({ questions: pool, finishTitle, backLabel, examLabe
               );
             })}
           </div>
+          )}
 
-          {picked !== null && (
+          {picked !== null && !isWritten && (
             <div className={`pop mt-4 flex gap-2.5 rounded-2xl px-4 py-3 text-[14px] leading-7 ${correct ? 'bg-tealdeep-500/10 text-tealdeep-800' : 'bg-gold-200/50 text-gold-700'}`}>
               <span className={`mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${correct ? 'bg-tealdeep-500 text-white' : 'bg-gold-500 text-lapis-950'}`}>
                 {correct ? <IconCheck size={14} /> : <IconX size={14} />}
               </span>
               <span>
                 <span className="font-display font-extrabold">{correct ? 'إجابة صحيحة! ' : 'ليست الإجابة الصحيحة. '}</span>
-                {q.explain}
+                <MathText text={q.explain} />
               </span>
             </div>
           )}
@@ -170,7 +198,7 @@ export default function Quiz({ questions: pool, finishTitle, backLabel, examLabe
             <span className="text-[13px] font-bold text-ink-400">درجتك حتى الآن: {score}</span>
             <button
               onClick={next}
-              disabled={picked === null}
+              disabled={!answered}
               data-testid="quiz-next"
               className="press inline-flex items-center gap-1.5 rounded-full bg-lapis-700 px-6 py-2.5 font-display text-[14.5px] font-bold text-cream-50 shadow disabled:cursor-not-allowed disabled:opacity-40"
             >

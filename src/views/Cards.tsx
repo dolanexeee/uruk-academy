@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { VocabWord } from '../content/types';
 import type { AcademyState } from '../lib/store';
 import { dueVocabIds, todayStr } from '../lib/store';
+import MathText from '../components/MathText';
 import { IconCheck, IconX, IconRefresh, IconIshtarStar, IconChevronStart } from '../components/icons';
 
 const BOX_COLORS = ['#1D56B4', '#2F6FD0', '#C99A5F', '#D9A441', '#F6D67C'];
@@ -10,6 +11,8 @@ export interface CardDeck {
   id: string;
   title: string;
   vocab: VocabWord[];
+  /** Singular noun for one card item: 'كلمة' (English) | 'قانون' (Math). */
+  noun?: string;
 }
 
 interface Props {
@@ -81,7 +84,7 @@ export default function Cards({ state, deck, onBack, onEncounter, onAnswer }: Pr
           <h2 className="font-display text-[22px] font-black text-cream-50">بطاقات المراجعة</h2>
           <p className="mt-1.5">
             <span className="inline-flex rounded-full bg-gold-500/15 px-3 py-0.5 text-[12px] font-bold text-gold-300 ring-1 ring-gold-300/25">
-              {deck.title} · {deck.vocab.length} كلمة
+              {deck.title} · {deck.vocab.length} {deck.noun ?? 'كلمة'}
             </span>
           </p>
           <p className="mt-1.5 text-[13px] text-lapis-100/85">
@@ -154,14 +157,19 @@ export default function Cards({ state, deck, onBack, onEncounter, onAnswer }: Pr
               aria-label="بطاقة مفردات — اضغط للقلب"
             >
               <span className="flip-face flex flex-col items-center justify-center rounded-3xl border border-gold-500/60 bg-cream-50 p-6 shadow-xl">
-                <span className="en font-display text-4xl font-black text-lapis-900" dir="ltr">{word.word}</span>
+                <span
+                  className={`en font-display font-black text-lapis-900 ${word.word.includes('$') ? 'text-[24px] leading-relaxed' : 'text-4xl'}`}
+                  dir="ltr"
+                >
+                  <MathText text={word.word} />
+                </span>
                 <span className="paper-quote mt-2 rounded-full px-3 py-0.5 text-[12px] font-bold text-lapis-700">{word.pos}</span>
                 <span className="mt-6 text-[12.5px] text-ink-400">اضغط البطاقة لترى المعنى</span>
               </span>
               <span className="flip-face flip-back flex flex-col items-center justify-center rounded-3xl border border-gold-300/25 bg-gradient-to-b from-lapis-700 to-lapis-900 p-6 text-center shadow-xl">
-                <span className="text-[19px] font-bold leading-8 text-cream-50">{word.meaning}</span>
-                <span className="en mt-4 text-[14px] leading-6 text-lapis-100" dir="ltr">{word.example}</span>
-                <span className="mt-1 text-[12.5px] leading-5 text-lapis-100/75">{word.exampleAr}</span>
+                <span className="text-[19px] font-bold leading-8 text-cream-50"><MathText text={word.meaning} /></span>
+                <span className="en mt-4 text-[14px] leading-6 text-lapis-100" dir="ltr"><MathText text={word.example} /></span>
+                <span className="mt-1 text-[12.5px] leading-5 text-lapis-100/75"><MathText text={word.exampleAr} /></span>
               </span>
             </button>
           </div>

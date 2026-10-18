@@ -1,7 +1,67 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { LessonSection, Unit, VocabWord } from '../content/types';
+import { bookOfUnit } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
-import { IconCheck, IconCards, IconChevronStart, IconIshtarStar, WedgeMark } from '../components/icons';
+import MathText from '../components/MathText';
+import { IconCheck, IconCards, IconChevronStart, IconChevronEnd, IconIshtarStar, WedgeMark } from '../components/icons';
+
+/** A worked solution: the problem, then steps revealed one at a time —
+    each with its formula and a one-line justification — and the final
+    answer highlighted only once every step is on screen. */
+function SolutionBody({ s }: { s: LessonSection }) {
+  const steps = s.steps ?? [];
+  const [revealed, setRevealed] = useState(0);
+  const allShown = revealed >= steps.length;
+  return (
+    <div className="mt-3">
+      {s.problem && (
+        <div className="paper-quote rounded-2xl px-4 py-3">
+          <p className="text-[12px] font-black text-lapis-700">المسألة</p>
+          <div className="mt-1 text-[15px] font-bold leading-8 text-lapis-900">
+            <MathText text={s.problem} />
+          </div>
+        </div>
+      )}
+      <div className="mt-3 space-y-2.5">
+        {steps.slice(0, revealed).map((st, i) => (
+          <div key={i} className="pop flex gap-3 rounded-2xl bg-white/70 px-4 py-3 ring-1 ring-cream-300">
+            <span className="font-display flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-lapis-700 text-[12.5px] font-black text-gold-300">
+              {i + 1}
+            </span>
+            <div className="min-w-0 flex-1">
+              {st.formula && (
+                <div className="text-[15px] font-semibold leading-7 text-lapis-900">
+                  <MathText text={st.formula} />
+                </div>
+              )}
+              <p className="text-[13.5px] leading-6 text-ink-600">
+                <MathText text={st.note} />
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+      {!allShown ? (
+        <button
+          onClick={() => setRevealed((r) => Math.min(steps.length, r + 1))}
+          data-testid="solution-next"
+          className="press font-display mt-3 inline-flex items-center gap-1.5 rounded-full bg-lapis-700 px-5 py-2.5 text-[14px] font-bold text-cream-50 shadow"
+        >
+          {revealed === 0 ? 'ابدأ الحل خطوة بخطوة' : `الخطوة التالية (${revealed + 1} من ${steps.length})`} <IconChevronEnd size={15} />
+        </button>
+      ) : (
+        s.finalAnswer && (
+          <div data-testid="solution-final" className="pop mt-3 rounded-2xl border-2 border-gold-500/60 bg-gold-200/40 px-4 py-3">
+            <p className="text-[12px] font-black text-gold-700">الإجابة النهائية</p>
+            <div className="mt-1 text-[15.5px] font-bold leading-8 text-lapis-900">
+              <MathText text={s.finalAnswer} />
+            </div>
+          </div>
+        )
+      )}
+    </div>
+  );
+}
 
 interface Props {
   state: AcademyState;
@@ -24,14 +84,14 @@ function Section({ s, index, vocab }: { s: LessonSection; index: number; vocab: 
         {s.title}
       </h3>
       {s.paragraphs?.map((p, i) => (
-        <p key={i} className="mt-2.5 text-[15px] leading-8 text-ink-900/90">{p}</p>
+        <p key={i} className="mt-2.5 text-[15px] leading-8 text-ink-900/90"><MathText text={p} /></p>
       ))}
       {s.bullets && (
         <ul className="mt-3 space-y-2">
           {s.bullets.map((b, i) => (
             <li key={i} className="flex gap-2 text-[14.5px] leading-7 text-ink-900/90">
               <span className="mt-[9px] h-2 w-2 shrink-0 rotate-45 bg-gold-500" />
-              <span>{b}</span>
+              <span><MathText text={b} /></span>
             </li>
           ))}
         </ul>
@@ -40,19 +100,20 @@ function Section({ s, index, vocab }: { s: LessonSection; index: number; vocab: 
         <div className="mt-3 space-y-2">
           {s.examples.map((e, i) => (
             <div key={i} className="paper-quote rounded-2xl px-4 py-3">
-              <p className="en text-[15px] font-semibold leading-6 text-lapis-900" dir="ltr">{e.en}</p>
-              {e.ar && <p className="mt-1 text-[13px] leading-6 text-ink-600">{e.ar}</p>}
+              <p className="en text-[15px] font-semibold leading-6 text-lapis-900" dir="ltr"><MathText text={e.en} /></p>
+              {e.ar && <p className="mt-1 text-[13px] leading-6 text-ink-600"><MathText text={e.ar} /></p>}
             </div>
           ))}
         </div>
       )}
+      {s.type === 'solution' && <SolutionBody s={s} />}
       {s.table && (
         <div className="mt-3 overflow-x-auto rounded-2xl ring-1 ring-cream-300">
           <table className="w-full min-w-[520px] text-[13.5px]">
             <thead>
               <tr className="bg-lapis-700 text-cream-50">
                 {s.table.head.map((h, i) => (
-                  <th key={i} className="px-3 py-2.5 text-start font-display font-bold">{h}</th>
+                  <th key={i} className="px-3 py-2.5 text-start font-display font-bold"><MathText text={h} /></th>
                 ))}
               </tr>
             </thead>
@@ -61,9 +122,9 @@ function Section({ s, index, vocab }: { s: LessonSection; index: number; vocab: 
                 <tr key={ri} className={ri % 2 ? 'bg-cream-100/70' : 'bg-cream-50'}>
                   {row.map((cell, ci) =>
                     s.table!.ltrCols?.includes(ci) ? (
-                      <td key={ci} className="en px-3 py-2.5 font-semibold text-lapis-900" dir="ltr">{cell}</td>
+                      <td key={ci} className="en px-3 py-2.5 font-semibold text-lapis-900" dir="ltr"><MathText text={cell} /></td>
                     ) : (
-                      <td key={ci} className="px-3 py-2.5 leading-6">{cell}</td>
+                      <td key={ci} className="px-3 py-2.5 leading-6"><MathText text={cell} /></td>
                     ),
                   )}
                 </tr>
@@ -80,12 +141,12 @@ function Section({ s, index, vocab }: { s: LessonSection; index: number; vocab: 
             return (
               <div key={id} className={`px-4 py-3 ${i % 2 ? 'bg-cream-100/70' : 'bg-cream-50'}`}>
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="en text-[16px] font-bold text-lapis-800" dir="ltr">{v.word}</span>
+                  <span className="en text-[16px] font-bold text-lapis-800" dir="ltr"><MathText text={v.word} /></span>
                   <span className="text-[11px] font-semibold text-gold-700">{v.pos}</span>
-                  <span className="text-[14px] font-semibold leading-6 text-ink-900">{v.meaning}</span>
+                  <span className="text-[14px] font-semibold leading-6 text-ink-900"><MathText text={v.meaning} /></span>
                 </div>
-                <p className="en mt-1 text-[13.5px] leading-5 text-ink-600" dir="ltr">{v.example}</p>
-                <p className="text-[12.5px] leading-5 text-ink-400">{v.exampleAr}</p>
+                <p className="en mt-1 text-[13.5px] leading-5 text-ink-600" dir="ltr"><MathText text={v.example} /></p>
+                <p className="text-[12.5px] leading-5 text-ink-400"><MathText text={v.exampleAr} /></p>
               </div>
             );
           })}
@@ -96,7 +157,7 @@ function Section({ s, index, vocab }: { s: LessonSection; index: number; vocab: 
           <span className="mt-0.5 shrink-0 text-gold-600">
             <IconIshtarStar size={18} />
           </span>
-          <span>{s.callout}</span>
+          <span><MathText text={s.callout} /></span>
         </div>
       )}
     </section>
@@ -106,6 +167,7 @@ function Section({ s, index, vocab }: { s: LessonSection; index: number; vocab: 
 export default function Lesson({ state, unit, lessonId, onBack, onComplete, onOpenCards }: Props) {
   const lesson = unit.lessons.find((l) => l.id === lessonId) ?? unit.lessons[0];
   const done = !!state.lessonsDone[lesson.id];
+  const unitWord = bookOfUnit(unit.id)?.unitWord ?? 'الوحدة';
   const [readPct, setReadPct] = useState(0);
 
   useEffect(() => {
@@ -125,7 +187,7 @@ export default function Lesson({ state, unit, lessonId, onBack, onComplete, onOp
   return (
     <div className="screen mx-auto w-full max-w-3xl px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
       <button onClick={onBack} className="press inline-flex items-center gap-1.5 text-[13px] font-bold text-gold-300">
-        <IconChevronStart size={15} /> العودة إلى الوحدة
+        <IconChevronStart size={15} /> العودة إلى {unitWord}
       </button>
 
       {/* slim sticky sub-header: unit + lesson + reading progress */}
@@ -155,7 +217,7 @@ export default function Lesson({ state, unit, lessonId, onBack, onComplete, onOp
               </span>
             )}
           </p>
-          <p className="mt-3 rounded-3xl border border-cream-100/15 bg-lapis-900/70 p-4 text-[14.5px] leading-7 text-lapis-100">{lesson.intro}</p>
+          <p className="mt-3 rounded-3xl border border-cream-100/15 bg-lapis-900/70 p-4 text-[14.5px] leading-7 text-lapis-100"><MathText text={lesson.intro} /></p>
         </header>
 
         <div className="mt-4 space-y-4">
