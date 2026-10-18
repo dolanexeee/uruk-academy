@@ -1,0 +1,143 @@
+@import './fonts.css';
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Cairo', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans Arabic', 'Cairo', system-ui, sans-serif;
+
+  --color-lapis-950: #050f26;
+  --color-lapis-900: #0a1c40;
+  --color-lapis-850: #0c2450;
+  --color-lapis-800: #0e2a57;
+  --color-lapis-700: #123064;
+  --color-lapis-600: #1d56b4;
+  --color-lapis-500: #2f6fd0;
+  --color-lapis-100: #d7e4f8;
+  --color-lapis-50: #eef3fc;
+
+  --color-gold-200: #fbe9b8;
+  --color-gold-300: #f6d67c;
+  --color-gold-400: #e9bc52;
+  --color-gold-500: #d9a441;
+  --color-gold-600: #b57e26;
+  --color-gold-700: #8f621c;
+
+  --color-bronze-300: #dfba8a;
+  --color-bronze-400: #c99a5f;
+  --color-bronze-600: #96682f;
+
+  --color-cream-50: #fdfaf1;
+  --color-cream-100: #f9f1dc;
+  --color-cream-200: #f7ecd2;
+  --color-cream-300: #efe0bc;
+
+  --color-tealdeep-800: #0b3d3a;
+  --color-tealdeep-600: #0f5a53;
+  --color-tealdeep-500: #12756b;
+
+  --color-ink-900: #16233c;
+  --color-ink-600: #47536b;
+  --color-ink-400: #7c879e;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-lapis-950);
+  color: var(--color-ink-900);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* English runs inside the Arabic UI: keep them LTR and tidy */
+.en {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: 'IBM Plex Sans Arabic', 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+/* ------- micro-interactions ------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  animation: rise 0.55s cubic-bezier(0.22, 0.9, 0.3, 1) both;
+}
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.12s; }
+.rise-3 { animation-delay: 0.19s; }
+.rise-4 { animation-delay: 0.26s; }
+.rise-5 { animation-delay: 0.33s; }
+
+@keyframes pop {
+  0% { transform: scale(0.92); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.pop {
+  animation: pop 0.35s ease both;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* flashcard 3D flip */
+.flip-scene {
+  perspective: 1400px;
+}
+.flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.34, 1.2, 0.4, 1);
+}
+.flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-back {
+  transform: rotateY(180deg);
+}
+
+/* subtle brick-course texture for lapis surfaces (original CSS pattern) */
+.brick {
+  background-image:
+    linear-gradient(rgba(246, 214, 124, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(246, 214, 124, 0.045) 1px, transparent 1px);
+  background-size: 100% 34px, 56px 100%;
+}
+
+.press {
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.press:active {
+  transform: scale(0.975);
+}
+
+::selection {
+  background: var(--color-gold-300);
+  color: var(--color-lapis-900);
+}

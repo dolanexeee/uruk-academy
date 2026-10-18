@@ -1,0 +1,129 @@
+import { useState } from 'react';
+import { liveUnit, ABOUT_SOURCES } from '../content/curriculum';
+import type { AcademyState } from '../lib/store';
+import { streak, lastStudyDay } from '../lib/store';
+import { ProgressRing, fmtDate, pct, ZigguratMark } from '../components/ui';
+
+interface Props {
+  state: AcademyState;
+  onBack: () => void;
+  onSetName: (name: string) => void;
+  onReset: () => void;
+}
+
+export default function Profile({ state, onBack, onSetName, onReset }: Props) {
+  const [draft, setDraft] = useState(state.name);
+  const [confirmReset, setConfirmReset] = useState(false);
+  const lessonsTotal = liveUnit.lessons.length;
+  const lessonsDone = liveUnit.lessons.filter((l) => state.lessonsDone[l.id]).length;
+  const mastered = liveUnit.vocab.filter((v) => (state.srs[v.id]?.box ?? 0) >= 4).length;
+  const quizBest = state.quizBest[liveUnit.id];
+  const examBest = state.examBest[liveUnit.id];
+
+  return (
+    <div className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5">
+      <button onClick={onBack} className="press text-[13px] font-bold text-gold-300">→ العودة إلى الرئيسية</button>
+
+      <header className="rise mt-3 flex items-center gap-4 rounded-3xl bg-cream-50 p-5 shadow-lg">
+        <ZigguratMark size={58} />
+        <div className="min-w-0 flex-1">
+          <h2 className="font-display text-xl font-black text-lapis-900">{state.name || 'طالب أوروك'}</h2>
+          <p className="text-[13px] text-ink-600">السادس الإعدادي · كل بياناتك محفوظة على جهازك فقط</p>
+        </div>
+        <ProgressRing value={lessonsDone / lessonsTotal} size={58} stroke={5}>
+          <span className="font-display text-[13px] font-extrabold text-lapis-800">{pct(lessonsDone, lessonsTotal)}٪</span>
+        </ProgressRing>
+      </header>
+
+      <section className="rise rise-1 mt-4 rounded-3xl bg-cream-50 p-5 shadow-md">
+        <h3 className="font-display text-[15.5px] font-extrabold text-lapis-900">اسم الطالب (اختياري)</h3>
+        <div className="mt-3 flex gap-2">
+          <input
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder="اكتب اسمك هنا…"
+            data-testid="student-name"
+            className="min-w-0 flex-1 rounded-2xl border-2 border-cream-300 bg-white/70 px-4 py-2.5 text-[15px] font-semibold outline-none focus:border-lapis-500"
+          />
+          <button
+            onClick={() => onSetName(draft.trim())}
+            data-testid="save-name"
+            className="press shrink-0 rounded-2xl bg-lapis-700 px-5 py-2.5 font-display text-[14.5px] font-bold text-cream-50 shadow"
+          >
+            حفظ
+          </button>
+        </div>
+        <p className="mt-2 text-[12px] text-ink-400">يُحفظ على هذا الجهاز فقط، ولا يُرسل إلى أي خادم.</p>
+      </section>
+
+      <section className="rise rise-2 mt-4 grid grid-cols-2 gap-3">
+        <div className="rounded-3xl bg-cream-50 p-4 shadow-md">
+          <p className="text-[12px] font-bold text-ink-400">دروس الوحدة الأولى</p>
+          <p className="font-display mt-1 text-2xl font-black text-lapis-900">{lessonsDone}<span className="text-sm text-ink-400"> / {lessonsTotal}</span></p>
+          <div className="mt-2 space-y-1">
+            {liveUnit.lessons.map((l) => (
+              <p key={l.id} className="flex items-center gap-1.5 text-[12px] leading-5 text-ink-600">
+                <span>{state.lessonsDone[l.id] ? '✅' : '⬜'}</span>
+                <span className="truncate">{l.title}</span>
+              </p>
+            ))}
+          </div>
+        </div>
+        <div className="space-y-3">
+          <div className="rounded-3xl bg-cream-50 p-4 shadow-md">
+            <p className="text-[12px] font-bold text-ink-400">سلسلة أيام الدراسة</p>
+            <p className="font-display mt-1 text-2xl font-black text-lapis-900">🔥 {streak(state)} <span className="text-sm text-ink-400">يوم متتالٍ</span></p>
+            <p className="mt-1 text-[12px] text-ink-600">آخر يوم دراسة: {fmtDate(lastStudyDay(state))}</p>
+          </div>
+          <div className="rounded-3xl bg-cream-50 p-4 shadow-md">
+            <p className="text-[12px] font-bold text-ink-400">المفردات المتقنة (صندوق ٤+)</p>
+            <p className="font-display mt-1 text-2xl font-black text-lapis-900">{mastered}<span className="text-sm text-ink-400"> / {liveUnit.vocab.length} كلمة</span></p>
+          </div>
+        </div>
+      </section>
+
+      <section className="rise rise-3 mt-4 grid grid-cols-2 gap-3">
+        <div className="rounded-3xl bg-lapis-900/70 p-4 ring-1 ring-cream-100/15">
+          <p className="text-[12px] font-bold text-lapis-100/70">أفضل اختبار وحدة</p>
+          <p className="font-display mt-1 text-xl font-black text-cream-50">{quizBest ? `${quizBest.score}/${quizBest.total}` : '— لم يُجرَ بعد'}</p>
+          {quizBest && <p className="text-[11.5px] text-lapis-100/60">{fmtDate(quizBest.at)}</p>}
+        </div>
+        <div className="rounded-3xl bg-lapis-900/70 p-4 ring-1 ring-cream-100/15">
+          <p className="text-[12px] font-bold text-lapis-100/70">أفضل امتحان وزاري</p>
+          <p className="font-display mt-1 text-xl font-black text-cream-50">{examBest ? `${examBest.score}/${examBest.total}` : '— لم يُجرَ بعد'}</p>
+          {examBest && <p className="text-[11.5px] text-lapis-100/60">{fmtDate(examBest.at)}</p>}
+        </div>
+      </section>
+
+      <section className="rise rise-4 mt-4 rounded-3xl bg-cream-50 p-5 shadow-md">
+        <h3 className="font-display text-[15.5px] font-extrabold text-lapis-900">عن المحتوى والمصادر</h3>
+        <p className="mt-2 text-[13.5px] leading-7 text-ink-600">{ABOUT_SOURCES}</p>
+        <p className="mt-3 text-[12.5px] leading-6 text-ink-400">
+          أكاديمية أوروك هي المشروع الثالث في ثلاثية أوروك مفتوحة المصدر (بعد Uruk Cut وUruk OS). المرحلة الأولى — ٢٠٢٦.
+        </p>
+      </section>
+
+      <section className="rise rise-5 mt-4 rounded-3xl border border-red-300/40 bg-lapis-900/50 p-5">
+        <h3 className="font-display text-[15px] font-extrabold text-red-200">تصفير التقدّم</h3>
+        <p className="mt-1 text-[12.5px] leading-6 text-lapis-100/70">يحذف كل الدروس والنتائج والبطاقات من هذا الجهاز نهائيًا.</p>
+        {confirmReset ? (
+          <div className="mt-3 flex gap-2">
+            <button
+              onClick={() => { onReset(); setConfirmReset(false); }}
+              className="press rounded-full bg-red-500 px-5 py-2.5 font-display text-[14px] font-extrabold text-white shadow"
+            >
+              نعم، احذف كل شيء
+            </button>
+            <button onClick={() => setConfirmReset(false)} className="press rounded-full border border-cream-100/30 px-5 py-2.5 font-display text-[14px] font-bold text-cream-100">
+              إلغاء
+            </button>
+          </div>
+        ) : (
+          <button onClick={() => setConfirmReset(true)} className="press mt-3 rounded-full border border-red-300/50 px-5 py-2.5 font-display text-[14px] font-bold text-red-200">
+            تصفير التقدّم…
+          </button>
+        )}
+      </section>
+    </div>
+  );
+}
