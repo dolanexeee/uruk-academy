@@ -10,7 +10,8 @@ async function openSubject(page: Page) {
 test('home: branding, live subject, honest قريبًا subjects, progress strip', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
-  await expect(page.getByText('تقدّمك في الوحدة الأولى')).toBeVisible();
+  // P2: the progress strip now tracks the whole book, not Unit One alone.
+  await expect(page.getByText('تقدّمك في كتاب الإنجليزية')).toBeVisible();
   await expect(page.getByText('متاحة الآن')).toBeVisible();
   // coming-soon subjects are shown but not navigable buttons
   await expect(page.getByText('الرياضيات')).toBeVisible();

@@ -37,6 +37,7 @@ export const unit1: Unit = {
   titleEn: "I'll always be proud of him",
   theme: 'الصحة والطوارئ — قصة إنسانية عن ولد أنقذ والدته المريضة بالسكّري، وأزمنة السرد في الماضي.',
   status: 'live',
+  kind: 'content',
   vocab,
   examMinutes: 20,
   lessons: [

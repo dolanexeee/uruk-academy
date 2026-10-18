@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { liveUnit, ABOUT_SOURCES } from '../content/curriculum';
+import { contentUnits, allUnits, allVocab, capstone, ABOUT_SOURCES } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
 import { streak, lastStudyDay } from '../lib/store';
 import { ProgressRing, fmtDate, pct, ZigguratMark } from '../components/ui';
-import { IconCheck, IconCircle, IconFlame, IconChevronStart } from '../components/icons';
+import { IconCheck, IconFlame, IconChevronStart } from '../components/icons';
 
 interface Props {
   state: AcademyState;
@@ -15,11 +15,14 @@ interface Props {
 export default function Profile({ state, onBack, onSetName, onReset }: Props) {
   const [draft, setDraft] = useState(state.name);
   const [confirmReset, setConfirmReset] = useState(false);
-  const lessonsTotal = liveUnit.lessons.length;
-  const lessonsDone = liveUnit.lessons.filter((l) => state.lessonsDone[l.id]).length;
-  const mastered = liveUnit.vocab.filter((v) => (state.srs[v.id]?.box ?? 0) >= 4).length;
-  const quizBest = state.quizBest[liveUnit.id];
-  const examBest = state.examBest[liveUnit.id];
+  const lessonsTotal = contentUnits.reduce((a, u) => a + u.lessons.length, 0);
+  const lessonsDone = contentUnits.reduce((a, u) => a + u.lessons.filter((l) => state.lessonsDone[l.id]).length, 0);
+  const mastered = allVocab.filter((v) => (state.srs[v.id]?.box ?? 0) >= 4).length;
+  const quizBests = allUnits
+    .map((u) => ({ unit: u, best: state.quizBest[u.id] }))
+    .filter((x) => x.best);
+  const quizTop = quizBests.sort((a, b) => b.best!.score / Math.max(1, b.best!.total) - a.best!.score / Math.max(1, a.best!.total))[0];
+  const capBest = state.examBest[capstone.id];
 
   return (
     <div className="screen mx-auto w-full max-w-3xl px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
@@ -61,17 +64,21 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
 
       <section className="rise rise-2 mt-4 grid grid-cols-2 gap-3">
         <div className="rounded-3xl bg-cream-50 p-4 shadow-md">
-          <p className="text-[12px] font-bold text-ink-400">دروس الوحدة الأولى</p>
+          <p className="text-[12px] font-bold text-ink-400">دروس كتاب الإنجليزية</p>
           <p className="font-display mt-1 text-2xl font-black text-lapis-900">{lessonsDone}<span className="text-sm text-ink-400"> / {lessonsTotal}</span></p>
-          <div className="mt-2 space-y-1">
-            {liveUnit.lessons.map((l) => (
-              <p key={l.id} className="flex items-center gap-1.5 text-[12px] leading-5 text-ink-600">
-                <span className={state.lessonsDone[l.id] ? 'text-tealdeep-600' : 'text-ink-400'}>
-                  {state.lessonsDone[l.id] ? <IconCheck size={13} /> : <IconCircle size={13} />}
-                </span>
-                <span className="truncate">{l.title}</span>
-              </p>
-            ))}
+          <div className="mt-2 space-y-1.5">
+            {contentUnits.map((u) => {
+              const d = u.lessons.filter((l) => state.lessonsDone[l.id]).length;
+              return (
+                <div key={u.id} className="flex items-center gap-2 text-[12px] leading-5 text-ink-600">
+                  <span className={d === u.lessons.length ? 'text-tealdeep-600' : 'text-ink-400'}>
+                    <IconCheck size={13} />
+                  </span>
+                  <span className="min-w-0 flex-1 truncate">{u.titleAr}</span>
+                  <span className="font-bold">{d}/{u.lessons.length}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
         <div className="space-y-3">
@@ -85,21 +92,42 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
           </div>
           <div className="rounded-3xl bg-cream-50 p-4 shadow-md">
             <p className="text-[12px] font-bold text-ink-400">المفردات المتقنة (صندوق ٤+)</p>
-            <p className="font-display mt-1 text-2xl font-black text-lapis-900">{mastered}<span className="text-sm text-ink-400"> / {liveUnit.vocab.length} كلمة</span></p>
+            <p className="font-display mt-1 text-2xl font-black text-lapis-900">{mastered}<span className="text-sm text-ink-400"> / {allVocab.length} كلمة</span></p>
           </div>
         </div>
       </section>
 
       <section className="rise rise-3 mt-4 grid grid-cols-2 gap-3">
         <div className="rounded-3xl bg-lapis-900/70 p-4 ring-1 ring-cream-100/15">
-          <p className="text-[12px] font-bold text-lapis-100/70">أفضل اختبار وحدة</p>
-          <p className="font-display mt-1 text-xl font-black text-cream-50">{quizBest ? `${quizBest.score}/${quizBest.total}` : '— لم يُجرَ بعد'}</p>
-          {quizBest && <p className="text-[11.5px] text-lapis-100/60">{fmtDate(quizBest.at)}</p>}
+          <p className="text-[12px] font-bold text-lapis-100/70">أفضل اختبار {quizTop ? `— ${quizTop.unit.titleAr}` : ''}</p>
+          <p className="font-display mt-1 text-xl font-black text-cream-50">{quizTop?.best ? `${quizTop.best.score}/${quizTop.best.total}` : '— لم يُجرَ بعد'}</p>
+          {quizTop?.best && <p className="text-[11.5px] text-lapis-100/60">{fmtDate(quizTop.best.at)}</p>}
         </div>
         <div className="rounded-3xl bg-lapis-900/70 p-4 ring-1 ring-cream-100/15">
-          <p className="text-[12px] font-bold text-lapis-100/70">أفضل امتحان وزاري</p>
-          <p className="font-display mt-1 text-xl font-black text-cream-50">{examBest ? `${examBest.score}/${examBest.total}` : '— لم يُجرَ بعد'}</p>
-          {examBest && <p className="text-[11.5px] text-lapis-100/60">{fmtDate(examBest.at)}</p>}
+          <p className="text-[12px] font-bold text-lapis-100/70">أفضل امتحان وزاري شامل</p>
+          <p className="font-display mt-1 text-xl font-black text-cream-50">{capBest ? `${capBest.score}/${capBest.total}` : '— لم يُجرَ بعد'}</p>
+          {capBest && <p className="text-[11.5px] text-lapis-100/60">{fmtDate(capBest.at)}</p>}
+        </div>
+      </section>
+
+      <section className="rise rise-3 mt-4 rounded-3xl bg-cream-50 p-5 shadow-md">
+        <h3 className="font-display text-[15.5px] font-extrabold text-lapis-900">نتائج الوحدات</h3>
+        <div className="mt-3 divide-y divide-cream-300/70">
+          {allUnits.map((u) => {
+            const qb = state.quizBest[u.id];
+            const eb = state.examBest[u.id];
+            return (
+              <div key={u.id} className="flex items-center gap-3 py-2.5 text-[13px]">
+                <span className="font-display min-w-0 flex-1 truncate font-bold text-lapis-900">{u.titleAr}</span>
+                <span className="shrink-0 text-ink-600">
+                  {u.kind === 'revision' ? 'اختبار المراجعة' : 'الاختبار'}: <strong className="text-lapis-800">{qb ? `${qb.score}/${qb.total}` : '—'}</strong>
+                </span>
+                <span className="shrink-0 text-ink-600">
+                  {u.kind === 'revision' ? 'نصف الكتاب' : 'الامتحان'}: <strong className="text-lapis-800">{eb ? `${eb.score}/${eb.total}` : '—'}</strong>
+                </span>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -107,7 +135,7 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
         <h3 className="font-display text-[15.5px] font-extrabold text-lapis-900">عن المحتوى والمصادر</h3>
         <p className="mt-2 text-[13.5px] leading-7 text-ink-600">{ABOUT_SOURCES}</p>
         <p className="mt-3 text-[12.5px] leading-6 text-ink-400">
-          أكاديمية أوروك هي المشروع الثالث في ثلاثية أوروك مفتوحة المصدر (بعد Uruk Cut وUruk OS). المرحلة الأولى — ٢٠٢٦.
+          أكاديمية أوروك هي المشروع الثالث في ثلاثية أوروك مفتوحة المصدر (بعد Uruk Cut وUruk OS). المرحلة الثانية: كتاب الإنجليزية كاملًا — ٢٠٢٦.
         </p>
       </section>
 

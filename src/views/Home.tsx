@@ -1,4 +1,4 @@
-import { subjects, liveUnit } from '../content/curriculum';
+import { subjects, contentUnits, allUnits } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
 import { streak } from '../lib/store';
 import { ProgressRing, Chip, pct, ZigguratMark } from '../components/ui';
@@ -14,11 +14,12 @@ interface Props {
 }
 
 export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOpenExam, onOpenProfile }: Props) {
-  const lessonsTotal = liveUnit.lessons.length;
-  const lessonsDone = liveUnit.lessons.filter((l) => state.lessonsDone[l.id]).length;
+  const lessonsTotal = contentUnits.reduce((a, u) => a + u.lessons.length, 0);
+  const lessonsDone = contentUnits.reduce((a, u) => a + u.lessons.filter((l) => state.lessonsDone[l.id]).length, 0);
   const overall = lessonsDone / lessonsTotal;
   const days = streak(state);
-  const quizBest = state.quizBest[liveUnit.id];
+  const quizBests = allUnits.map((u) => state.quizBest[u.id]).filter(Boolean);
+  const quizBest = quizBests.sort((a, b) => b!.score / Math.max(1, b!.total) - a!.score / Math.max(1, a!.total))[0];
   const greet = state.name ? `أهلًا بعودتك، ${state.name}` : 'أهلًا بك في أكاديمية أوروك';
 
   return (
@@ -52,9 +53,9 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
               <span className="font-display text-sm font-extrabold text-cream-50">{pct(lessonsDone, lessonsTotal)}٪</span>
             </ProgressRing>
             <div className="min-w-0 flex-1">
-              <p className="font-display text-[15px] font-bold text-cream-50">تقدّمك في الوحدة الأولى</p>
+              <p className="font-display text-[15px] font-bold text-cream-50">تقدّمك في كتاب الإنجليزية</p>
               <p className="mt-0.5 text-[13px] text-lapis-100">
-                أنجزت {lessonsDone} من {lessonsTotal} دروس
+                أنجزت {lessonsDone} من {lessonsTotal} درسًا في {allUnits.length} وحدات
                 {quizBest ? ` · أفضل اختبار: ${quizBest.score}/${quizBest.total}` : ''}
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -94,8 +95,8 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
           <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gold-500/20 text-gold-300 ring-1 ring-gold-300/30">
             <IconClipboard size={22} />
           </span>
-          <p className="font-display mt-3 text-[15px] font-extrabold text-cream-50">الامتحان الوزاري</p>
-          <p className="mt-1 text-[12.5px] leading-5 text-lapis-100">مؤقّت ودرجات وتصحيح كامل — كما في القاعة</p>
+          <p className="font-display mt-3 text-[15px] font-extrabold text-cream-50">الامتحان الوزاري الشامل</p>
+          <p className="mt-1 text-[12.5px] leading-5 text-lapis-100">محاكاة الكتاب كله: مؤقّت ودرجات وتقرير لكل وحدة</p>
         </button>
       </section>
 
@@ -129,7 +130,7 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
                       style={{ width: `${pct(lessonsDone, lessonsTotal)}%` }}
                     />
                   </div>
-                  <span className="text-[12px] font-bold text-lapis-700">{lessonsDone}/{lessonsTotal} دروس</span>
+                  <span className="text-[12px] font-bold text-lapis-700">{lessonsDone}/{lessonsTotal} درسًا · الكتاب كامل</span>
                 </div>
               </button>
             ) : (
@@ -153,7 +154,7 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
       </section>
 
       <p className="rise rise-5 mt-6 text-center text-[12px] leading-5 text-lapis-100/60">
-        أكاديمية أوروك — مشروع تعليمي مفتوح المصدر، يُبنى على مراحل. المرحلة الأولى: الإنجليزية للسادس الإعدادي.
+        أكاديمية أوروك — مشروع تعليمي مفتوح المصدر. كتاب الإنجليزية للسادس الإعدادي مكتمل هنا: ثماني وحدات وامتحان وزاري شامل.
       </p>
     </div>
   );

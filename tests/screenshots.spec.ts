@@ -64,3 +64,37 @@ test('screenshots: mobile flow + desktop home', async ({ page, browser }) => {
   await desk.screenshot({ path: `${DIR}/08-lesson-desktop.png`, fullPage: true });
   await desk.close();
 });
+
+test('screenshots p2: all-units subject page, a U3 lesson, U4 revision hub, capstone exam', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
+  await page.getByRole('button', { name: /اللغة الإنجليزية/ }).first().click();
+  await expect(page.getByText('الكتاب مكتمل')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/09-subject-all-units-p2.png`, fullPage: true });
+
+  // U3 reading lesson
+  await page.getByRole('button', { name: /الوحدة الثالثة/ }).first().click();
+  await page.getByRole('button', { name: /القراءة — مترجمة المؤتمرات/ }).click();
+  await expect(page.getByText('الدرس بملخّصنا')).toBeVisible();
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${DIR}/10-u3-lesson-p2.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الوحدة/ }).click();
+  await expect(page.getByText('الوحدة الثالثة')).toBeVisible();
+
+  // U4 revision hub
+  const hubBtn = page.getByRole('button', { name: /بطاقات المراجعة/ });
+  if (!(await hubBtn.isVisible().catch(() => false))) {
+    await page.getByRole('button', { name: /الوحدة الرابعة/ }).first().click();
+  }
+  await expect(page.getByText('بطاقات مجمّعة: 62 كلمة')).toBeVisible();
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${DIR}/11-u4-revision-hub-p2.png`, fullPage: true });
+
+  // capstone exam in progress
+  await page.getByTestId('capstone-open').click();
+  await page.getByTestId('exam-start').click();
+  await page.getByTestId('exam-option-1').click();
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${DIR}/12-capstone-exam-p2.png` });
+});

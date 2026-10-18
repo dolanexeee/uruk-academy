@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
-import { liveUnit } from '../content/curriculum';
-import type { LessonSection } from '../content/types';
+import type { LessonSection, Unit, VocabWord } from '../content/types';
 import type { AcademyState } from '../lib/store';
 import { IconCheck, IconCards, IconChevronStart, IconIshtarStar, WedgeMark } from '../components/icons';
 
 interface Props {
   state: AcademyState;
+  unit: Unit;
   lessonId: string;
   onBack: () => void;
   onComplete: (lessonId: string) => void;
   onOpenCards: () => void;
 }
 
-function Section({ s, index }: { s: LessonSection; index: number }) {
-  const vocabById = useMemo(() => Object.fromEntries(liveUnit.vocab.map((v) => [v.id, v])), []);
+function Section({ s, index, vocab }: { s: LessonSection; index: number; vocab: VocabWord[] }) {
+  const vocabById = useMemo(() => Object.fromEntries(vocab.map((v) => [v.id, v])), [vocab]);
   return (
     <section className="rise rounded-3xl bg-cream-50 p-5 shadow-md">
       <h3 className="font-display flex items-center gap-2.5 text-[17px] font-extrabold text-lapis-900">
@@ -103,8 +103,8 @@ function Section({ s, index }: { s: LessonSection; index: number }) {
   );
 }
 
-export default function Lesson({ state, lessonId, onBack, onComplete, onOpenCards }: Props) {
-  const lesson = liveUnit.lessons.find((l) => l.id === lessonId) ?? liveUnit.lessons[0];
+export default function Lesson({ state, unit, lessonId, onBack, onComplete, onOpenCards }: Props) {
+  const lesson = unit.lessons.find((l) => l.id === lessonId) ?? unit.lessons[0];
   const done = !!state.lessonsDone[lesson.id];
   const [readPct, setReadPct] = useState(0);
 
@@ -132,7 +132,7 @@ export default function Lesson({ state, lessonId, onBack, onComplete, onOpenCard
       <div className="sticky top-3 z-10 mt-3 overflow-hidden rounded-2xl bg-lapis-900/95 shadow-lg ring-1 ring-gold-300/20 backdrop-blur">
         <div className="flex items-center gap-3 px-4 py-2.5">
           <span className="shrink-0 rounded-full bg-gold-500/15 px-2.5 py-0.5 text-[11px] font-bold text-gold-300 ring-1 ring-gold-300/25">
-            الوحدة الأولى
+            {unit.titleAr}
           </span>
           <span className="font-display min-w-0 flex-1 truncate text-[13.5px] font-bold text-cream-50">{lesson.title}</span>
           <span className="shrink-0 text-[11px] font-bold text-lapis-100/75">
@@ -148,7 +148,7 @@ export default function Lesson({ state, lessonId, onBack, onComplete, onOpenCard
         <header className="rise mt-4">
           <h2 className="font-display text-[22px] font-black leading-8 text-cream-50">{lesson.title}</h2>
           <p className="mt-1 flex items-center gap-1.5 text-[12.5px] text-lapis-100/80">
-            الوحدة الأولى · {lesson.minutes} دقيقة تقريبًا
+            {unit.titleAr} · {lesson.minutes} دقيقة تقريبًا
             {done && (
               <span className="inline-flex items-center gap-1 font-bold text-tealdeep-500">
                 · <IconCheck size={13} /> منجز
@@ -160,7 +160,7 @@ export default function Lesson({ state, lessonId, onBack, onComplete, onOpenCard
 
         <div className="mt-4 space-y-4">
           {lesson.sections.map((s, i) => (
-            <Section key={i} s={s} index={i} />
+            <Section key={i} s={s} index={i} vocab={unit.vocab} />
           ))}
         </div>
 

@@ -18,22 +18,24 @@ import {
   dueVocabIds,
   type AcademyState,
 } from './lib/store';
-import { liveUnit } from './content/curriculum';
+import { allVocab, capstone, deckFor, examSpecForUnit, unitById } from './content/curriculum';
 import { ZigguratMark } from './components/ui';
 import { IconHome, IconBook, IconCards, IconUser } from './components/icons';
 
 type Route =
   | { name: 'home' }
   | { name: 'subject' }
-  | { name: 'lesson'; id: string }
-  | { name: 'quiz' }
-  | { name: 'cards' }
-  | { name: 'exam' }
+  | { name: 'lesson'; unitId: string; id: string }
+  | { name: 'quiz'; unitId: string }
+  | { name: 'cards'; deckId: string }
+  | { name: 'exam'; examId: string }
   | { name: 'profile' };
 
 export default function App() {
   const [state, setState] = useState<AcademyState>(() => loadState());
   const [route, setRoute] = useState<Route>({ name: 'home' });
+  /** Which unit the subject accordion opens on (last unit the student touched). */
+  const [subjectFocus, setSubjectFocus] = useState(1);
 
   function update(fn: (s: AcademyState) => void) {
     setState((prev) => {
@@ -54,7 +56,7 @@ export default function App() {
   }
 
   const dueCount = useMemo(
-    () => dueVocabIds(state, liveUnit.vocab.map((v) => v.id)).length,
+    () => dueVocabIds(state, allVocab.map((v) => v.id)).length,
     [state],
   );
 
@@ -63,10 +65,28 @@ export default function App() {
     window.scrollTo({ top: 0 });
   };
 
+  const openUnit = (unitId: string, r: Route) => {
+    const u = unitById(unitId);
+    if (u) setSubjectFocus(u.number);
+    go(r);
+  };
+
   const navBtn = (active: boolean) =>
     `press flex flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[11px] font-bold ${
       active ? 'text-gold-300' : 'text-lapis-100/65 hover:text-lapis-100'
     }`;
+
+  const quizUnit = route.name === 'quiz' ? unitById(route.unitId) : undefined;
+  const examSpec =
+    route.name === 'exam'
+      ? route.examId === capstone.id
+        ? capstone
+        : (() => {
+            const u = unitById(route.examId);
+            return u ? examSpecForUnit(u) : capstone;
+          })()
+      : null;
+  const lessonUnit = route.name === 'lesson' ? unitById(route.unitId) : undefined;
 
   return (
     <div className="min-h-dvh bg-lapis-950 bg-[radial-gradient(120%_60%_at_50%_0%,#123064_0%,#0a1c40_55%,#050f26_100%)]">
@@ -75,50 +95,66 @@ export default function App() {
           state={state}
           dueCount={dueCount}
           onOpenSubject={() => go({ name: 'subject' })}
-          onOpenCards={() => go({ name: 'cards' })}
-          onOpenExam={() => go({ name: 'exam' })}
+          onOpenCards={() => go({ name: 'cards', deckId: 'all' })}
+          onOpenExam={() => go({ name: 'exam', examId: capstone.id })}
           onOpenProfile={() => go({ name: 'profile' })}
         />
       )}
       {route.name === 'subject' && (
         <Subject
           state={state}
+          initialOpen={subjectFocus}
           onBack={() => go({ name: 'home' })}
-          onOpenLesson={(id) => go({ name: 'lesson', id })}
-          onOpenQuiz={() => go({ name: 'quiz' })}
-          onOpenCards={() => go({ name: 'cards' })}
-          onOpenExam={() => go({ name: 'exam' })}
+          onOpenLesson={(unitId, id) => openUnit(unitId, { name: 'lesson', unitId, id })}
+          onOpenQuiz={(unitId) => openUnit(unitId, { name: 'quiz', unitId })}
+          onOpenCards={(unitId) => openUnit(unitId, { name: 'cards', deckId: unitId })}
+          onOpenExam={(examId) => {
+            const u = unitById(examId);
+            if (u) setSubjectFocus(u.number);
+            go({ name: 'exam', examId });
+          }}
         />
       )}
-      {route.name === 'lesson' && (
+      {route.name === 'lesson' && lessonUnit && (
         <Lesson
+          key={route.id}
           state={state}
+          unit={lessonUnit}
           lessonId={route.id}
           onBack={() => go({ name: 'subject' })}
           onComplete={(id) => update((s) => storeCompleteLesson(s, id))}
-          onOpenCards={() => go({ name: 'cards' })}
+          onOpenCards={() => go({ name: 'cards', deckId: lessonUnit.id })}
         />
       )}
-      {route.name === 'quiz' && (
+      {route.name === 'quiz' && quizUnit && (
         <Quiz
+          key={quizUnit.id}
+          questions={quizUnit.quiz}
+          finishTitle={quizUnit.kind === 'revision' ? 'نتيجتك في اختبار المراجعة' : 'نتيجتك في اختبار الوحدة'}
+          backLabel={quizUnit.kind === 'revision' ? 'العودة إلى وحدة المراجعة' : 'العودة إلى الوحدة'}
+          examLabel={quizUnit.kind === 'revision' ? 'جرّب امتحان نصف الكتاب' : 'جرّب الامتحان الوزاري'}
           onBack={() => go({ name: 'subject' })}
-          onFinish={(score, total) => update((s) => recordQuiz(s, liveUnit.id, score, total))}
-          onOpenExam={() => go({ name: 'exam' })}
+          onFinish={(score, total) => update((s) => recordQuiz(s, quizUnit.id, score, total))}
+          onOpenExam={() => go({ name: 'exam', examId: quizUnit.id })}
         />
       )}
       {route.name === 'cards' && (
         <Cards
+          key={route.deckId}
           state={state}
+          deck={deckFor(route.deckId)}
           onBack={() => go({ name: 'subject' })}
           onEncounter={(ids) => update((s) => encounterVocab(s, ids))}
           onAnswer={(id, correct) => update((s) => srsAnswer(s, id, correct))}
         />
       )}
-      {route.name === 'exam' && (
+      {route.name === 'exam' && examSpec && (
         <Exam
+          key={examSpec.id}
           state={state}
+          spec={examSpec}
           onBack={() => go({ name: 'subject' })}
-          onFinish={(score, total, perSkill) => update((s) => recordExam(s, liveUnit.id, score, total, perSkill))}
+          onFinish={(score, total, perGroup) => update((s) => recordExam(s, examSpec.id, score, total, perGroup))}
         />
       )}
       {route.name === 'profile' && (
@@ -143,7 +179,7 @@ export default function App() {
           <span className="flex items-center px-1">
             <ZigguratMark size={30} />
           </span>
-          <button className={`${navBtn(route.name === 'cards')} relative`} onClick={() => go({ name: 'cards' })}>
+          <button className={`${navBtn(route.name === 'cards')} relative`} onClick={() => go({ name: 'cards', deckId: 'all' })}>
             <IconCards size={21} /> البطاقات
             {dueCount > 0 && (
               <span className="absolute end-3 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold-500 px-1 text-[10px] font-black text-lapis-950">

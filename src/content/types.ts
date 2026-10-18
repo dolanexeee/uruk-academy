@@ -53,6 +53,9 @@ export interface QuizQuestion {
   /** Arabic explanation shown after answering. */
   explain: string;
   marks: number;
+  /** Source unit number — set on composed pools (revision mocks, capstone)
+      so reports can break results down per unit. */
+  unit?: number;
 }
 
 export interface Unit {
@@ -62,12 +65,33 @@ export interface Unit {
   titleEn?: string;
   theme: string;
   status: 'live' | 'soon';
+  /** 'content' = a teaching unit with lessons; 'revision' = a review hub
+      (Units 4 and 8 in the book) with no new lessons of its own. */
+  kind: 'content' | 'revision';
+  /** For revision units: the unit numbers it revises (e.g. [1, 2, 3]). */
+  revises?: number[];
   lessons: Lesson[];
   vocab: VocabWord[];
   quiz: QuizQuestion[];
   /** Dedicated exam pool (ministry-style). */
   exam: QuizQuestion[];
   examMinutes: number;
+}
+
+/** A normalized exam definition the Exam view can run: a unit exam, a
+    revision half-book mock, or the full-book capstone. */
+export interface ExamSpec {
+  id: string;
+  titleAr: string;
+  subtitleEn?: string;
+  minutes: number;
+  questions: QuizQuestion[];
+  /** 'skill' groups the report by reading/grammar/vocab;
+      'unit' groups it by source unit number (capstone, revision mocks). */
+  groupBy: 'skill' | 'unit';
+  backLabel: string;
+  /** Optional replacement for the first intro bullet. */
+  introNote?: string;
 }
 
 export interface CurriculumUnitMeta {

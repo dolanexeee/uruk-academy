@@ -10,21 +10,24 @@
 
 ---
 
-## ماذا يوجد الآن؟ (المرحلة الأولى)
-
-المحرك كامل، وبنى المحتوى بدأت بوحدة واحدة كاملة ومُختبَرة:
+## ماذا يوجد الآن؟ (المرحلتان الأولى والثانية — كتاب الإنجليزية مكتمل)
 
 - **الرئيسية** — شبكة المواد مع شريط تقدّم حقيقي من بيانات الطالب على جهازه.
-- **الإنجليزية — السادس الإعدادي**: **الوحدة الأولى كاملة** من كتاب «English for Iraq»:
-  - 📖 درس قراءة: «سأظلّ فخورةً بك دائمًا» — ملخّص القصة بكلماتنا وحقائق الاستيعاب الوزارية.
-  - ✒️ درس قواعد: أزمنة السرد — الماضي البسيط × الماضي المستمر، بجداول وأمثلة من نماذج الوزارة.
-  - 🔤 درس مفردات: ٢٢ كلمة في حقل الصحة والطوارئ بمعانٍ عربية وأمثلة أصلية.
-  - 💡 درس شرح: التصرّف الصحيح في الطوارئ + خلاصة الوحدة.
-  - 🧠 **اختبار الوحدة**: ١٤ سؤالًا بتصحيح فوري وشرح عربي لكل سؤال.
-  - 🃏 **بطاقات مراجعة بنظام لايتنر** (٥ صناديق وجدولة استحقاق) لكلمات الوحدة.
-  - 📝 **وضع الامتحان الوزاري**: ١٥ سؤالًا، ٦٠ درجة، مؤقّت ٢٠ دقيقة، لا تصحيح حتى
-    التسليم، ثم تقرير كامل بتصحيح كل سؤال وتفصيل الدرجات حسب المهارة.
-- **الوحدات ٢–٨ وبقية المواد** معلنة بصدق بشارة «قريبًا» وغير قابلة للتنقّل حتى تُبنى فعلًا.
+- **الإنجليزية — السادس الإعدادي**: كتاب «English for Iraq» **كاملًا بكل وحداته الثماني**:
+  - 📖 **٦ وحدات تعليمية كاملة** (١، ٢، ٣، ٥، ٦، ٧): لكل وحدة ٤ دروس (قراءة بقصّة/موضوع
+    الدرس العاشر وحقائقه الوزارية الموثّقة، قواعد بجداول وأمثلة من نماذج الوزارة،
+    مفردات ~٢٠ كلمة، شرح مع موضوع الإنشاء الوزاري للوحدة) + اختبار ١٤ سؤالًا بتصحيح
+    فوري وشرح عربي + بطاقات مراجعة بنظام لايتنر (٥ صناديق) + امتحان وزاري مؤقّت
+    (١٥ سؤالًا / ٦٠ درجة / ٢٠ دقيقة) بتقرير مفصّل حسب المهارة.
+    الموضوعات: الطوارئ والصحة (١)، تكنولوجيا الأمن والرادار (٢)، المترجم الفوري في
+    المؤتمرات (٣)، أهمية العطل (٥)، صناعة المال والادّخار والاستثمار (٦)، استخدام
+    المكتبة والوظائف (٧).
+  - 🔁 **وحدتا مراجعة كما في الكتاب نفسه** (٤ تراجع ١–٣، ٨ تراجع ٥–٧): اختبار مراجعة
+    مختلط + Deck لايتنر موحّد لكلمات الوحدات المراجَعة + امتحان «نصف الكتاب».
+  - 🏆 **الامتحان الوزاري الشامل**: ٢٥ سؤالًا / ١٠٠ درجة / ٤٥ دقيقة من كل وحدات الكتاب،
+    وتقريره يفصّل النتيجة **وحدةً وحدة** ليعرف الطالب نقطة ضعفه بدقة.
+- **بقية المواد** (رياضيات، فيزياء، كيمياء، أحياء، عربية) معلنة بصدق بشارة «قريبًا»
+  وغير قابلة للتنقّل حتى تُبنى فعلًا.
 - **حساب الطالب المحلي**: اسم اختياري، نسبة إنجاز كل وحدة، سلسلة أيام الدراسة،
   أفضل النتائج — كلها على الجهاز، ولا حسابات ولا خوادم.
 - **PWA قابلة للتثبيت** وتعمل offline بالكامل (تطبيق + محتوى + خطوط عربية مدمجة).
@@ -40,7 +43,7 @@
 
 Vite + React + TypeScript + Tailwind CSS · تخزين محلي (localStorage) ·
 Service Worker بتخزين مسبق كامل (vite-plugin-pwa) · خطوط Cairo وIBM Plex Sans Arabic
-مدمجة · اختبارات Playwright شاملة (٧/٧) ضد بنية الإنتاج.
+مدمجة · اختبارات Playwright شاملة (١٤/١٤) ضد بنية الإنتاج.
 
 ```bash
 npm install
@@ -60,9 +63,12 @@ Apache-2.0 — انظر [LICENSE](LICENSE). الهوية البصرية (الز�
 ### English summary
 
 **Uruk Academy** is an Arabic-first, offline-first, open-source interactive learning
-platform for Iraqi students — the third flagship of the URUK suite. Phase 1 ships the
-complete engine (lessons player, instant-feedback quizzes, Leitner flashcards, a timed
-ministry-style exam mode with a full correction report, local student profile) with
-**Unit One of “English for Iraq” (6th Preparatory, Iraqi Ministry of Education) fully
-built** — content rewritten in our own words from the official textbook, never copied
-verbatim. Everything runs on-device; no accounts, no servers, $0 to run.
+platform for Iraqi students — the third flagship of the URUK suite. The engine
+(lessons player, instant-feedback quizzes, Leitner flashcards, timed ministry-style
+exam mode with full correction reports, local student profile) now carries the
+**complete “English for Iraq” book (6th Preparatory, Iraqi Ministry of Education)**:
+six full teaching units, the book's own two revision units (4 and 8) built as review
+hubs with half-book mocks, and a 25-question / 100-mark full-book capstone exam with
+a per-unit score breakdown — all content rewritten in our own words from verified
+curriculum facts, never copied verbatim. Everything runs on-device; no accounts,
+no servers, $0 to run.

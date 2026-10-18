@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { liveUnit } from '../content/curriculum';
+import type { QuizQuestion } from '../content/types';
 import { Chip } from '../components/ui';
 import {
   IconCheck,
@@ -14,6 +14,11 @@ import {
 } from '../components/icons';
 
 interface Props {
+  questions: QuizQuestion[];
+  /** Heading on the result screen, e.g. «نتيجتك في اختبار الوحدة». */
+  finishTitle: string;
+  backLabel: string;
+  examLabel: string;
   onBack: () => void;
   onFinish: (score: number, total: number) => void;
   onOpenExam: () => void;
@@ -21,8 +26,8 @@ interface Props {
 
 const skillLabel: Record<string, string> = { reading: 'استيعاب قراءة', grammar: 'قواعد', vocab: 'مفردات' };
 
-export default function Quiz({ onBack, onFinish, onOpenExam }: Props) {
-  const questions = useMemo(() => liveUnit.quiz, []);
+export default function Quiz({ questions: pool, finishTitle, backLabel, examLabel, onBack, onFinish, onOpenExam }: Props) {
+  const questions = useMemo(() => pool, [pool]);
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -63,7 +68,7 @@ export default function Quiz({ onBack, onFinish, onOpenExam }: Props) {
           <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold-500/15 text-gold-600 ring-1 ring-gold-500/35">
             {ratio >= 0.85 ? <IconTrophy size={32} /> : ratio >= 0.6 ? <IconIshtarStar size={32} /> : <IconFlame size={32} />}
           </span>
-          <h2 className="font-display mt-3 text-2xl font-black text-lapis-900">نتيجتك في اختبار الوحدة</h2>
+          <h2 className="font-display mt-3 text-2xl font-black text-lapis-900">{finishTitle}</h2>
           <p className="font-display mt-2 text-4xl font-black text-gold-600">
             {score} <span className="text-xl text-ink-400">/ {total}</span>
           </p>
@@ -76,13 +81,13 @@ export default function Quiz({ onBack, onFinish, onOpenExam }: Props) {
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             <button onClick={onOpenExam} className="press inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 font-display text-[15px] font-extrabold text-lapis-950 shadow">
-              <IconClipboard size={17} /> جرّب الامتحان الوزاري
+              <IconClipboard size={17} /> {examLabel}
             </button>
             <button onClick={restart} className="press inline-flex items-center gap-2 rounded-full bg-lapis-700 px-6 py-3 font-display text-[15px] font-bold text-cream-50 shadow">
               <IconRefresh size={16} /> إعادة الاختبار
             </button>
             <button onClick={onBack} className="press rounded-full border border-ink-900/15 px-6 py-3 font-display text-[15px] font-bold text-ink-900">
-              العودة إلى الوحدة
+              {backLabel}
             </button>
           </div>
         </div>
@@ -95,7 +100,7 @@ export default function Quiz({ onBack, onFinish, onOpenExam }: Props) {
   return (
     <div className="screen ground mx-auto flex min-h-[calc(100dvh-2rem)] w-full max-w-3xl flex-col px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
       <button onClick={onBack} className="press inline-flex items-center gap-1.5 self-start text-[13px] font-bold text-gold-300">
-        <IconChevronStart size={15} /> العودة إلى الوحدة
+        <IconChevronStart size={15} /> {backLabel}
       </button>
 
       <div className="flex flex-1 items-center justify-center py-4">

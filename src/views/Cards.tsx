@@ -1,21 +1,28 @@
 import { useEffect, useMemo, useState } from 'react';
-import { liveUnit } from '../content/curriculum';
+import type { VocabWord } from '../content/types';
 import type { AcademyState } from '../lib/store';
 import { dueVocabIds, todayStr } from '../lib/store';
 import { IconCheck, IconX, IconRefresh, IconIshtarStar, IconChevronStart } from '../components/icons';
 
 const BOX_COLORS = ['#1D56B4', '#2F6FD0', '#C99A5F', '#D9A441', '#F6D67C'];
 
+export interface CardDeck {
+  id: string;
+  title: string;
+  vocab: VocabWord[];
+}
+
 interface Props {
   state: AcademyState;
+  deck: CardDeck;
   onBack: () => void;
   onEncounter: (ids: string[]) => void;
   onAnswer: (id: string, correct: boolean) => void;
 }
 
-export default function Cards({ state, onBack, onEncounter, onAnswer }: Props) {
-  const allIds = useMemo(() => liveUnit.vocab.map((v) => v.id), []);
-  const vocabById = useMemo(() => Object.fromEntries(liveUnit.vocab.map((v) => [v.id, v])), []);
+export default function Cards({ state, deck, onBack, onEncounter, onAnswer }: Props) {
+  const allIds = useMemo(() => deck.vocab.map((v) => v.id), [deck]);
+  const vocabById = useMemo(() => Object.fromEntries(deck.vocab.map((v) => [v.id, v])), [deck]);
 
   useEffect(() => {
     onEncounter(allIds);
@@ -72,7 +79,12 @@ export default function Cards({ state, onBack, onEncounter, onAnswer }: Props) {
       <header className="rise mt-3 flex items-end justify-between">
         <div>
           <h2 className="font-display text-[22px] font-black text-cream-50">بطاقات المراجعة</h2>
-          <p className="mt-1 text-[13px] text-lapis-100/85">
+          <p className="mt-1.5">
+            <span className="inline-flex rounded-full bg-gold-500/15 px-3 py-0.5 text-[12px] font-bold text-gold-300 ring-1 ring-gold-300/25">
+              {deck.title} · {deck.vocab.length} كلمة
+            </span>
+          </p>
+          <p className="mt-1.5 text-[13px] text-lapis-100/85">
             نظام لايتنر: خمسة صناديق. الإجابة الصحيحة تنقل الكلمة لصندوق أبعد، والخطأ يعيدها للأول.
           </p>
         </div>
@@ -125,7 +137,7 @@ export default function Cards({ state, onBack, onEncounter, onAnswer }: Props) {
               <IconRefresh size={16} /> مراجعة كل الكلمات
             </button>
             <button onClick={onBack} className="press rounded-full border border-ink-900/15 px-6 py-3 font-display text-[15px] font-bold text-ink-900">
-              العودة إلى الوحدة
+              العودة إلى المنهج
             </button>
           </div>
         </div>
