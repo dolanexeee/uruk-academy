@@ -298,3 +298,44 @@ test('screenshots stage E: biology subject, worked genetics solution, written qu
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${DIR}/53-biology-capstone.png`, fullPage: true });
 });
+
+test('screenshots stage F: arabic subject, worked إعراب solution, written question, capstone', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
+  await page.getByRole('button', { name: /اللغة العربية Arabic/ }).click();
+  await expect(page.getByText('أسلوب الاستفهام').first()).toBeVisible();
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${DIR}/60-arabic-subject.png`, fullPage: true });
+
+  // worked إعراب solution: chapter 1 lesson with parsing steps revealed
+  await page.getByRole('button', { name: /أمثلة محلولة — إعراب جمل الاستفهام/ }).click();
+  await expect(page.getByText('المثال ١ — مَنْ بَنَى المَدْرَسَةَ؟ ومتى أُسِّسَتْ؟')).toBeVisible();
+  for (let i = 0; i < 4; i++) {
+    const next = page.getByTestId('solution-next').first();
+    if ((await next.count()) === 0) break;
+    await next.click();
+  }
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/61-arabic-solution.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+  await expect(page.getByText('أسلوب الاستفهام').first()).toBeVisible();
+
+  // written question with the model answer + rubric revealed (chapter 1 quiz)
+  await page.getByRole('button', { name: /اختبار الفصل/ }).click();
+  for (let i = 0; i < 10; i++) {
+    await page.getByTestId('quiz-option-1').click();
+    await page.getByTestId('quiz-next').click();
+  }
+  await page.getByTestId('written-answer').fill('من: اسم استفهام مبني على السكون في محل رفع مبتدأ لأنه تلاه فعل متعد استوفى مفعوله، والجملة الفعلية بعده خبر، وما الاستفهامية بعد حرف الجر تحذف ألفها');
+  await page.getByTestId('written-reveal').click();
+  await expect(page.getByText('مفتاح التصحيح')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/62-arabic-written.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+
+  // arabic capstone intro (145 marks, ترك 45, three parts, 210 minutes)
+  await page.getByRole('button', { name: /ابدأ الامتحان الشامل/ }).click();
+  await expect(page.getByText('الامتحان الوزاري الشامل — اللغة العربية')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/63-arabic-capstone.png`, fullPage: true });
+});

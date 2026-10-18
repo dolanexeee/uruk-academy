@@ -7,19 +7,18 @@ async function openSubject(page: Page) {
   await expect(page.getByText('الوحدة الأولى')).toBeVisible();
 }
 
-test('home: branding, live subject, honest قريبًا subjects, progress strip', async ({ page }) => {
+test('home: branding, live subjects, progress strip', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
-  // The progress strip tracks all live books (English + Mathematics + Physics + Chemistry + Biology).
+  // The progress strip tracks all live books (English + Mathematics + Physics + Chemistry + Biology + Arabic).
   await expect(page.getByText('تقدّمك في الأكاديمية')).toBeVisible();
   await expect(page.getByText('متاحة الآن').first()).toBeVisible();
-  // Mathematics is live in Stage A, Physics in Stage C, Chemistry in Stage D, Biology in Stage E; Arabic stays قريبًا and non-navigable
+  // All six books are live (Arabic completed the program in Stage F) — no subject remains قريبًا.
   await expect(page.getByRole('button', { name: /الرياضيات/ }).first()).toBeVisible();
   await expect(page.getByRole('button', { name: /الفيزياء/ }).first()).toBeVisible();
   await expect(page.getByRole('button', { name: /الكيمياء/ }).first()).toBeVisible();
   await expect(page.getByRole('button', { name: /الأحياء/ }).first()).toBeVisible();
-  await expect(page.getByText('قريبًا').first()).toBeVisible();
-  await expect(page.getByRole('button', { name: /اللغة العربية/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /اللغة العربية/ }).first()).toBeVisible();
 });
 
 test('lesson: complete Unit One grammar lesson, progress persists after reload', async ({ page }) => {

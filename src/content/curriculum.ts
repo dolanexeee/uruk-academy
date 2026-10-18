@@ -1,13 +1,16 @@
 /* Uruk Academy — curriculum map.
-   Five complete books are live: «English for Iraq» (Phase 2: all 8 units,
+   Six complete books are live: «English for Iraq» (Phase 2: all 8 units,
    two revision hubs, full-book capstone), «Mathematics» for the
    Scientific branch (Stage A: all chapters, chapter capstones and the
    full وزاري mock), «Physics» (Stage C: the nine chapters of the
    revised book, chapter exams and the full وزاري mock), «Chemistry»
    (Stage D: the eight chapters of the current print, chapter exams and
-   the full وزاري mock) and «Biology» (Stage E: the five chapters of
-   the current reduced print, chapter exams and the full وزاري mock).
-   One subject (Arabic) stays honestly badged «قريبًا».
+   the full وزاري mock), «Biology» (Stage E: the five chapters of
+   the current reduced print, chapter exams and the full وزاري mock)
+   and «Arabic» (Stage F: the fifteen chapters of the integrative
+   print shared by both branches — ten أساليب, four أدب groupings, one
+   guided إنشاء chapter — chapter exams and the full وزاري mock).
+   No subject remains badged «قريبًا».
    Views are book-agnostic: they render any Book through the registry
    below and never hardcode a subject. */
 
@@ -24,6 +27,7 @@ import { mathChapters, mathCapstone } from './math';
 import { physicsChapters, physicsCapstone } from './physics';
 import { chemistryChapters, chemistryCapstone } from './chemistry';
 import { biologyChapters, biologyCapstone } from './biology';
+import { arabicChapters, arabicCapstone } from './arabic';
 
 export const contentUnits: Unit[] = [unit1, unit2, unit3, unit5, unit6, unit7];
 export const revisionUnits: Unit[] = [unit4, unit8];
@@ -115,7 +119,23 @@ const biologyBook: Book = {
   aboutSources: BIOLOGY_ABOUT_SOURCES,
 };
 
-export const books: Book[] = [englishBook, mathBook, physicsBook, chemistryBook, biologyBook];
+export const ARABIC_ABOUT_SOURCES = `محتوى اللغة العربية في هذه الأكاديمية مبني على بنية الكتاب المدرسي الرسمي «اللغة العربية للصف السادس الإعدادي» الصادر عن وزارة التربية في جمهورية العراق (الطبعة الرابعة 1447هـ/2025م بجزأيها ووحداتها العشر بطريقته التكاملية — والبنية موثّقة في CONTENT.md وملف البحث المرافق): عشرة أساليب نحوية بترتيب الكتاب نفسه، وموضوعات الأدب كما يجمعها الكتاب، وفصل إنشاء موجَّه. لا يحوي هذا الكتاب جزءًا مستقلًّا للبلاغة ولم ترد لها درجات في ورقة الفرع العلمي، فلم نفترض لها فصولًا. كل الشروحات والأمثلة والموضوعات الإنشائية مكتوبة بأسلوبنا الخاص ولم تُنسخ نصوص الكتاب أو أسئلة الامتحانات حرفيًا، والشواهد المقتبسة مضبوطة بالشكل من صفحات الكتاب نفسه، أما صيغ الامتحانات فتحاكي الورقة الوزارية الرسمية في بنيتها ودرجاتها، وتصحيح الإنشاء فيها ذاتي بسلّم معلن لأنه تدريب على البنية لا حكم رسمي. أكاديمية أوروك مشروع تعليمي مفتوح المصدر لا يتبع لوزارة التربية.`;
+
+const arabicBook: Book = {
+  subjectId: 'ar6',
+  units: arabicChapters,
+  contentUnits: arabicChapters,
+  capstone: arabicCapstone,
+  unitWord: 'الفصل',
+  unitsPlural: 'فصول',
+  vocabSuffix: 'بطاقة مراجعة',
+  cardNoun: 'بطاقة',
+  capstoneBlurb:
+    'محاكاة أمينة للورقة الوزارية الحقيقية بأقسامها الثلاثة: القواعد بأساليبها العشرة وإعرابها الكامل، والأدب بشروحاته، والإنشاء بموضوعيه — 145 درجة معروضة، ترك 45، ثلاث ساعات ونصف، بحلول نموذجية ومفاتيح تصحيح، والتقرير يفصّل نتيجتك في كل قسم.',
+  aboutSources: ARABIC_ABOUT_SOURCES,
+};
+
+export const books: Book[] = [englishBook, mathBook, physicsBook, chemistryBook, biologyBook, arabicBook];
 export const bookBySubjectId = (id: string): Book | undefined => books.find((b) => b.subjectId === id);
 
 export const allBooksUnits: Unit[] = books.flatMap((b) => b.units);
@@ -152,6 +172,7 @@ export function examSpecForUnit(u: Unit): ExamSpec {
   const isPhysics = book?.subjectId === 'phys6';
   const isChemistry = book?.subjectId === 'chem6';
   const isBiology = book?.subjectId === 'bio6';
+  const isArabic = book?.subjectId === 'ar6';
   return {
     id: u.id,
     titleAr: `الامتحان الوزاري — ${u.titleAr}`,
@@ -163,12 +184,14 @@ export function examSpecForUnit(u: Unit): ExamSpec {
           ? `Chemistry · Sixth Preparatory · Chapter ${u.number}`
           : isBiology
             ? `Biology · Sixth Preparatory · Chapter ${u.number}`
-            : `English for Iraq · Sixth Preparatory · Unit ${u.number}`,
+            : isArabic
+              ? `Arabic · Sixth Preparatory · Chapter ${u.number}`
+              : `English for Iraq · Sixth Preparatory · Unit ${u.number}`,
     minutes: u.examMinutes,
     questions: u.exam,
     groupBy: 'skill',
     backLabel: `العودة إلى ${book?.unitWord ?? 'الوحدة'}`,
-    introNote: isMath || isPhysics || isChemistry || isBiology
+    introNote: isMath || isPhysics || isChemistry || isBiology || isArabic
       ? 'ورقة بأسلوب الوزاري من هذا الفصل وحده: أسئلة اختيارية تُصحَّح فورًا بعد التسليم، وأسئلة مقالية تقارن فيها حلك بالحل النموذجي وتصحّح لنفسك بمفتاح التصحيح — كما يجب أن تتدرب للامتحان الحقيقي.'
       : undefined,
   };
@@ -275,7 +298,31 @@ export const subjects: Subject[] = [
       { number: 5, titleAr: 'الوراثة', titleEn: 'Genetics', status: 'live' },
     ],
   },
-  { id: 'ar6', titleAr: 'اللغة العربية', titleEn: 'Arabic', grade: 'السادس الإعدادي', status: 'soon', blurb: '', units: [] },
+  {
+    id: 'ar6',
+    titleAr: 'اللغة العربية',
+    titleEn: 'Arabic',
+    grade: 'السادس الإعدادي',
+    status: 'live',
+    blurb: 'كتاب اللغة العربية للسادس الإعدادي كاملًا بطبعتها التكاملية الحالية المشتركة بين الفرعين: خمسة عشر فصلًا — الأساليب النحوية العشرة بإعراب كامل مسبَّب خطوة بخطوة، وموضوعات الأدب بشروحاتها النموذجية، وفصل إنشاء موجَّه — وامتحان وزاري شامل يحاكي الورقة الرسمية بأقسامها الثلاثة.',
+    units: [
+      { number: 1, titleAr: 'أسلوب الاستفهام', titleEn: 'Interrogation', status: 'live' },
+      { number: 2, titleAr: 'أسلوب النفي', titleEn: 'Negation', status: 'live' },
+      { number: 3, titleAr: 'أسلوب التقديم والتأخير', titleEn: 'Fronting & Postponement', status: 'live' },
+      { number: 4, titleAr: 'أسلوب التوكيد', titleEn: 'Emphasis', status: 'live' },
+      { number: 5, titleAr: 'أسلوب النداء', titleEn: 'Vocative', status: 'live' },
+      { number: 6, titleAr: 'أسلوب التعجب', titleEn: 'Exclamation', status: 'live' },
+      { number: 7, titleAr: 'أسلوبا المدح والذم', titleEn: 'Praise & Blame', status: 'live' },
+      { number: 8, titleAr: 'أسلوبا التمني والترجي', titleEn: 'Wishing & Hoping', status: 'live' },
+      { number: 9, titleAr: 'أسلوبا العرض والتحضيض', titleEn: 'Gentle & Urgent Request', status: 'live' },
+      { number: 10, titleAr: 'أسلوبا التحذير والإغراء', titleEn: 'Warning & Encouragement', status: 'live' },
+      { number: 11, titleAr: 'الأدب الحديث وشعراؤه', titleEn: 'Modern Literature & Its Poets', status: 'live' },
+      { number: 12, titleAr: 'مدارس الشعر الحديث', titleEn: 'Schools of Modern Poetry', status: 'live' },
+      { number: 13, titleAr: 'فنون النثر الحديث', titleEn: 'Modern Prose Arts', status: 'live' },
+      { number: 14, titleAr: 'المقالة والسيرة والمذاهب النقدية', titleEn: 'Essay, Biography & Critical Schools', status: 'live' },
+      { number: 15, titleAr: 'الإنشاء والتعبير', titleEn: 'Composition & Expression', status: 'live' },
+    ],
+  },
 ];
 
 /** Back-compat alias (Phase 1 name for Unit One). */
