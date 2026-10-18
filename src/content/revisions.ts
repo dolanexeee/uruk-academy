@@ -5,7 +5,11 @@
    so the Academy builds them as what they are — review hubs whose quiz,
    flashcard deck and half-book mock exam are composed from the source
    units' own verified pools (tagged per source unit so reports can break
-   results down unit by unit). See CONTENT.md. */
+   results down unit by unit). See CONTENT.md.
+   P2.1 fidelity note: the book's own Unit 8 revision texts are
+   environment-themed («Our natural resources», «Recycling waste»,
+   «The Euphrates River»); Unit 8's hub copy below records this, while
+   the hub's quizzes/decks/mocks stay composed from the revised units. */
 
 import type { QuizQuestion, Unit } from './types';
 import { unit1 } from './unit1';
@@ -61,7 +65,7 @@ export const unit8: Unit = {
   number: 8,
   titleAr: 'الوحدة الثامنة — مراجعة',
   titleEn: 'Revision: Units 5–7',
-  theme: 'وحدة المراجعة الختامية كما في الكتاب: تثبيت الوحدات ٥–٧ قبل الامتحان الوزاري الشامل.',
+  theme: 'وحدة المراجعة الختامية كما في الكتاب: تثبيت الوحدات ٥–٧ قبل الامتحان الوزاري الشامل. وللتوثيق: نصوص المراجعة في الكتاب نفسه لهذه الوحدة بيئية الموضوع — «Our natural resources» و«Recycling waste» و«The Euphrates River».',
   status: 'live',
   kind: 'revision',
   revises: [5, 6, 7],

@@ -13,7 +13,7 @@ const vocab: VocabWord[] = [
   { id: 'u6-savings-account', word: 'savings account', pos: 'اسم', meaning: 'حساب التوفير — حساب مصرفي يدفع فائدة على المال المودَع', example: 'She keeps her money in a savings account.', exampleAr: 'تحتفظ بمالها في حساب توفير.' },
   { id: 'u6-interest', word: 'interest', pos: 'اسم', meaning: 'الفائدة — مال إضافي يدفعه المصرف مقابل إيداعك', example: 'You get more interest if you leave your money in the account longer.', exampleAr: 'تحصل على فائدة أكبر إذا تركت مالك في الحساب مدة أطول.' },
   { id: 'u6-invest', word: 'invest', pos: 'فعل', meaning: 'يستثمر — يضع المال في مشروع أو أصل لينمو', example: 'People invest their money in different ways.', exampleAr: 'يستثمر الناس أموالهم بطرق مختلفة.' },
-  { id: 'u6-investment', word: 'investment', pos: 'اسم', meaning: 'استثمار — ما تضع فيه مالك توقّعًا للربح', example: 'Buying property is a popular investment in the UK.', exampleAr: 'شراء العقار استثمار شائع في بريطانيا.' },
+  { id: 'u6-investment', word: 'investment', pos: 'اسم', meaning: 'استثمار — ما تضع فيه مالك توقّعًا للربح', example: 'Buying property is the most popular investment in the UK.', exampleAr: 'شراء العقار هو أشهر استثمار في بريطانيا.' },
   { id: 'u6-shares', word: 'shares', pos: 'اسم', meaning: 'أسهم — حصص ملكية صغيرة في الشركات', example: 'He bought shares in a large company.', exampleAr: 'اشترى أسهمًا في شركة كبيرة.' },
   { id: 'u6-property', word: 'property', pos: 'اسم', meaning: 'عقار — أرض أو مبنى يُشترى للسكن أو الاستثمار', example: 'Property prices have risen in recent years.', exampleAr: 'ارتفعت أسعار العقارات في السنوات الأخيرة.' },
   { id: 'u6-pension', word: 'pension', pos: 'اسم', meaning: 'راتب تقاعدي — دخل منتظم بعد التوقف عن العمل', example: 'When we start work, we are encouraged to put money into a pension plan.', exampleAr: 'حين نبدأ العمل، نُشجَّع على وضع المال في خطة تقاعد.' },
@@ -61,8 +61,8 @@ export const unit6: Unit = {
           title: 'الدرس بملخّصنا',
           paragraphs: [
             'يبدأ الدرس من المستقبل: ينبغي للناس أن يدّخروا جزءًا من مالهم للمستقبل، لأن الحياة تحمل طوارئ، ولأن الإنسان سيكبر ويتوقف يومًا عن العمل. فالادّخار ليس بخلًا — إنه أمان الغد يُبنى من فائض اليوم.',
-            'أبسط صور الادّخار حسابُ التوفير في المصرف: تودِع مالك فيدفع لك المصرف فائدة عليه، وكلما ارتفعت نسبة الفائدة وبقي مالك في الحساب مدة أطول، حصلت على فائدة أكبر. المال هنا آمن، ونموّه بطيء لكنه مؤكد.',
-            'أما الاستثمار فيضع المال في أصول قد تزيد قيمتها: كشراء أسهم في الشركات، أو شراء عقار — والعقار من أشهر الاستثمارات في بريطانيا في الوقت الحاضر. الاستثمار قد يربح أكثر من حساب التوفير، لكنه يحمل مخاطرة: فالقيم تصعد وتهبط.',
+            'أبسط صور الادّخار حسابُ التوفير في المصرف: تودِع مالك فيدفع لك المصرف فائدة عليه، وكلما طال بقاء المال في الحساب ازدادت الفائدة — فمدة البقاء هي العامل الحاسم الذي يقرّره الدرس. المال هنا آمن، ونموّه بطيء لكنه مؤكد.',
+            'أما الاستثمار فيضع المال في أصول قد تزيد قيمتها: كشراء أسهم في الشركات، أو شراء عقار — وهو أشهر استثمار في بريطانيا في الوقت الحاضر. الاستثمار قد يربح أكثر من حساب التوفير، لكنه يحمل مخاطرة: فالقيم تصعد وتهبط.',
             'وهكذا يستفيد الناس من أموالهم بوجوه متكاملة: مال آمن ينمو ببطء في التوفير، ومال مغامر قد ينمو بسرعة في الاستثمار، والتخطيط المبكر للنهاية: فحين نبدأ العمل نُشجَّع على وضع المال في خطط التقاعد (pension plans) ليكون لنا دخل منتظم حين نتقاعد.',
           ],
           examples: [
@@ -78,10 +78,10 @@ export const unit6: Unit = {
           paragraphs: ['ستة مواضع سؤال رسمية عن هذا الدرس — وهي وحدها خريطة الدرس:'],
           bullets: [
             'يدّخر الناس للمستقبل: للطوارئ، ولزمن التوقف عن العمل.',
-            'يحصل أصحاب حسابات التوفير على فائدة أكبر بارتفاع نسبة الفائدة وطول بقاء المال.',
+            'يحصل أصحاب حسابات التوفير على فائدة أكبر كلما طال بقاء المال في الحساب — فالمدة وحدها هي العامل الذي يقرّره الدرس.',
             'يستثمر الناس أموالهم في الأسهم وفي العقارات (طريقتان يطلبهما السؤال صراحة).',
             'يستفيد الناس من أموالهم بجعلها تنمو: فائدة التوفير وأرباح الاستثمار.',
-            'شراء العقار من أشهر الاستثمارات في بريطانيا حاليًا.',
+            'شراء العقار هو أشهر استثمار في بريطانيا حاليًا.',
             'حين نبدأ العمل نُشجَّع على الاشتراك في خطط التقاعد لنضمن دخلًا عند التقاعد.',
           ],
           callout: 'سؤال «كيف يستثمر الناس أموالهم؟» يطلب طريقتين دائمًا — جهّز إجابتك بثنائية: shares و property.',
@@ -93,7 +93,7 @@ export const unit6: Unit = {
       title: 'القواعد — المبني للمجهول Passive Voice',
       kind: 'grammar',
       minutes: 20,
-      intro: 'قواعد الوحدة السادسة هي المبني للمجهول بكل أزمنته: صيغة تأتي في كل ورقة وزارية، وتتحوّل إليها الجمل بنمط ثابت إذا أتقنته صارت درجاتها مضمونة.',
+      intro: 'قواعد الوحدة السادسة هي المبني للمجهول بكل أزمنته: صيغة تأتي في كل ورقة وزارية، وتتحوّل إليها الجمل بنمط ثابت إذا أتقنته صارت درجاتها مضمونة. وفي نهاية الدرس قسم تذكير قصير بالجمل الشرطية — لأن تدريب «اختبر نفسك» في كتاب النشاط يختبرها في هذه الوحدة أيضًا، وأصلها ومعالجتها الكاملة في الوحدة الثالثة.',
       sections: [
         {
           type: 'grammar',
@@ -128,6 +128,24 @@ export const unit6: Unit = {
             { en: 'The bank was robbed yesterday.', ar: 'سُرق المصرف أمس — هدف تمارين الترتيب في الورقة الوزارية.' },
           ],
           callout: 'ثلثا الخطأ في هذا الباب سببه نسيان be أو كتابة الفعل بصيغته العادية بعدها. القاعدة الذهبية: لا مبني للمجهول بلا be + تصريف ثالث.',
+        },
+        {
+          type: 'grammar',
+          title: 'ثالثًا: تذكير — الجمل الشرطية تُختبر في هذه الوحدة أيضًا',
+          paragraphs: [
+            'بأمانة التوثيق: الجمل الشرطية ليست نظام هذه الوحدة الأصلي — معالجتها الكاملة هي درس قواعد الوحدة الثالثة. لكن تدريب «اختبر نفسك» (Test yourself) في كتاب النشاط للوحدة السادسة يختبرها أيضًا، فإليك خلاصة أنواعها الأربعة بأمثلة من عالم مال هذه الوحدة، ثم ارجع إلى الوحدة الثالثة للإتقان.',
+          ],
+          table: {
+            head: ['النوع', 'التكوين', 'مثال من عالم المال'],
+            rows: [
+              ['الصفري', 'If + مضارع بسيط، مضارع بسيط', 'If you keep money at home, it earns nothing.'],
+              ['الأول', 'If + مضارع بسيط، will + مصدر', 'If you save a little every month, you will have enough for emergencies.'],
+              ['الثاني', 'If + ماضٍ بسيط، would + مصدر', 'If I earned more, I would invest in property.'],
+              ['الثالث', 'If + ماضٍ تام، would have + p.p.', 'If she had joined a pension plan early, she would have had a bigger income in retirement.'],
+            ],
+            ltrCols: [2],
+          },
+          callout: 'للمعالجة الكاملة — تسمية النوع من المعنى، وwere مع كل الضمائر، وخدع الامتحان — ادرس درس «القواعد — الجمل الشرطية والجمل المؤكِّدة» في الوحدة الثالثة.',
         },
       ],
     },
@@ -178,7 +196,7 @@ export const unit6: Unit = {
           type: 'explain',
           title: 'خلاصة الوحدة السادسة',
           paragraphs: [
-            'ركائز الوحدة: فهم درس «Making Money» بأدواته الثلاث (توفير بفائدة، استثمار بأسهم وعقار، تقاعد مخطّط)، وإتقان تحويل الجمل إلى المبني للمجهول بكل الأزمنة مع قاعدة be + التصريف الثالث، ومفردات المال والمصارف العشرون.',
+            'ركائز الوحدة: فهم درس «Making Money» بأدواته الثلاث (توفير بفائدة، استثمار بأسهم وعقار، تقاعد مخطّط)، وإتقان تحويل الجمل إلى المبني للمجهول بكل الأزمنة مع قاعدة be + التصريف الثالث، وتذكير بالجمل الشرطية لأن «اختبر نفسك» في كتاب النشاط يختبرها هنا أيضًا (ومعالجتها الكاملة في الوحدة الثالثة)، ومفردات المال والمصارف العشرون.',
           ],
           bullets: [
             'اختبر نفسك في «اختبار الوحدة» مع شرح لكل إجابة.',
@@ -191,7 +209,7 @@ export const unit6: Unit = {
   ],
   quiz: [
     { id: 'u6q-r1', skill: 'reading', type: 'mcq', q: 'لماذا ينبغي للناس أن يدّخروا المال حسب درس «Making Money»؟', options: ['ليشتروا سيارات أسرع', 'للمستقبل: للطوارئ ولزمن التقاعد', 'لأن المصارف تفرض ذلك بالقوة', 'لإقراض الأصدقاء دون فائدة'], answer: 1, explain: 'الادّخار في الدرس أمان للمستقبل: طوارئ الحياة ودخل ما بعد التوقف عن العمل.', marks: 1 },
-    { id: 'u6q-r2', skill: 'reading', type: 'mcq', q: 'متى يحصل صاحب حساب التوفير على فائدة أكبر؟', options: ['حين يسحب ماله كل أسبوع', 'حين ترتفع نسبة الفائدة ويبقى المال مدة أطول', 'حين يفتح حسابًا في مصرف أجنبي فقط', 'حين يخفي ماله في البيت'], answer: 1, explain: 'الفائدة تكبر بعاملين: ارتفاع نسبتها، وطول بقاء المال في الحساب.', marks: 1 },
+    { id: 'u6q-r2', skill: 'reading', type: 'mcq', q: 'متى يحصل صاحب حساب التوفير على فائدة أكبر؟', options: ['حين يسحب ماله كل أسبوع', 'حين يبقى المال في الحساب مدة أطول', 'حين يفتح حسابًا في مصرف أجنبي فقط', 'حين يخفي ماله في البيت'], answer: 1, explain: 'بحسب الدرس وكتاب النشاط، العامل الحاسم هو مدة بقاء المال في الحساب (keep it for a long time) — كلما طالت المدة زادت الفائدة.', marks: 1 },
     { id: 'u6q-r3', skill: 'reading', type: 'mcq', q: 'ما الطريقتان اللتان يذكرهما الدرس لاستثمار المال؟', options: ['القمار واليانصيب', 'شراء الأسهم وشراء العقار', 'إقراض الغرباء وشراء الذهب فقط', 'الادّخار في الجيب وشراء السيارات'], answer: 1, explain: 'ثنائية الدرس الشهيرة التي يطلبها سؤال الوزارة صراحة: shares و property.', marks: 1 },
     { id: 'u6q-r4', skill: 'reading', type: 'tf', q: 'حين نبدأ العمل نُشجَّع على وضع المال في خطط التقاعد.', options: ['صح', 'خطأ'], answer: 0, explain: 'صحيح — جملة الدرس بنصّها تقريبًا، وهدفها دخل منتظم عند التقاعد.', marks: 1 },
     { id: 'u6q-r5', skill: 'reading', type: 'mcq', q: 'ما أشهر استثمار في بريطانيا في الوقت الحاضر حسب الدرس؟', options: ['شراء العقار', 'تجارة السيارات المستعملة', 'حسابات التوفير فقط', 'شراء الذهب'], answer: 0, explain: 'العقار property هو الاستثمار الأشهر في بريطانيا كما يقرر الدرس.', marks: 1 },
@@ -210,7 +228,7 @@ export const unit6: Unit = {
     { id: 'u6e-r2', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'How can people invest their money? (two ways)', options: ['By gambling and lotteries', 'By buying shares and buying property', 'By hiding it at home', 'By spending it quickly'], answer: 1, explain: 'طريقتا الدرس: الأسهم والعقار — والسؤال الوزاري يطلب اثنتين دائمًا.', marks: 4 },
     { id: 'u6e-r3', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'What is the most popular investment in the UK at the moment?', options: ['Savings accounts', 'Property', 'Gold coins', 'Used cars'], answer: 1, explain: 'العقار هو الاستثمار الأشهر في بريطانيا حسب الدرس.', marks: 4 },
     { id: 'u6e-r4', skill: 'reading', type: 'mcq', q: 'أكمل الجملة مستخدمًا معلومات الدرس:', qEn: 'When we start work, we are encouraged to put money into a pension plan in order to ___.', options: ['travel every year', 'have an income when we retire', 'avoid paying for food', 'buy a bigger house at once'], answer: 1, explain: 'غاية خطة التقاعد: دخل منتظم حين نتوقف عن العمل.', marks: 4 },
-    { id: 'u6e-r5', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'When do people get a lot of interest on their savings accounts?', options: ['When they empty the account weekly', 'When interest rates are high and the money stays longer', 'When the bank is closed', 'When they borrow more money'], answer: 1, explain: 'الفائدة الكبيرة ثمرة عاملين: نسبة مرتفعة وبقاء أطول للمال.', marks: 4 },
+    { id: 'u6e-r5', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'When do people get a lot of interest on their savings accounts?', options: ['When they empty the account weekly', 'When they keep their money in the account for a long time', 'When the bank is closed', 'When they borrow more money'], answer: 1, explain: 'حسب الدرس: الفائدة الأكبر ثمرة طول بقاء المال في الحساب وحده — مدة البقاء هي العامل المقرَّر.', marks: 4 },
     { id: 'u6e-g1', skill: 'grammar', type: 'mcq', q: 'رتّب الكلمات لتكوين جملة مبنية للمجهول:', qEn: '(was / The / yesterday / bank / robbed)', options: ['The bank was robbed yesterday.', 'The yesterday bank was robbed the.', 'Was bank the robbed yesterday the.', 'The robbed was bank yesterday.'], answer: 0, explain: 'ترتيب نماذج الوزارة الشهير: فاعل (المفعول أصلًا) + was + p.p. + ظرف الزمان.', marks: 4 },
     { id: 'u6e-g2', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة:', qEn: 'My bedroom ___ at the moment, so I’m sleeping in the living room.', options: ['is being painted', 'is painting by me', 'paints now', 'being paint'], answer: 0, explain: 'مضارع مستمر مجهول (يحدث الآن): is being + p.p. — من أسئلة نماذج الوزارة.', marks: 4 },
     { id: 'u6e-g3', skill: 'grammar', type: 'mcq', q: 'حوّل إلى المبني للمجهول:', qEn: 'People use these coins in Egypt. → These coins ___.', options: ['are used in Egypt', 'use in Egypt', 'is used by people hands', 'used yesterday in Egypt'], answer: 0, explain: 'مضارع بسيط مجهول لجمع: are used — والفاعل العام (people) يُحذف لأنه غير مهم.', marks: 4 },

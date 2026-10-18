@@ -98,3 +98,37 @@ test('screenshots p2: all-units subject page, a U3 lesson, U4 revision hub, caps
   await page.waitForTimeout(300);
   await page.screenshot({ path: `${DIR}/12-capstone-exam-p2.png` });
 });
+
+test('screenshots p2.1: U3 grammar with reported speech + wish, U5 grammar with past perfect + relatives, U7 grammar without future perfect', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
+  await page.getByRole('button', { name: /اللغة الإنجليزية/ }).first().click();
+  await expect(page.getByText('الوحدة الأولى')).toBeVisible();
+
+  // U3 grammar lesson — the two Activity-Book systems added in P2.1
+  await page.getByRole('button', { name: /الوحدة الثالثة/ }).first().click();
+  await page.getByRole('button', { name: /القواعد — الجمل الشرطية/ }).click();
+  await expect(page.getByText('ثالثًا: الكلام المنقول Reported Speech')).toBeVisible();
+  await expect(page.getByText('رابعًا: أبنية التمنّي Wish Structures')).toBeVisible();
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${DIR}/13-u3-lesson-p21.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الوحدة/ }).click();
+  await expect(page.getByText('الوحدة الثالثة')).toBeVisible();
+
+  // U5 grammar lesson — third section: past perfect + relative clauses
+  await page.getByRole('button', { name: /الوحدة الخامسة/ }).first().click();
+  await page.getByRole('button', { name: /القواعد — المضارع التام/ }).click();
+  await expect(page.getByText(/ثالثًا: الماضي التام والجمل الموصولة/)).toBeVisible();
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${DIR}/14-u5-grammar-p21.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الوحدة/ }).click();
+  await expect(page.getByText('الوحدة الخامسة')).toBeVisible();
+
+  // U7 grammar lesson — five Activity-Book future types; future perfect is gone
+  await page.getByRole('button', { name: /الوحدة السابعة/ }).first().click();
+  await page.getByRole('button', { name: /القواعد — أزمنة المستقبل/ }).click();
+  await expect(page.getByText('أولًا: خريطة صور المستقبل')).toBeVisible();
+  await expect(page.getByText('المستقبل التام')).toHaveCount(0);
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${DIR}/15-u7-grammar-p21.png`, fullPage: true });
+});

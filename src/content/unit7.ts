@@ -3,9 +3,13 @@
    Ministry of Education's published sample questions for this lesson
    (why the writer is improving his English, the careers section, body
    language in interviews, CV writing, evening/summer classes).
-   Grammar: future forms — verified from Iraqi teacher notes for Unit
-   Seven (future tenses) and the Ministry's grammar samples
-   (incl. future in the past). All text is our own writing. */
+   Grammar: future forms — the Activity Book's five future types
+   (will / going to / present continuous / present simple / future
+   continuous) plus future in the past. P2.1 discipline note: an
+   earlier draft also taught the future perfect as a unit topic;
+   the AB classification does not include it for this unit, so it
+   was removed from the lesson, quiz and exam in P2.1.
+   All text is our own writing. */
 
 import type { Unit, VocabWord } from './types';
 
@@ -99,20 +103,20 @@ export const unit7: Unit = {
       title: 'القواعد — أزمنة المستقبل وصوره',
       kind: 'grammar',
       minutes: 20,
-      intro: 'قواعد الوحدة السابعة هي عائلة المستقبل كاملة: للإنجليزية خمس طرق رئيسية للحديث عمّا سيأتي، ولكل طريقة معناها الدقيق. أسئلة الوزارة تطلب إكمال الجمل بالصورة الصحيحة من الفعل، والفرق بين الصور هو المطلوب.',
+      intro: 'قواعد الوحدة السابعة هي عائلة المستقبل كاملة كما يصنّفها كتاب النشاط: خمسة أنواع (will، وgoing to، والمضارع المستمر، والمضارع البسيط، والمستقبل المستمر)، ثم صيغة خاصة هي المستقبل في الماضي. لكل صورة معناها الدقيق، وأسئلة الوزارة تطلب إكمال الجمل بالصورة الصحيحة من الفعل — والفرق بين الصور هو المطلوب.',
       sections: [
         {
           type: 'grammar',
           title: 'أولًا: خريطة صور المستقبل',
-          paragraphs: ['اختر الصورة بحسب المعنى: خطة مقرّرة، أو موعد ثابت، أو ترتيب مؤكد، أو مشهد جارٍ في لحظة مستقبلية، أو حدث سيكتمل قبل لحظة مستقبلية.'],
+          paragraphs: ['اختر الصورة بحسب المعنى: توقّع أو قرار لحظي، أو خطة مقرّرة، أو موعد ثابت، أو ترتيب مؤكد، أو مشهد جارٍ في لحظة مستقبلية.'],
           table: {
             head: ['الصورة', 'التكوين', 'الاستخدام', 'مثال'],
             rows: [
+              ['will', 'will + verb', 'توقّعات، قرارات لحظية، وعود وعروض', 'I think he will pass the exam.'],
               ['be going to', 'am/is/are going to + verb', 'خطط ونوايا مقرّرة من قبل', 'We are going to buy a new house next month.'],
               ['المضارع المستمر', 'am/is/are + verb-ing', 'ترتيبات مؤكدة بموعد ومكان', 'I am meeting my friend at the airport tomorrow.'],
               ['المضارع البسيط', 'verb / verb-s', 'جداول ومواعيد ثابتة (قطارات، دروس)', 'The train departs in ten minutes.'],
               ['المستقبل المستمر', 'will be + verb-ing', 'حدث سيكون جاريًا في لحظة من المستقبل', 'In an hour, I will be sitting in front of my TV.'],
-              ['المستقبل التام', 'will have + p.p.', 'حدث سيكتمل قبل لحظة من المستقبل', 'By 2050, all students will have their own computers.'],
             ],
             ltrCols: [1, 3],
           },
@@ -144,7 +148,7 @@ export const unit7: Unit = {
             { en: 'He decided he was going to study medicine.', ar: 'قرار ماضٍ عن خطة كانت مستقبلية: was going to.' },
             { en: 'She said she would phone us the next day.', ar: 'will المنقولة إلى الماضي تصبح would.' },
           ],
-          callout: 'قاعدة الإكمال الوزارية: إذا رأيت in an hour / this time tomorrow فكّر بالمستقبل المستمر، وإذا رأيت by + زمن مستقبلي فكّر بالمستقبل التام.',
+          callout: 'قاعدة الإكمال الوزارية: إذا رأيت in an hour / this time tomorrow فكّر بالمستقبل المستمر، وإذا رأيت موعدًا ثابتًا في جدول (قطار يغادر، درس يبدأ) فكّر بالمضارع البسيط.',
         },
       ],
     },
@@ -195,7 +199,7 @@ export const unit7: Unit = {
           type: 'explain',
           title: 'خلاصة الوحدة السابعة',
           paragraphs: [
-            'ركائز الوحدة ثلاث: فهم درس «Using the Library» وحقائقه (دافع الكاتب، قسم المهن، لغة الجسد، السيرة الذاتية، الدروس المسائية)، والتمييز الدقيق بين صور المستقبل الخمس بحسب المعنى، وصيغة المستقبل في الماضي was/were going to و would عند رواية خطط ماضية.',
+            'ركائز الوحدة ثلاث: فهم درس «Using the Library» وحقائقه (دافع الكاتب، قسم المهن، لغة الجسد، السيرة الذاتية، الدروس المسائية)، والتمييز الدقيق بين أنواع المستقبل الخمسة كما يصنّفها كتاب النشاط (will وgoing to والمضارع المستمر والمضارع البسيط والمستقبل المستمر) بحسب المعنى، وصيغة المستقبل في الماضي was/were going to و would عند رواية خطط ماضية.',
           ],
           bullets: [
             'اختبر نفسك في «اختبار الوحدة» مع شرح لكل إجابة.',
@@ -215,7 +219,7 @@ export const unit7: Unit = {
     { id: 'u7q-g1', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة لإكمال الجملة:', qEn: 'We ___ a new house next month. (a plan we have already decided)', options: ['are going to buy', 'buys', 'bought yesterday', 'buying now'], answer: 0, explain: 'خطة مقرّرة سلفًا تأتي بـ be going to + المصدر — من تدريبات الوحدة نفسها.', marks: 1 },
     { id: 'u7q-g2', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة لإكمال الجملة:', qEn: 'Hurry up! The train ___ in ten minutes.', options: ['will be depart', 'departs', 'is depart', 'depart yesterday'], answer: 1, explain: 'مواعيد الجداول الثابتة (القطارات والدروس) تأتي بالمضارع البسيط: departs.', marks: 1 },
     { id: 'u7q-g3', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة لإكمال الجملة:', qEn: 'In an hour, I ___ in front of my TV.', options: ['will be sitting', 'sits', 'am sit', 'sat yesterday'], answer: 0, explain: 'حدث سيكون جاريًا في لحظة مستقبلية محددة يأتي بالمستقبل المستمر: will be sitting.', marks: 1 },
-    { id: 'u7q-g4', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة لإكمال الجملة:', qEn: 'By the year 2050, all students ___ their own computers.', options: ['will have', 'has now', 'had yesterday', 'having'], answer: 0, explain: 'حدث سيكتمل قبل لحظة مستقبلية (by 2050) يأتي بالمستقبل التام: will have + التصريف الثالث.', marks: 1 },
+    { id: 'u7q-g4', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة لإكمال الجملة:', qEn: 'I think our team ___ the match tomorrow.', options: ['will win', 'wins yesterday', 'won last week', 'winning now'], answer: 0, explain: 'التوقّعات والآراء عمّا سيحدث تأتي بـ will + المصدر — أول أنواع المستقبل في تصنيف كتاب النشاط.', marks: 1 },
     { id: 'u7q-g5', skill: 'grammar', type: 'mcq', q: 'أعد كتابة الجملة بالمستقبل في الماضي:', qEn: 'He is going to be a librarian. → He decided he ___.', options: ['was going to be a librarian', 'is going to be a librarian now', 'will be a librarian yesterday', 'goes to be a librarian'], answer: 0, explain: 'عند رواية خطة مستقبلية في الماضي ترجع be going to إلى was going to — نمط وزاري ثابت.', marks: 1 },
     { id: 'u7q-v1', skill: 'vocab', type: 'mcq', q: 'ما معنى body language؟', options: ['لغة أجنبية صعبة', 'لغة الجسد — تعبيرات الحركات والجلوس', 'لغة برمجة للحاسوب', 'خط اليد في الكتابة'], answer: 1, explain: 'لغة الجسد هي ما تعبّر عنه هيئتك وحركاتك دون كلام، وهي من حقائق درس المقابلات في هذه الوحدة.', marks: 1 },
     { id: 'u7q-v2', skill: 'vocab', type: 'mcq', q: 'اختر الكلمة الصحيحة لإكمال الجملة:', qEn: 'If you want information about evening classes, ask the ___.', options: ['librarian', 'paramedic', 'operator', 'neighbour'], answer: 0, explain: 'أمين المكتبة librarian هو المسؤول عن المكتبة ومساعدة روّادها بالمعلومات.', marks: 1 },
@@ -230,7 +234,7 @@ export const unit7: Unit = {
     { id: 'u7e-r5', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'Where can you get information about evening and summer classes?', options: ['From the bank manager', 'From the librarian', 'From a travel agent', 'From the careers section only'], answer: 1, explain: 'من أمين المكتبة — حقيقة صريحة في نماذج أسئلة الدرس.', marks: 4 },
     { id: 'u7e-g1', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة:', qEn: 'I ___ my friend at the airport tomorrow. (arrangement)', options: ['am meeting', 'meets', 'met yesterday', 'will be meet'], answer: 0, explain: 'ترتيب مؤكد بموعد ومكان يأتي بالمضارع المستمر: am meeting.', marks: 4 },
     { id: 'u7e-g2', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة:', qEn: 'This time tomorrow, we ___ over the sea.', options: ['will be flying', 'flies yesterday', 'fly now', 'flying last week'], answer: 0, explain: '«في مثل هذا الوقت غدًا» علامة المستقبل المستمر: حدث جارٍ في لحظة مستقبلية.', marks: 4 },
-    { id: 'u7e-g3', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة:', qEn: 'By next June, she ___ her course.', options: ['will have finished', 'finishes yesterday', 'is finish', 'finish now'], answer: 0, explain: 'by + لحظة مستقبلية تعني اكتمال الحدث قبلها: المستقبل التام will have finished.', marks: 4 },
+    { id: 'u7e-g3', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة:', qEn: '“There is no milk in the fridge.” — “Don’t worry, I ___ some on my way home.”', options: ['will buy', 'buys yesterday', 'bought now', 'buying last night'], answer: 0, explain: 'قرار لحظي يتخذه المتكلم في لحظة الكلام يأتي بـ will — لا خطة سابقة ولا ترتيب مؤكد.', marks: 4 },
     { id: 'u7e-g4', skill: 'grammar', type: 'mcq', q: 'أعد الكتابة بالمستقبل في الماضي:', qEn: 'She is going to her computer course tomorrow. → I found out she ___ to her computer course.', options: ['was going', 'is going now', 'will go yesterday', 'goes'], answer: 0, explain: 'was going — صيغة نماذج الوزارة نفسها للمستقبل في الماضي.', marks: 4 },
     { id: 'u7e-g5', skill: 'grammar', type: 'tf', q: 'حدّد صحة العبارة النحوية التالية:', qEn: 'We use the present simple for future timetables and fixed schedules.', options: ['True', 'False'], answer: 0, explain: 'صحيح: مواعيد القطارات والدروس الثابتة تأتي بالمضارع البسيط (The train departs at six).', marks: 4 },
     { id: 'u7e-g6', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة:', qEn: 'Watch out! You ___ that glass.', options: ['are going to drop', 'drops yesterday', 'drop last night', 'dropped now'], answer: 0, explain: 'حدث وشيك مبني على دليل حاضر (الزجاج يهتز) يأتي بـ going to للتوقّع القريب.', marks: 4 },

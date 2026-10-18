@@ -12,7 +12,7 @@ const vocab: VocabWord[] = [
   { id: 'u5-break', word: 'break', pos: 'اسم', meaning: 'استراحة — توقف قصير عن العمل', example: 'Our brain and body need a break.', exampleAr: 'دماغنا وجسدنا يحتاجان إلى استراحة.' },
   { id: 'u5-vital', word: 'vital', pos: 'صفة', meaning: 'حيوي — ضروري جدًا لا يمكن الاستغناء عنه', example: 'Regular holidays make us feel vital and alive.', exampleAr: 'العطل المنتظمة تجعلنا نشعر بالحيوية والنشاط.' },
   { id: 'u5-pressure', word: 'pressure', pos: 'اسم', meaning: 'ضغط — إجهاد الحياة والعمل المتراكم', example: 'The pressure of life can cause health problems.', exampleAr: 'ضغط الحياة يمكن أن يسبب مشكلات صحية.' },
-  { id: 'u5-blood-pressure', word: 'blood pressure', pos: 'اسم', meaning: 'ضغط الدم — قوة دفع الدم في الأوعية', example: 'High blood pressure can cause heart disease and strokes.', exampleAr: 'ضغط الدم المرتفع قد يسبب أمراض القلب والجلطات.' },
+  { id: 'u5-blood-pressure', word: 'blood pressure', pos: 'اسم', meaning: 'ضغط الدم — قوة دفع الدم في الأوعية', example: 'High blood pressure can cause strokes and heart attacks.', exampleAr: 'ضغط الدم المرتفع قد يسبب الجلطات والنوبات القلبية.' },
   { id: 'u5-heart-disease', word: 'heart disease', pos: 'اسم', meaning: 'مرض القلب', example: 'Stress and overwork can lead to heart disease.', exampleAr: 'التوتر والإفراط في العمل قد يؤديان إلى مرض القلب.' },
   { id: 'u5-stroke', word: 'stroke', pos: 'اسم', meaning: 'جلطة دماغية — توقف مفاجئ لتدفق الدم إلى الدماغ', example: 'High blood pressure increases the risk of a stroke.', exampleAr: 'ضغط الدم المرتفع يزيد خطر الجلطة الدماغية.' },
   { id: 'u5-brain', word: 'brain', pos: 'اسم', meaning: 'الدماغ — مركز التفكير في الجسم', example: 'Your brain needs a rest just like your body.', exampleAr: 'دماغك يحتاج إلى راحة تمامًا كجسدك.' },
@@ -46,7 +46,7 @@ export const unit5: Unit = {
       title: 'القراءة — لماذا العطل مهمة؟',
       kind: 'reading',
       minutes: 15,
-      intro: 'درس القراءة في الوحدة الخامسة (الدرس العاشر من الكتاب) سؤالٌ في عنوانه: «لماذا العطل مهمة إلى هذا الحد؟» والإجابة التي يبنيها الدرس طبية ونفسية واجتماعية في آن. أسئلة نماذج الوزارة عنه هي خريطتنا.',
+      intro: 'درس القراءة في الوحدة الخامسة (الدرس العاشر من الكتاب) سؤالٌ في عنوانه: «لماذا العطل مهمة إلى هذا الحد؟» وتطرح نماذج الوزارة سؤال العنوان نفسه — لكن إجابة الكتاب الحرفية عنه غير منشورة في النماذج الموثّقة، فلا نخترعها. ما نبني عليه درسنا هو النقاط الموثّقة في تلك النماذج وتدريبات كتاب النشاط: الصحة وضغط الحياة، والحيوية، والوقت مع المقربين، وصورة مدمن العمل.',
       sections: [
         {
           type: 'explain',
@@ -59,14 +59,14 @@ export const unit5: Unit = {
           type: 'reading',
           title: 'الدرس بملخّصنا',
           paragraphs: [
-            'الحجة الأولى طبية: إذا لم يأخذ الناس استراحات أو عطلًا أبدًا، فسيواجهون مشكلات صحية مؤكدة — فضغط الحياة المستمر يولّد أمراضًا، وضغط الدم المرتفع تحديدًا يمكن أن يسبب أمراض القلب والجلطات. الجسد آلة تحتاج صيانة، والعطلة جزء من صيانتها لا رفاهية زائدة.',
+            'الحجة الأولى طبية: إذا لم يأخذ الناس استراحات أو عطلًا أبدًا، فسيواجهون مشكلات صحية مؤكدة — فضغط الحياة المستمر يولّد أمراضًا، وضغط الدم المرتفع تحديدًا يمكن أن يسبب الجلطات الدماغية والنوبات القلبية. الجسد آلة تحتاج صيانة، والعطلة جزء من صيانتها لا رفاهية زائدة.',
             'والحجة الثانية حيوية: العطل المنتظمة تجعل الإنسان يشعر بالحيوية (vital) — فالدماغ والجسد معًا يحتاجان إلى استراحة لاستعادة النشاط. من يرتاح يعود إلى عمله أصفى ذهنًا وأقوى جسدًا من الذي لم يتوقف أبدًا.',
             'والحجة الثالثة اجتماعية: وقت العطلة فرصة لنتعرف من جديد إلى المقربين منا — فحين نقضي الوقت مع عائلاتنا وأصدقائنا، يشعرون أننا نهتم بهم فعلًا، لا بالقول بل بالحضور. العلاقات أيضًا تحتاج «وقتًا» كما يحتاج الجسد «راحة».',
             'ويختم الدرس بصورة تحذيرية: مدمنو العمل (workaholics) — أولئك المدمنون على العمل حدّ تخطّي عطلهم، وكثير منهم يظنون أن لا أحد غيرهم يستطيع إنجاز عملهم، فيؤجلون الراحة عامًا بعد عام… حتى يتعلموا بعد فوات الأوان أن العمل ليس كل شيء في الحياة.',
           ],
           examples: [
             { en: 'If people don’t take breaks and holidays, they will have health problems.', ar: 'إن لم يأخذ الناس استراحات وعطلًا، فستصيبهم مشكلات صحية — جملة الدرس التحذيرية الأولى.' },
-            { en: 'High blood pressure can cause heart disease and strokes.', ar: 'ضغط الدم المرتفع قد يسبب أمراض القلب والجلطات.' },
+            { en: 'High blood pressure can cause strokes and heart attacks.', ar: 'ضغط الدم المرتفع قد يسبب الجلطات والنوبات القلبية.' },
             { en: 'Holiday time is an opportunity to learn about the people close to us.', ar: 'وقت العطلة فرصة للتعرّف إلى المقربين منا.' },
             { en: 'A workaholic is a person who is addicted to work.', ar: 'مدمن العمل شخص مدمن على العمل.' },
           ],
@@ -77,7 +77,7 @@ export const unit5: Unit = {
           paragraphs: ['المواضع التي سألت عنها نماذج الوزارة في هذا الدرس:'],
           bullets: [
             'بلا استراحات أو عطل: مشكلات صحية سببها ضغط الحياة.',
-            'ضغط الدم المرتفع قد يسبب أمراض القلب والجلطات (strokes).',
+            'ضغط الدم المرتفع قد يسبب الجلطات (strokes) والنوبات القلبية (heart attacks) — ثنائية كتاب النشاط الطبية.',
             'العطل المنتظمة تجعلنا نشعر بالحيوية — فالدماغ والجسد يحتاجان استراحة.',
             'وقت العطلة فرصة للتعرّف إلى المقربين منا.',
             'أهلنا وأصدقاؤنا يشعرون باهتمامنا حين نقضي الوقت معهم.',
@@ -91,7 +91,7 @@ export const unit5: Unit = {
       title: 'القواعد — المضارع التام بنوعيه',
       kind: 'grammar',
       minutes: 20,
-      intro: 'قواعد هذه الوحدة من أكثر ما تدرّبه نماذج الوزارة: المضارع التام البسيط والمستمر، مع كلماته المفتاحية (just / already / yet) وثنائية been و gone والفرق الدقيق بينهما.',
+      intro: 'قواعد هذه الوحدة من أكثر ما تدرّبه نماذج الوزارة: المضارع التام البسيط والمستمر، مع كلماته المفتاحية (just / already / yet) وثنائية been و gone والفرق الدقيق بينهما. ويختبر كتاب النشاط لهذه الوحدة نظامين إضافيين — الماضي التام والجمل الموصولة — ولهما القسم الثالث في نهاية الدرس.',
       sections: [
         {
           type: 'grammar',
@@ -124,6 +124,29 @@ export const unit5: Unit = {
             'مع المستمر اسأل: هل أهتم بالنشاط الجاري (مدة و- ing) أم بالنتيجة المنجزة (التصريف الثالث)؟',
           ],
           callout: 'خدعة الامتحان المفضلة: جملة فيها yesterday مع خيار has gone — خطأ دائمًا؛ الظرف المنتهي يفرض الماضي البسيط.',
+        },
+        {
+          type: 'grammar',
+          title: 'ثالثًا: الماضي التام والجمل الموصولة — نظاما كتاب النشاط لهذه الوحدة',
+          paragraphs: [
+            'يختبر كتاب النشاط في تدريبات هذه الوحدة نظامين إضافيين يقفان إلى جانب المضارع التام. أولهما الماضي التام (Past Perfect): had + التصريف الثالث، ويُستخدم لحدث وقع قبل حدث ماضٍ آخر — فإذا اجتمع ماضيان في قصة واحدة، فالأسبق منهما ماضٍ تام واللاحق ماضٍ بسيط، وكلماته المفتاحية: before و after و by the time.',
+            'وثانيهما الجمل الموصولة (Relative Clauses) التي تصف اسمًا قبلها: who للأشخاص، وwhich للأشياء، وthat لهما معًا في الجمل «المحدِّدة» التي لا غنى عنها في تحديد المقصود. أما الجملة «غير المحدِّدة» فتضيف معلومة جانبية عن اسم معروف سلفًا، وتُحصر بين فواصل، ولا يجوز فيها that ولا حذف الموصول.',
+          ],
+          table: {
+            head: ['البنية', 'التكوين', 'مثال'],
+            rows: [
+              ['الماضي التام', 'had + التصريف الثالث', 'When we arrived, the film had already started.'],
+              ['موصولة محدِّدة — شخص', 'who / that تصل الاسم بوصفه', 'A workaholic is a person who works too much.'],
+              ['موصولة محدِّدة — شيء', 'which / that تصل الاسم بوصفه', 'The break that you take at noon refreshes you.'],
+              ['موصولة غير محدِّدة', 'اسم معروف، ثم وصف جانبي بين فاصلتين', 'The hotel, which stood by the sea, was quiet.'],
+            ],
+            ltrCols: [2],
+          },
+          examples: [
+            { en: 'She had never taken a real holiday before that summer.', ar: 'لم تكن قد أخذت عطلة حقيقية قط قبل ذلك الصيف — ماضٍ تام لحدث أسبق من ماضٍ آخر.' },
+            { en: 'People who never rest damage their health.', ar: 'الناس الذين لا يرتاحون أبدًا يدمّرون صحتهم — موصولة محدِّدة بـ who.' },
+          ],
+          callout: 'فرق يطلبه الاختبار: في الجملة المحدِّدة يجوز حذف الموصول إذا كان مفعولًا (The book (that) I read was useful)، أما في غير المحدِّدة — بين الفواصل — فلا حذف ولا that أبدًا.',
         },
       ],
     },
@@ -173,7 +196,7 @@ export const unit5: Unit = {
           type: 'explain',
           title: 'خلاصة الوحدة الخامسة',
           paragraphs: [
-            'ركائز الوحدة: درس العطل بحججه الثلاث (صحة، حيوية، علاقات) وصورة مدمن العمل التحذيرية، والمضارع التام بسيطًا ومستمرًا مع been/gone و just/already/yet، ومفردات الصحة والعمل العشرون.',
+            'ركائز الوحدة: درس العطل بنقاطه الموثّقة (صحة، حيوية، علاقات) وصورة مدمن العمل التحذيرية، والمضارع التام بسيطًا ومستمرًا مع been/gone و just/already/yet، ونظاما كتاب النشاط المرفقان: الماضي التام والجمل الموصولة، ومفردات الصحة والعمل العشرون.',
           ],
           bullets: [
             'اختبر نفسك في «اختبار الوحدة» مع شرح لكل إجابة.',
@@ -186,7 +209,7 @@ export const unit5: Unit = {
   ],
   quiz: [
     { id: 'u5q-r1', skill: 'reading', type: 'mcq', q: 'حسب درس «Why are holidays so important?»، ماذا يحدث إن لم يأخذ الناس استراحات أو عطلًا أبدًا؟', options: ['يصبحون أغنى', 'يواجهون مشكلات صحية بسبب ضغط الحياة', 'يتعلمون لغات أسرع', 'لا شيء يتغير'], answer: 1, explain: 'ضغط الحياة المستمر بلا راحة يولّد المشكلات الصحية — حجة الدرس الأولى.', marks: 1 },
-    { id: 'u5q-r2', skill: 'reading', type: 'mcq', q: 'ضغط الدم المرتفع يمكن أن يسبب…', options: ['تساقط الشعر', 'أمراض القلب والجلطات', 'حساسية الربيع', 'ضعف النظر فقط'], answer: 1, explain: 'heart disease و strokes — الثنائية الطبية التي يطلبها سؤال الوزارة.', marks: 1 },
+    { id: 'u5q-r2', skill: 'reading', type: 'mcq', q: 'ضغط الدم المرتفع يمكن أن يسبب…', options: ['تساقط الشعر', 'الجلطات والنوبات القلبية', 'حساسية الربيع', 'ضعف النظر فقط'], answer: 1, explain: 'strokes و heart attacks — الثنائية الطبية كما ترد في كتاب النشاط ويسأل عنها النموذج الوزاري.', marks: 1 },
     { id: 'u5q-r3', skill: 'reading', type: 'mcq', q: 'ما تعريف مدمن العمل (workaholic) في الدرس؟', options: ['شخص يحب العطل الطويلة', 'شخص مدمن على العمل يعمل بإفراط', 'شخص يعمل بدوام جزئي', 'شخص يبحث عن عمل جديد'], answer: 1, explain: 'workaholic = شخص addicted to work — يعمل بإفراط ويتخطى عطله.', marks: 1 },
     { id: 'u5q-r4', skill: 'reading', type: 'tf', q: 'وقت العطلة فرصة للتعرّف إلى الأشخاص المقربين منا.', options: ['صح', 'خطأ'], answer: 0, explain: 'صحيح — الحجة الاجتماعية للدرس: العطلة تعيد وصلنا بأهلنا وأصدقائنا.', marks: 1 },
     { id: 'u5q-r5', skill: 'reading', type: 'mcq', q: 'لماذا يتخطى بعض الناس عطلهم حسب الدرس؟', options: ['لأن العطل ممنوعة قانونًا', 'لأنهم يظنون أن لا أحد غيرهم يستطيع إنجاز عملهم', 'لأنهم يكرهون السفر', 'لأن الطقس سيئ دائمًا'], answer: 1, explain: 'وهم «لا أحد غيري يستطيع» — ويتعلم أصحابه متأخرين أن العمل ليس كل شيء.', marks: 1 },
@@ -196,13 +219,13 @@ export const unit5: Unit = {
     { id: 'u5q-g4', skill: 'grammar', type: 'mcq', q: 'حوّل الجملة إلى المضارع التام المستمر:', qEn: 'She’s writing letters. She started at two o’clock.', options: ['She has been writing letters since two o’clock.', 'She writes letters yesterday at two.', 'She has wrote letters tomorrow.', 'She is write letters since two.'], answer: 0, explain: 'نقطة بداية محددة في الماضي ونشاط مستمر: has been writing + since — تحويل وزاري كلاسيكي.', marks: 1 },
     { id: 'u5q-g5', skill: 'grammar', type: 'tf', q: 'نستخدم for مع نقطة بداية محددة (for Tuesday) ونستخدم since مع المدة (since three hours).', options: ['صح', 'خطأ'], answer: 1, explain: 'خطأ — العكس تمامًا: since للنقطة (since Tuesday) و for للمدة (for three hours).', marks: 1 },
     { id: 'u5q-v1', skill: 'vocab', type: 'mcq', q: 'ما معنى كلمة vital في الدرس؟', options: ['مكلف', 'حيوي وضروري جدًا', 'نادر الحدوث', 'مؤقت'], answer: 1, explain: 'vital ضروري للحياة: العطل المنتظمة تجعلنا نشعر بالحيوية والنشاط.', marks: 1 },
-    { id: 'u5q-v2', skill: 'vocab', type: 'mcq', q: 'اختر الكلمة الصحيحة لإكمال الجملة:', qEn: 'High blood pressure can cause heart disease and ___.', options: ['strokes', 'holidays', 'opportunities', 'breaks only'], answer: 0, explain: 'strokes الجلطات — الشريك الثاني لأمراض القلب في جملة الدرس الطبية.', marks: 1 },
+    { id: 'u5q-v2', skill: 'vocab', type: 'mcq', q: 'اختر الكلمة الصحيحة لإكمال الجملة:', qEn: 'High blood pressure can cause ___ and heart attacks.', options: ['strokes', 'holidays', 'opportunities', 'breaks only'], answer: 0, explain: 'strokes الجلطات الدماغية — الشريك الأول للنوبات القلبية في جملة كتاب النشاط الطبية.', marks: 1 },
     { id: 'u5q-v3', skill: 'vocab', type: 'tf', q: 'فعل skip في الدرس يعني «يتخطى» — كأن يتخطى المرء عطلته.', options: ['صح', 'خطأ'], answer: 0, explain: 'صحيح — مدمنو العمل skip their holidays عامًا بعد عام.', marks: 1 },
     { id: 'u5q-v4', skill: 'vocab', type: 'mcq', q: 'ما الترجمة الإنجليزية الصحيحة لعبارة «فرصة»؟', options: ['opportunity', 'pressure', 'stroke', 'brain'], answer: 0, explain: 'opportunity — ووقت العطلة في الدرس فرصة للتعرّف إلى المقربين.', marks: 1 },
   ],
   exam: [
     { id: 'u5e-r1', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'What will happen if people don’t take breaks and holidays?', options: ['They will become richer', 'They will have health problems because of the pressure of life', 'They will learn faster', 'Nothing will change'], answer: 1, explain: 'ضغط الحياة بلا راحة = مشكلات صحية — أول أسئلة نماذج الوزارة عن الدرس.', marks: 4 },
-    { id: 'u5e-r2', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'What can high blood pressure cause?', options: ['Better sleep', 'Heart disease and strokes', 'Stronger memory', 'Faster work'], answer: 1, explain: 'أمراض القلب والجلطات — الثنائية الطبية للدرس.', marks: 4 },
+    { id: 'u5e-r2', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'What can high blood pressure cause?', options: ['Better sleep', 'Strokes and heart attacks', 'Stronger memory', 'Faster work'], answer: 1, explain: 'الجلطات الدماغية والنوبات القلبية — الثنائية الطبية للدرس كما في كتاب النشاط.', marks: 4 },
     { id: 'u5e-r3', skill: 'reading', type: 'mcq', q: 'أكمل الجملة مستخدمًا معلومات الدرس:', qEn: 'Holiday time is an opportunity to learn about ___.', options: ['the people close to us', 'foreign stock markets', 'car engines', 'exam tricks'], answer: 0, explain: 'المقربون منا — حجة الدرس الاجتماعية في جملة واحدة.', marks: 4 },
     { id: 'u5e-r4', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'Who are workaholics?', options: ['People who love long holidays', 'People who are addicted to work', 'People looking for their first job', 'People who work one hour a week'], answer: 1, explain: 'مدمنو العمل: addicted to work — تعريف الدرس الحرفي.', marks: 4 },
     { id: 'u5e-r5', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'Why do our families and friends feel we care about them on holiday?', options: ['Because we buy them expensive gifts', 'Because we spend time with them', 'Because we phone them once a year', 'Because we work harder'], answer: 1, explain: 'الحضور وقضاء الوقت — لا الهدايا — ما يُشعرهم باهتمامنا.', marks: 4 },

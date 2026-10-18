@@ -1,7 +1,11 @@
 /* Uruk Academy — Unit Three of «English for Iraq», 6th Preparatory.
    Reading: Lesson 10 «Conference Interpreter» — Samira's story; facts
    verified against the Ministry of Education's published sample
-   questions for this lesson (all eight). Grammar: conditional
+   questions for this lesson (all eight). P2.1 discipline note: the
+   samples ASK what an interpreter's pay depends on but publish no
+   answer key, so no pay factors are asserted anywhere in this unit —
+   the question is presented as the book's own question only.
+   Grammar: conditional
    sentences — the وزاري grammar the Ministry's samples drill with
    type-naming — plus cleft sentences, the unit's Activity Book strand
    per Iraqi teacher guides. All text our own writing. */
@@ -20,9 +24,9 @@ const vocab: VocabWord[] = [
   { id: 'u3-subject', word: 'subject', pos: 'اسم', meaning: 'موضوع — ما يدور حوله الحديث أو المؤتمر', example: 'She prepared by reading about the subject of the conference.', exampleAr: 'استعدّت بالقراءة عن موضوع المؤتمر.' },
   { id: 'u3-take-turns', word: 'take turns', pos: 'عبارة فعلية', meaning: 'يتناوبون — يعمل كلٌّ بدوره', example: 'The two interpreters take turns in the booth.', exampleAr: 'يتناوب المترجمان العمل في الكابينة.' },
   { id: 'u3-waste-time', word: 'waste time', pos: 'عبارة فعلية', meaning: 'يضيّع الوقت دون فائدة', example: 'An interpreter mustn’t waste time thinking.', exampleAr: 'يجب ألّا يضيّع المترجم الوقت في التفكير.' },
-  { id: 'u3-quality', word: 'quality', pos: 'اسم', meaning: 'صفة أو ميزة شخصية (كسرعة البديهة)', example: 'Quick thinking is an important quality in an interpreter.', exampleAr: 'سرعة التفكير صفة مهمة في المترجم الفوري.' },
-  { id: 'u3-experience', word: 'experience', pos: 'اسم', meaning: 'خبرة عملية متراكمة في العمل', example: 'An interpreter’s pay depends on experience and languages.', exampleAr: 'يعتمد أجر المترجم على الخبرة واللغات.' },
-  { id: 'u3-depend-on', word: 'depend on', pos: 'عبارة فعلية', meaning: 'يعتمد على — يتحدد بشيء آخر', example: 'How much she earns depends on the number of languages she knows.', exampleAr: 'يعتمد ما تكسبه على عدد اللغات التي تعرفها.' },
+  { id: 'u3-quality', word: 'quality', pos: 'اسم', meaning: 'صفة أو ميزة شخصية (كسعة الاطّلاع)', example: 'Being well-informed is an important quality in an interpreter.', exampleAr: 'سعة الاطّلاع صفة مهمة في المترجم الفوري.' },
+  { id: 'u3-experience', word: 'experience', pos: 'اسم', meaning: 'خبرة عملية متراكمة في العمل', example: 'Experience helps an interpreter stay calm and accurate in the booth.', exampleAr: 'تساعد الخبرة المترجم على الثبات والدقة داخل الكابينة.' },
+  { id: 'u3-depend-on', word: 'depend on', pos: 'عبارة فعلية', meaning: 'يعتمد على — يتحدد بشيء آخر', example: 'How well you do in this job depends on how carefully you prepare.', exampleAr: 'مدى نجاحك في هذا العمل يعتمد على مدى إتقانك الاستعداد له.' },
   { id: 'u3-employer', word: 'employer', pos: 'اسم', meaning: 'صاحب العمل — من يوظّف الآخرين', example: 'A freelance interpreter has no single employer.', exampleAr: 'المترجم المستقل ليس له صاحب عمل واحد.' },
   { id: 'u3-concentrate', word: 'concentrate', pos: 'فعل', meaning: 'يركّز انتباهه كاملًا على شيء', example: 'You must concentrate completely in the booth.', exampleAr: 'يجب أن تركّز كليًا داخل الكابينة.' },
   { id: 'u3-listen', word: 'listen carefully', pos: 'عبارة فعلية', meaning: 'يصغي بانتباه شديد', example: 'Interpreters listen carefully and translate at once.', exampleAr: 'يصغي المترجمون بانتباه ويترجمون فورًا.' },
@@ -53,7 +57,7 @@ export const unit3: Unit = {
           type: 'explain',
           title: 'قبل أن تقرأ',
           paragraphs: [
-            'الترجمة الفورية ليست ترجمة أوراق على مهل: المترجم يجلس في كابينة زجاجية، يسمع المتحدث بلغته، وينطق الترجمة في اللحظة نفسها تقريبًا. الدرس يرسم صورة كاملة لهذه الحرفة من خلال سميرة: كيف تعمل، وكيف تستعد، وبمَ تتميز، وكيف يُحسب أجرها.',
+            'الترجمة الفورية ليست ترجمة أوراق على مهل: المترجم يجلس في كابينة زجاجية، يسمع المتحدث بلغته، وينطق الترجمة في اللحظة نفسها تقريبًا. الدرس يرسم صورة كاملة لهذه الحرفة من خلال سميرة: كيف تعمل، وكيف تستعد، وبمَ تتميّز عن غيرها.',
           ],
         },
         {
@@ -63,13 +67,13 @@ export const unit3: Unit = {
             'أول ما يلفت في سميرة طريقة عملها: إنها تعمل لحسابها الخاص (freelance) — أي أنها لا تعمل موظفة عند شركة أو جهة واحدة، بل تتعاقد مع من يحتاجها مؤتمرًا بعد مؤتمر. حرية أكبر، ومسؤولية أكبر في بناء سمعتها بنفسها.',
             'واستعدادها لمؤتمرها لا يبدأ في قاعة المؤتمر: المترجم الجيّد رجلُ (وامرأةُ) اطّلاع دائم — يقرأ الصحف ويتابع الأخبار ليبقى واسع الاطّلاع (well-informed)، وقبل أحد المؤتمرات قرأت سميرة عن النفط خصيصًا، لأن موضوع المؤتمر كان يدور حوله. فالمترجم لا يترجم كلمات، بل يترجم مواضيع يجب أن يفهمها أولًا.',
             'وفي الكابينة لا تجلس سميرة وحدها: يوجد مترجمان دائمًا في الكابينة الواحدة يتناوبان العمل ويساعد أحدهما الآخر، لأن الترجمة المتزامنة عمل مرهق للذهن لا يحتمل الاستمرار الطويل منفردًا.',
-            'أما صفات المترجم الناجح فأهمها سرعة البديهة: المترجم الفوري ليس عنده وقت يضيّعه في التفكير — الترجمة تتم في اللحظة نفسها التي يتكلم فيها المتحدث. وأجر المترجم ليس ثابتًا: يعتمد على عاملين هما الخبرة وعدد اللغات التي يجيدها.',
+            'أما صفات المترجم الجيّد فتعدّدها نماذج الوزارة بدقة: يتابع الأخبار باستمرار، ويقرأ الصحف، فيكون واسع الاطّلاع على مواضيع كثيرة، ولا يضيّع الوقت في التفكير — فالترجمة تتم في اللحظة نفسها التي يتكلم فيها المتحدث. وبين أسئلة النماذج الثمانية سؤال شهير عن أجر المترجم وعمّا يعتمد عليه: تطرحه النماذج سؤالًا للطالب ولا تنشر إجابة موثّقة له، فلا نخترعها هنا — مكانه أن تدرسه في كتابك وتصل إلى جوابه من نصّ الدرس نفسه.',
           ],
           examples: [
             { en: 'Samira works freelance — she works for herself, not for one employer.', ar: 'سميرة تعمل لحسابها الخاص — تعريف الوزارة الدقيق لكلمة freelance.' },
             { en: 'To prepare for one conference, Samira read about oil.', ar: 'استعدادًا لأحد المؤتمرات قرأت سميرة عن النفط.' },
             { en: 'There are two interpreters in the booth; they take turns and help each other.', ar: 'في الكابينة مترجمان يتناوبان ويساعد أحدهما الآخر.' },
-            { en: 'An interpreter’s pay depends on experience and the number of languages.', ar: 'أجر المترجم يعتمد على الخبرة وعدد اللغات.' },
+            { en: 'A good interpreter follows the news and is well-informed on many topics.', ar: 'المترجم الجيّد يتابع الأخبار وواسع الاطّلاع على مواضيع كثيرة — عبارة نماذج الوزارة نفسها.' },
           ],
         },
         {
@@ -81,9 +85,9 @@ export const unit3: Unit = {
             'المترجمون يقرأون الصحف ويتابعون الأخبار ليكونوا واسعي الاطّلاع.',
             'قرأت سميرة عن النفط استعدادًا لأحد مؤتمراتها.',
             'في الكابينة مترجمان اثنان: يتناوبان العمل ويساعد أحدهما الآخر.',
-            'من صفات المترجم الجيّد: الاطّلاع الواسع وسرعة التفكير والتركيز.',
+            'من صفات المترجم الجيّد كما في النماذج: يتابع الأخبار، واسع الاطّلاع على مواضيع كثيرة، يقرأ الصحف، ولا يضيّع الوقت في التفكير.',
             'المترجم لا يملك وقتًا يضيّعه في التفكير — الترجمة متزامنة مع الكلام.',
-            'الأجر يعتمد على الخبرة وعدد اللغات.',
+            'سؤال النماذج «عمّا يعتمد أجر المترجم؟» موثّق بوصفه سؤالًا — أما إجابته فغير منشورة في النماذج، فلا تحفظ عوامل مخترعة.',
           ],
         },
       ],
@@ -93,7 +97,7 @@ export const unit3: Unit = {
       title: 'القواعد — الجمل الشرطية والجمل المؤكِّدة',
       kind: 'grammar',
       minutes: 20,
-      intro: 'الجمل الشرطية بأنواعها الأربعة هي أكثر بنود القواعد تكرارًا في نماذج الوزارة — حتى إنها تطلب تسمية نوع الشرط صراحة. تليها الجمل المؤكِّدة (cleft sentences) وهي موضوع كتاب النشاط لهذه الوحدة.',
+      intro: 'الجمل الشرطية بأنواعها الأربعة هي أكثر بنود القواعد تكرارًا في نماذج الوزارة — حتى إنها تطلب تسمية نوع الشرط صراحة. تليها الجمل المؤكِّدة (cleft sentences) وهي موضوع كتاب النشاط لهذه الوحدة. ويختبر كتاب النشاط أيضًا نظامين آخرين في تدريبات الوحدة — الكلام المنقول وأبنية التمنّي — ولهما القسمان الثالث والرابع في نهاية الدرس.',
       sections: [
         {
           type: 'grammar',
@@ -123,9 +127,34 @@ export const unit3: Unit = {
           examples: [
             { en: 'Samira enjoys the preparation most. → What Samira enjoys most is the preparation.', ar: 'تقديم الأهم بعد What.' },
             { en: 'It was Samira who read about oil before the conference.', ar: 'It + was + محور التأكيد + who.' },
-            { en: 'What an interpreter needs most is quick thinking.', ar: 'أكثر ما يحتاجه المترجم هو سرعة التفكير.' },
+            { en: 'What an interpreter needs most is to be well-informed.', ar: 'أكثر ما يحتاجه المترجم هو سعة الاطّلاع.' },
           ],
           callout: 'خدعة الامتحان في الشرط: «If my father knew I drove so fast…» ماضٍ بسيط بعد if وجواب بـ would — إذن تخيّل حاضر (ثانٍ)، وإن كان يتكلم عن قيادة حدثت فعلًا.',
+        },
+        {
+          type: 'grammar',
+          title: 'ثالثًا: الكلام المنقول Reported Speech',
+          paragraphs: [
+            'حين تنقل كلام غيرك تتراجع الأزمنة خطوة إلى الماضي: المضارع يصبح ماضيًا، والماضي البسيط يصبح ماضيًا تامًا، وwill تصبح would، وcan تصبح could. الفعل الناقل say يأتي وحده (said that…)، أما tell فيحتاج مفعولًا يدلّ على المُخبَر (told me that…). وفي نقل الأسئلة تختفي صيغة السؤال الاستفهامية ويُستخدم if — أو كلمة السؤال نفسها — رابطًا مع ترتيب الجملة الخبرية، وتتبدّل كلمات الزمان: now ← then، وtoday ← that day، وtomorrow ← the next day.',
+          ],
+          examples: [
+            { en: 'Samira said, “I am reading about oil.” → Samira said (that) she was reading about oil.', ar: 'مضارع مستمر منقولًا يصبح ماضيًا مستمرًا، والضمير يتبع الناقل.' },
+            { en: '“I will prepare well,” he said. → He said he would prepare well.', ar: 'will في الكلام المنقول تصبح would.' },
+            { en: '“Did you follow the news?” she asked. → She asked if I had followed the news.', ar: 'نقل السؤال: if + ترتيب خبري، والماضي التام لما سبق.' },
+          ],
+        },
+        {
+          type: 'grammar',
+          title: 'رابعًا: أبنية التمنّي Wish Structures',
+          paragraphs: [
+            'يعبّر التركيبان I wish و If only عن رغبة مخالفة للواقع، وقاعدتهما هي قاعدة الشرط الثاني والثالث نفسها منقولة إلى التمنّي: أمنية للحاضر يعقبها ماضٍ بسيط (I wish I knew)، وندم على الماضي يعقبه ماضٍ تام (If only I had prepared)، وI wish + would لتصرّف نرجو تغيّره (I wish he would slow down).',
+          ],
+          examples: [
+            { en: 'I wish I knew three languages.', ar: 'ليتني أعرف ثلاث لغات — أمنية حاضر تصاغ بالماضي البسيط (والواقع أني لا أعرفها).' },
+            { en: 'If only Samira had read about the subject earlier!', ar: 'ليتها قرأت عن الموضوع مبكرًا — ندم على ماضٍ يصاغ بالماضي التام.' },
+            { en: 'I wish the speaker would speak more slowly.', ar: 'أتمنى لو يتكلّم المتحدث ببطء أكبر — would لسلوك نرجو تغيّره.' },
+          ],
+          callout: 'علامة التعرّف السريعة: الجملة بعد wish / if only «أقدم» زمنيًا من معناها دائمًا — ماضٍ بسيط لأمنية الحاضر، وماضٍ تام لندم الماضي.',
         },
       ],
     },
@@ -174,7 +203,7 @@ export const unit3: Unit = {
           type: 'explain',
           title: 'خلاصة الوحدة الثالثة',
           paragraphs: [
-            'ركائز الوحدة: درس سميرة بوقائعه الثماني (عمل حر، قراءة عن النفط، مترجمان في كابينة، أجر بالخبرة واللغات)، والجمل الشرطية بأنواعها الأربعة مع مهارة تسمية النوع من المعنى، والجمل المؤكِّدة صياغةً وتأكيدًا، ومفردات المؤتمرات العشرون.',
+            'ركائز الوحدة: درس سميرة بوقائعه الموثّقة (عمل حر، قراءة عن النفط، مترجمان في كابينة، صفات المترجم الجيّد، وسؤال الأجر الذي تطرحه النماذج دون إجابة منشورة)، والجمل الشرطية بأنواعها الأربعة مع مهارة تسمية النوع من المعنى، والجمل المؤكِّدة صياغةً وتأكيدًا، ونظاما كتاب النشاط: الكلام المنقول وأبنية التمنّي، ومفردات المؤتمرات العشرون.',
           ],
           bullets: [
             'اختبر نفسك في «اختبار الوحدة» مع شرح لكل إجابة.',
@@ -189,7 +218,7 @@ export const unit3: Unit = {
     { id: 'u3q-r1', skill: 'reading', type: 'mcq', q: 'ماذا يعني أن سميرة تعمل «freelance»؟', options: ['تعمل مجانًا دون أجر', 'تعمل لنفسها، لا لصالح صاحب عمل واحد', 'تعمل في فرنسا فقط', 'تعمل بدوام جزئي في مكتبة'], answer: 1, explain: 'تعريف الوزارة الدقيق: freelance = يعمل لحسابه الخاص، لا لجهة واحدة.', marks: 1 },
     { id: 'u3q-r2', skill: 'reading', type: 'mcq', q: 'عن أي موضوع قرأت سميرة استعدادًا لأحد مؤتمراتها؟', options: ['الطب', 'الرياضة', 'النفط', 'السياحة'], answer: 2, explain: 'قرأت عن النفط (oil) لأن موضوع المؤتمر كان يدور حوله.', marks: 1 },
     { id: 'u3q-r3', skill: 'reading', type: 'mcq', q: 'لماذا يوجد مترجمان في الكابينة الواحدة؟', options: ['لأن الكابينة واسعة جدًا', 'ليتناوبا العمل ويساعد أحدهما الآخر', 'لأن القانون يمنع جلوس شخص وحده', 'أحدهما يترجم والآخر يكتب المحضر فقط'], answer: 1, explain: 'الترجمة المتزامنة مرهقة: يتناوب المترجمان ويساعد كلٌّ منهما زميله.', marks: 1 },
-    { id: 'u3q-r4', skill: 'reading', type: 'tf', q: 'يعتمد أجر المترجم الفوري على خبرته وعدد اللغات التي يجيدها.', options: ['صح', 'خطأ'], answer: 0, explain: 'صحيح — عاملا الأجر في الدرس: experience و languages.', marks: 1 },
+    { id: 'u3q-r4', skill: 'reading', type: 'tf', q: 'المترجم الجيّد يتابع الأخبار وواسع الاطّلاع على مواضيع كثيرة.', options: ['صح', 'خطأ'], answer: 0, explain: 'صحيح — وهذه عبارة نماذج الوزارة نفسها في وصف المترجم الجيّد (follows the news, well-informed on many topics)؛ أما سؤال الأجر في النماذج فلا إجابة منشورة له.', marks: 1 },
     { id: 'u3q-r5', skill: 'reading', type: 'mcq', q: 'لماذا لا يملك المترجم الفوري وقتًا يضيّعه في التفكير؟', options: ['لأن المؤتمرات قصيرة جدًا', 'لأن الترجمة متزامنة مع كلام المتحدث', 'لأنه يعمل واقفًا دائمًا', 'لأن الكابينة بلا نوافذ'], answer: 1, explain: 'الترجمة تحدث في اللحظة نفسها — simultaneous — فلا مجال للتوقف والتفكير الطويل.', marks: 1 },
     { id: 'u3q-g1', skill: 'grammar', type: 'mcq', q: 'حدّد نوع الجملة الشرطية التالية:', qEn: 'If you studied harder, you would pass the exam easily.', options: ['شرط صفري', 'شرط أول', 'شرط ثانٍ', 'شرط ثالث'], answer: 2, explain: 'ماضٍ بسيط بعد if و would في الجواب — تخيّل مخالف لواقع الحاضر: شرط ثانٍ. (جملة من نماذج الوزارة)', marks: 1 },
     { id: 'u3q-g2', skill: 'grammar', type: 'mcq', q: 'أكمل الجملة الشرطية بالصيغة الصحيحة:', qEn: 'If you ___ your passport last month, you wouldn’t have been allowed to travel.', options: ['hadn’t renewed', 'don’t renew', 'won’t renew', 'not renew now'], answer: 0, explain: 'الجواب would have been يفرض شرطًا ثالثًا: ماضٍ تام بعد if — hadn’t renewed. (من نماذج الوزارة)', marks: 1 },
@@ -206,7 +235,7 @@ export const unit3: Unit = {
     { id: 'u3e-r2', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'What did Samira read about to prepare for one conference?', options: ['Medicine', 'Oil', 'Sport', 'Tourism'], answer: 1, explain: 'قرأت عن النفط — موضوع مؤتمرها ذاك.', marks: 4 },
     { id: 'u3e-r3', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'Why are there two interpreters in the booth?', options: ['Because the booth is very large', 'So they can take turns and help each other', 'Because one of them writes the reports', 'Because the law requires an audience'], answer: 1, explain: 'يتناوبان ويساعد أحدهما الآخر — الترجمة المتزامنة مرهقة.', marks: 4 },
     { id: 'u3e-r4', skill: 'reading', type: 'mcq', q: 'أكمل الجملة مستخدمًا معلومات الدرس:', qEn: 'An interpreter must be well-informed, so she reads newspapers and ___.', options: ['follows the news', 'wastes time thinking', 'avoids all subjects', 'works only at night'], answer: 0, explain: 'متابعة الأخبار وقراءة الصحف — روتين المترجم الواسع الاطّلاع.', marks: 4 },
-    { id: 'u3e-r5', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'An interpreter’s pay depends on ___.', options: ['the size of the booth', 'experience and the number of languages', 'the weather on the day', 'the number of listeners only'], answer: 1, explain: 'عاملا الأجر: الخبرة واللغات.', marks: 4 },
+    { id: 'u3e-r5', skill: 'reading', type: 'mcq', q: 'أجب مستخدمًا معلومات درس القراءة:', qEn: 'Why shouldn’t an interpreter waste time thinking?', options: ['Because the booth is too small for books', 'Because interpretation is simultaneous — she translates as the speaker talks', 'Because conferences last only ten minutes', 'Because the conference hall closes early'], answer: 1, explain: 'سؤال موثّق من أسئلة النماذج الثمانية لهذا الدرس: لا وقت للتفكير لأن الترجمة متزامنة مع الكلام لحظة بلحظة.', marks: 4 },
     { id: 'u3e-g1', skill: 'grammar', type: 'mcq', q: 'اسمِ نوع الشرط واختر الجملة بالمعنى نفسه:', qEn: 'If you studied harder, you would pass the exam easily.', options: ['Second conditional — You don’t study hard, so you won’t pass easily', 'First conditional — You study hard and will pass', 'Zero conditional — Studying always passes you', 'Third conditional — You studied hard in the past'], answer: 0, explain: 'شرط ثانٍ: الحاضر الحقيقي عكس المتخيَّل — أنت لا تدرس بجد الآن.', marks: 4 },
     { id: 'u3e-g2', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة:', qEn: 'If my father ___ I drove so fast, he would be very angry.', options: ['knew', 'knows tomorrow', 'will know', 'has knowing'], answer: 0, explain: 'جواب بـ would يفرض ماضيًا بسيطًا بعد if (شرط ثانٍ) — جملة من نماذج الوزارة.', marks: 4 },
     { id: 'u3e-g3', skill: 'grammar', type: 'mcq', q: 'اختر الصيغة الصحيحة:', qEn: 'If it ___ tomorrow, we will stay at home.', options: ['rains', 'rained yesterday', 'would rain', 'had rained'], answer: 0, explain: 'شرط أول لمستقبل محتمل: مضارع بسيط بعد if و will في الجواب.', marks: 4 },
