@@ -157,7 +157,7 @@ export default function Exam({ state, spec, onBack, onFinish }: Props) {
             </div>
           </div>
           <ul className="mt-5 space-y-2 text-[14px] leading-7 text-ink-900/90">
-            <li className="flex gap-2"><span className="mt-[9px] h-2 w-2 shrink-0 rotate-45 bg-gold-500" />{spec.introNote ?? 'ثلاثة أقسام بأسلوب الورقة الوزارية: استيعاب قرائي، وقواعد، ومفردات — والدرجات ظاهرة لكل قسم.'}</li>
+            <li className="flex gap-2"><span className="mt-[9px] h-2 w-2 shrink-0 rotate-45 bg-gold-500" /><span><MathText text={spec.introNote ?? 'ثلاثة أقسام بأسلوب الورقة الوزارية: استيعاب قرائي، وقواعد، ومفردات — والدرجات ظاهرة لكل قسم.'} /></span></li>
             {hasWritten && (
               <li className="flex gap-2"><span className="mt-[9px] h-2 w-2 shrink-0 rotate-45 bg-gold-500" />في هذا الامتحان أسئلة مقالية: اكتب حلك كاملًا في موضعه، وبعد التسليم سيظهر لك الحل النموذجي ومفتاح التصحيح لتصحّح لنفسك نقطةً نقطة — لا تصحيح آليًا مزعومًا هنا.</li>
             )}

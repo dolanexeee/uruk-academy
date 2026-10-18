@@ -31,6 +31,9 @@ export interface LessonSection {
   table?: { head: string[]; rows: string[][]; ltrCols?: number[] };
   /** A highlighted callout (Arabic). */
   callout?: string;
+  /** Physics books: name of a built-in original SVG line diagram
+      (see src/components/Diagrams.tsx) rendered under the section body. */
+  diagram?: string;
   /** Worked-solution sections ('solution'): the problem statement. */
   problem?: string;
   /** Worked-solution sections: ordered steps, revealed progressively. */

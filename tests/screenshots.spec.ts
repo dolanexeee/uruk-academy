@@ -173,3 +173,44 @@ test('screenshots stage A: math subject, worked solution, written question, caps
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${DIR}/23-math-capstone.png`, fullPage: true });
 });
+
+test('screenshots stage C: physics subject, worked solution, written question, capstone', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
+  await page.getByRole('button', { name: /الفيزياء Physics/ }).click();
+  await expect(page.getByText('المتسعات').first()).toBeVisible();
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${DIR}/30-physics-subject.png`, fullPage: true });
+
+  // worked-solution lesson with steps revealed (units in every step)
+  await page.getByRole('button', { name: /أمثلة محلولة/ }).click();
+  await expect(page.getByText('المثال ١ — السعة من الهندسة')).toBeVisible();
+  for (let i = 0; i < 4; i++) {
+    const next = page.getByTestId('solution-next').first();
+    if ((await next.count()) === 0) break;
+    await next.click();
+  }
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/31-physics-solution.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+  await expect(page.getByText('المتسعات').first()).toBeVisible();
+
+  // written question with the model answer + rubric revealed
+  await page.getByRole('button', { name: /اختبار الفصل/ }).click();
+  for (let i = 0; i < 10; i++) {
+    await page.getByTestId('quiz-option-1').click();
+    await page.getByTestId('quiz-next').click();
+  }
+  await page.getByTestId('written-answer').fill('جمعت مقلوبات السعات أولًا فوجدت المكافئة، والشحنة ثابتة في التوالي، ثم قسمت الشحنة على كل سعة');
+  await page.getByTestId('written-reveal').click();
+  await expect(page.getByText('مفتاح التصحيح')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/32-physics-written.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+
+  // physics capstone intro (145 marks, ترك 45)
+  await page.getByRole('button', { name: /ابدأ الامتحان الشامل/ }).click();
+  await expect(page.getByText('الامتحان الوزاري الشامل — الفيزياء')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/33-physics-capstone.png`, fullPage: true });
+});

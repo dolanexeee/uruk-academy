@@ -65,7 +65,7 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
             <div className="min-w-0 flex-1">
               <p className="font-display text-[15px] font-bold text-cream-50">تقدّمك في الأكاديمية</p>
               <p className="mt-0.5 text-[13px] text-lapis-100">
-                أنجزت {lessonsDone} من {lessonsTotal} درسًا في كتابي الإنجليزية والرياضيات
+                أنجزت {lessonsDone} من {lessonsTotal} درسًا في كتب الأكاديمية
                 {quizBest ? ` · أفضل اختبار: ${quizBest.score}/${quizBest.total}` : ''}
               </p>
               <div className="mt-2 flex flex-wrap gap-2">

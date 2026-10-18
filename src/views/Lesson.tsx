@@ -3,6 +3,7 @@ import type { LessonSection, Unit, VocabWord } from '../content/types';
 import { bookOfUnit } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
 import MathText from '../components/MathText';
+import Diagram from '../components/Diagrams';
 import { IconCheck, IconCards, IconChevronStart, IconChevronEnd, IconIshtarStar, WedgeMark } from '../components/icons';
 
 /** A worked solution: the problem, then steps revealed one at a time —
@@ -107,6 +108,7 @@ function Section({ s, index, vocab }: { s: LessonSection; index: number; vocab: 
         </div>
       )}
       {s.type === 'solution' && <SolutionBody s={s} />}
+      {s.diagram && <Diagram name={s.diagram} />}
       {s.table && (
         <div className="mt-3 overflow-x-auto rounded-2xl ring-1 ring-cream-300">
           <table className="w-full min-w-[520px] text-[13.5px]">
