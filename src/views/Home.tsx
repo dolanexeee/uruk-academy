@@ -165,7 +165,7 @@ export default function Home({ state, dueCount, onOpenSubject, onOpenCards, onOp
       </section>
 
       <p className="rise rise-5 mt-6 text-center text-[12px] leading-5 text-lapis-100/60">
-        أكاديمية أوروك — مشروع تعليمي مفتوح المصدر. كتابا الإنجليزية والرياضيات للسادس الإعدادي مكتملان هنا، وبقية المواد تُبنى تباعًا.
+        أكاديمية أوروك — مشروع تعليمي مفتوح المصدر. كتب السادس الإعدادي الستة مكتملة هنا: الإنجليزية والرياضيات والفيزياء والكيمياء والأحياء واللغة العربية.
       </p>
     </div>
   );
