@@ -255,3 +255,46 @@ test('screenshots stage D: chemistry subject, worked solution with \\ce equation
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${DIR}/43-chemistry-capstone.png`, fullPage: true });
 });
+
+test('screenshots stage E: biology subject, worked genetics solution, written question, capstone', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
+  await page.getByRole('button', { name: /الأحياء Biology/ }).click();
+  await expect(page.getByText('الخلية').first()).toBeVisible();
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${DIR}/50-biology-subject.png`, fullPage: true });
+
+  // worked genetics solution: chapter 5 lesson with Punnett steps revealed
+  await page.getByRole('button', { name: /الوراثة Genetics/ }).click();
+  await page.getByRole('button', { name: /أمثلة محلولة — مسائل الوراثة/ }).click();
+  await expect(page.getByText('المثال ١ — أحادي الهجين: هجين في الطول مع هجين')).toBeVisible();
+  for (let i = 0; i < 4; i++) {
+    const next = page.getByTestId('solution-next').first();
+    if ((await next.count()) === 0) break;
+    await next.click();
+  }
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/51-biology-solution.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+  await expect(page.getByText('الخلية').first()).toBeVisible();
+
+  // written question with the model answer + rubric revealed (chapter 1 quiz)
+  await page.getByRole('button', { name: /الخلية The Cell/ }).click();
+  await page.getByRole('button', { name: /اختبار الفصل/ }).click();
+  for (let i = 0; i < 10; i++) {
+    await page.getByTestId('quiz-option-1').click();
+    await page.getByTestId('quiz-next').click();
+  }
+  await page.getByTestId('written-answer').fill('جهاز كولجي يقع في سيتوبلازم الخلية قريبًا من النواة، وظيفته استلام المواد من الشبكة الإندوبلازمية وتعديلها وفرزها وتغليفها في حويصلات، وفي الخلية النباتية يشارك في تكوين الصفيحة الخلوية وبناء الجدار');
+  await page.getByTestId('written-reveal').click();
+  await expect(page.getByText('مفتاح التصحيح')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/52-biology-written.png`, fullPage: true });
+  await page.getByRole('button', { name: /العودة إلى الفصل/ }).click();
+
+  // biology capstone intro (145 marks, ترك 45, branch structure)
+  await page.getByRole('button', { name: /ابدأ الامتحان الشامل/ }).click();
+  await expect(page.getByText('الامتحان الوزاري الشامل — الأحياء')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${DIR}/53-biology-capstone.png`, fullPage: true });
+});

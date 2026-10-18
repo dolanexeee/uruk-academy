@@ -1,11 +1,13 @@
 /* Uruk Academy — curriculum map.
-   Four complete books are live: «English for Iraq» (Phase 2: all 8 units,
+   Five complete books are live: «English for Iraq» (Phase 2: all 8 units,
    two revision hubs, full-book capstone), «Mathematics» for the
    Scientific branch (Stage A: all chapters, chapter capstones and the
    full وزاري mock), «Physics» (Stage C: the nine chapters of the
-   revised book, chapter exams and the full وزاري mock) and «Chemistry»
+   revised book, chapter exams and the full وزاري mock), «Chemistry»
    (Stage D: the eight chapters of the current print, chapter exams and
-   the full وزاري mock). Every other subject stays honestly badged «قريبًا».
+   the full وزاري mock) and «Biology» (Stage E: the five chapters of
+   the current reduced print, chapter exams and the full وزاري mock).
+   One subject (Arabic) stays honestly badged «قريبًا».
    Views are book-agnostic: they render any Book through the registry
    below and never hardcode a subject. */
 
@@ -21,6 +23,7 @@ import { capstoneExam } from './capstone';
 import { mathChapters, mathCapstone } from './math';
 import { physicsChapters, physicsCapstone } from './physics';
 import { chemistryChapters, chemistryCapstone } from './chemistry';
+import { biologyChapters, biologyCapstone } from './biology';
 
 export const contentUnits: Unit[] = [unit1, unit2, unit3, unit5, unit6, unit7];
 export const revisionUnits: Unit[] = [unit4, unit8];
@@ -39,6 +42,8 @@ export const MATH_ABOUT_SOURCES = `محتوى الرياضيات في هذه ا�
 export const PHYSICS_ABOUT_SOURCES = `محتوى الفيزياء في هذه الأكاديمية مبني على بنية الكتاب المدرسي الرسمي «الفيزياء للصف السادس الإعدادي — الفرع العلمي» الصادر عن وزارة التربية في جمهورية العراق بطبعتها المنقّحة الحالية ذات الفصول التسعة (دُمجت فيها الفيزياء الحديثة مع النظرية النسبية في فصل واحد — والبنية موثّقة في CONTENT.md وملف البحث المرافق). كل الشروحات والأمثلة والمسائل مكتوبة ومحلولَة بأسلوبنا الخاص ولم تُنسخ تمارين الكتاب أو أسئلة الامتحانات حرفيًا، والحسابات كلها بالثوابت نفسها التي تطبعها أوراق الوزارة، أما صيغ الامتحانات فتحاكي الورقة الوزارية الرسمية في بنيتها ودرجاتها. أكاديمية أوروك مشروع تعليمي مفتوح المصدر لا يتبع لوزارة التربية.`;
 
 export const CHEMISTRY_ABOUT_SOURCES = `محتوى الكيمياء في هذه الأكاديمية مبني على بنية الكتاب المدرسي الرسمي «الكيمياء للصف السادس العلمي» الصادر عن وزارة التربية في جمهورية العراق (الفصول الثمانية للطبعة الحالية — والبنية موثّقة في CONTENT.md وملف البحث المرافق). كل الشروحات والأمثلة والمسائل مكتوبة ومحلولَة بأسلوبنا الخاص ولم تُنسخ تمارين الكتاب أو أسئلة الامتحانات حرفيًا، والمعادلات الكيميائية كلها موزونة، والحسابات بالثوابت نفسها التي تطبعها أوراق الوزارة، أما صيغ الامتحانات فتحاكي الورقة الوزارية الرسمية في بنيتها ودرجاتها. أكاديمية أوروك مشروع تعليمي مفتوح المصدر لا يتبع لوزارة التربية.`;
+
+export const BIOLOGY_ABOUT_SOURCES = `محتوى الأحياء في هذه الأكاديمية مبني على بنية الكتاب المدرسي الرسمي «الأحياء للصف السادس العلمي» الصادر عن وزارة التربية في جمهورية العراق (الفصول الخمسة للطبعة الحالية المخفّضة 228 صفحة، بعد حذف الوراثة الكمية والتفاصيل المحذوفة الموثّقة في CONTENT.md وملف البحث المرافق). كل الشروحات والأمثلة والمسائل مكتوبة بأسلوبنا الخاص ولم تُنسخ نصوص الكتاب أو أسئلة الامتحانات حرفيًا، والمصطلحات مطابقة لمصطلحات الكتاب، ومسائل الوراثة محلولة بخطوات مربع بانيت ومعاد التحقق من احتمالاتها، أما صيغ الامتحانات فتحاكي الورقة الوزارية الرسمية في بنيتها ودرجاتها. أكاديمية أوروك مشروع تعليمي مفتوح المصدر لا يتبع لوزارة التربية.`;
 
 const englishBook: Book = {
   subjectId: 'en6',
@@ -96,7 +101,21 @@ const chemistryBook: Book = {
   aboutSources: CHEMISTRY_ABOUT_SOURCES,
 };
 
-export const books: Book[] = [englishBook, mathBook, physicsBook, chemistryBook];
+const biologyBook: Book = {
+  subjectId: 'bio6',
+  units: biologyChapters,
+  contentUnits: biologyChapters,
+  capstone: biologyCapstone,
+  unitWord: 'الفصل',
+  unitsPlural: 'فصول',
+  vocabSuffix: 'تعريفًا',
+  cardNoun: 'تعريف',
+  capstoneBlurb:
+    'محاكاة أمينة للورقة الوزارية الحقيقية: أسئلة مرقّمة بفروعها — شرحيات وتعاريف وموقع ووظيفة ومسألة وراثة — كما في الامتحان الرسمي وبدرجاته ومدته (145 درجة معروضة، ترك 45، ثلاث ساعات)، بحلول نموذجية ومفاتيح تصحيح، والتقرير يفصّل نتيجتك في كل فصل.',
+  aboutSources: BIOLOGY_ABOUT_SOURCES,
+};
+
+export const books: Book[] = [englishBook, mathBook, physicsBook, chemistryBook, biologyBook];
 export const bookBySubjectId = (id: string): Book | undefined => books.find((b) => b.subjectId === id);
 
 export const allBooksUnits: Unit[] = books.flatMap((b) => b.units);
@@ -132,6 +151,7 @@ export function examSpecForUnit(u: Unit): ExamSpec {
   const isMath = book?.subjectId === 'math6';
   const isPhysics = book?.subjectId === 'phys6';
   const isChemistry = book?.subjectId === 'chem6';
+  const isBiology = book?.subjectId === 'bio6';
   return {
     id: u.id,
     titleAr: `الامتحان الوزاري — ${u.titleAr}`,
@@ -141,12 +161,14 @@ export function examSpecForUnit(u: Unit): ExamSpec {
         ? `Physics · Sixth Preparatory · Chapter ${u.number}`
         : isChemistry
           ? `Chemistry · Sixth Preparatory · Chapter ${u.number}`
-          : `English for Iraq · Sixth Preparatory · Unit ${u.number}`,
+          : isBiology
+            ? `Biology · Sixth Preparatory · Chapter ${u.number}`
+            : `English for Iraq · Sixth Preparatory · Unit ${u.number}`,
     minutes: u.examMinutes,
     questions: u.exam,
     groupBy: 'skill',
     backLabel: `العودة إلى ${book?.unitWord ?? 'الوحدة'}`,
-    introNote: isMath || isPhysics || isChemistry
+    introNote: isMath || isPhysics || isChemistry || isBiology
       ? 'ورقة بأسلوب الوزاري من هذا الفصل وحده: أسئلة اختيارية تُصحَّح فورًا بعد التسليم، وأسئلة مقالية تقارن فيها حلك بالحل النموذجي وتصحّح لنفسك بمفتاح التصحيح — كما يجب أن تتدرب للامتحان الحقيقي.'
       : undefined,
   };
@@ -238,7 +260,21 @@ export const subjects: Subject[] = [
       { number: 8, titleAr: 'الكيمياء الحياتية', titleEn: 'Biochemistry', status: 'live' },
     ],
   },
-  { id: 'bio6', titleAr: 'الأحياء', titleEn: 'Biology', grade: 'السادس الإعدادي', status: 'soon', blurb: '', units: [] },
+  {
+    id: 'bio6',
+    titleAr: 'الأحياء',
+    titleEn: 'Biology',
+    grade: 'السادس الإعدادي',
+    status: 'live',
+    blurb: 'كتاب الأحياء للسادس العلمي كاملًا بطبعتها الحالية المخفّضة: خمسة فصول — شرح بالمفهوم، وأمثلة محلولة خطوة بخطوة (ومسائل وراثة بمربعات بانيت)، وشرحيات مقالية بحلول نموذجية ومفاتيح تصحيح، وامتحان وزاري شامل يحاكي الورقة الرسمية.',
+    units: [
+      { number: 1, titleAr: 'الخلية', titleEn: 'The Cell', status: 'live' },
+      { number: 2, titleAr: 'الأنسجة', titleEn: 'Tissues', status: 'live' },
+      { number: 3, titleAr: 'التكاثر', titleEn: 'Reproduction', status: 'live' },
+      { number: 4, titleAr: 'التكوين الجنيني', titleEn: 'Embryonic Development', status: 'live' },
+      { number: 5, titleAr: 'الوراثة', titleEn: 'Genetics', status: 'live' },
+    ],
+  },
   { id: 'ar6', titleAr: 'اللغة العربية', titleEn: 'Arabic', grade: 'السادس الإعدادي', status: 'soon', blurb: '', units: [] },
 ];
 

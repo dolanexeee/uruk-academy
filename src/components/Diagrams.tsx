@@ -351,6 +351,126 @@ const ART: Record<string, React.ReactNode> = {
       <Label x={250} y={152}>حجم القاعدة المضافة</Label>
     </>
   ),
+  /* Eukaryotic cell — schematic organelles (original line art) */
+  'cell-schematic': (
+    <>
+      <ellipse cx="160" cy="98" rx="128" ry="70" fill="#fdfaf2" stroke={L} strokeWidth="2.2" />
+      <ellipse cx="160" cy="98" rx="119" ry="63" fill="none" stroke={L6} strokeWidth="1" strokeDasharray="3 3" />
+      <path d="M118 62 q32 -14 64 0 M114 128 q46 16 92 0" fill="none" stroke={G} strokeWidth="1.6" strokeDasharray="5 3" />
+      <circle cx="152" cy="95" r="29" fill="#e8eefb" stroke={L6} strokeWidth="2" />
+      <circle cx="152" cy="95" r="10" fill={G} />
+      <ellipse cx="228" cy="58" rx="17" ry="8" fill="none" stroke={T} strokeWidth="2" transform="rotate(-18 228 58)" />
+      <path d="M215 60 q6 -5 12 0 q6 5 12 0" fill="none" stroke={T} strokeWidth="1.4" transform="rotate(-18 228 58)" />
+      <ellipse cx="88" cy="128" rx="16" ry="8" fill="none" stroke={T} strokeWidth="2" transform="rotate(14 88 128)" />
+      <path d="M76 126 q6 -5 12 0 q6 5 12 0" fill="none" stroke={T} strokeWidth="1.4" transform="rotate(14 88 128)" />
+      <ellipse cx="76" cy="58" rx="19" ry="10" fill="#e2f2ec" stroke={T} strokeWidth="2" />
+      <path d="M64 54 h24 M64 60 h24 M70 48 v20 M82 48 v20" stroke={T} strokeWidth="1.1" />
+      <path d="M205 118 q22 -8 40 2 M207 127 q20 -7 36 2 M210 136 q16 -5 30 2" fill="none" stroke={L6} strokeWidth="2" />
+      <ellipse cx="205" cy="72" rx="21" ry="12" fill="#dbe7fa" fillOpacity="0.7" stroke={L6} strokeWidth="1.6" />
+      {[[105, 72], [196, 118], [128, 140], [238, 96], [96, 100]].map(([cx, cy], i) => (
+        <circle key={i} cx={cx} cy={cy} r="2.4" fill={G} />
+      ))}
+      <line x1="160" y1="28" x2="160" y2="18" stroke={INK} strokeWidth="1.1" />
+      <Label x={160} y={12}>الغشاء البلازمي</Label>
+      <line x1="140" y1="70" x2="118" y2="46" stroke={INK} strokeWidth="1.1" />
+      <Label x={104} y={40}>النواة</Label>
+      <line x1="240" y1="50" x2="262" y2="38" stroke={INK} strokeWidth="1.1" />
+      <Label x={278} y={34}>الميتوكوندريا</Label>
+      <line x1="70" y1="48" x2="52" y2="32" stroke={INK} strokeWidth="1.1" />
+      <Label x={44} y={26}>بلاستيدة خضراء</Label>
+      <line x1="238" y1="126" x2="264" y2="140" stroke={INK} strokeWidth="1.1" />
+      <Label x={272} y={152}>جهاز كولجي</Label>
+      <line x1="198" y1="84" x2="196" y2={158} stroke={INK} strokeWidth="1.1" />
+      <Label x={196} y={172}>فجوة</Label>
+      <Label x={80} y={172}>السيتوبلازم</Label>
+    </>
+  ),
+  /* Flower — longitudinal schematic of the reproductive parts */
+  'flower': (
+    <>
+      <line x1="160" y1="188" x2="160" y2="126" stroke={T} strokeWidth="3" />
+      <path d="M160 128 C 128 122, 116 132, 108 148 C 126 150, 146 144, 160 134 C 174 144, 194 150, 212 148 C 204 132, 192 122, 160 128" fill="#e2f2ec" stroke={T} strokeWidth="1.8" />
+      <path d="M160 122 C 118 108, 102 74, 118 44 C 142 66, 154 92, 160 110" fill="#fdfaf2" stroke={G} strokeWidth="2" />
+      <path d="M160 122 C 202 108, 218 74, 202 44 C 178 66, 166 92, 160 110" fill="#fdfaf2" stroke={G} strokeWidth="2" />
+      <path d="M160 118 C 146 96, 146 74, 160 52 C 174 74, 174 96, 160 118" fill="#f9f1dc" stroke={G} strokeWidth="1.6" />
+      <ellipse cx="160" cy="104" rx="12" ry="15" fill="#fff" stroke={L} strokeWidth="2" />
+      <circle cx="160" cy="106" r="4" fill={G} />
+      <line x1="160" y1="89" x2="160" y2="58" stroke={L} strokeWidth="2" />
+      <ellipse cx="160" cy="52" rx="9" ry="5" fill={G} />
+      <path d="M152 92 C 138 78, 128 68, 122 54" fill="none" stroke={L6} strokeWidth="1.8" />
+      <path d="M168 92 C 182 78, 192 68, 198 54" fill="none" stroke={L6} strokeWidth="1.8" />
+      <ellipse cx="121" cy="50" rx="7" ry="4" fill={G} transform="rotate(-38 121 50)" />
+      <ellipse cx="199" cy="50" rx="7" ry="4" fill={G} transform="rotate(38 199 50)" />
+      <line x1="160" y1="46" x2="160" y2="34" stroke={INK} strokeWidth="1.1" />
+      <Label x={160} y={28}>الميسم</Label>
+      <line x1="126" y1="46" x2="98" y2="34" stroke={INK} strokeWidth="1.1" />
+      <Label x={76} y={30}>المُتك (لقاح)</Label>
+      <line x1="126" y1="82" x2="98" y2="82" stroke={INK} strokeWidth="1.1" />
+      <Label x={72} y={86}>البتلة</Label>
+      <line x1="168" y1="72" x2="196" y2="66" stroke={INK} strokeWidth="1.1" />
+      <Label x={222} y={70}>القلم</Label>
+      <line x1="172" y1="104" x2="200" y2="104" stroke={INK} strokeWidth="1.1" />
+      <Label x={228} y={108}>المبيض والبويضة</Label>
+      <line x1="128" y1="140" x2="102" y2="152" stroke={INK} strokeWidth="1.1" />
+      <Label x={78} y={164}>السبلة</Label>
+      <Label x={196} y={164}>ساق الزهرة</Label>
+    </>
+  ),
+  /* DNA replication fork — helicase, parental and new strands */
+  'dna-replication': (
+    <>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <line key={i} x1={44 + i * 20} y1="82" x2={44 + i * 20} y2="108" stroke={G} strokeWidth="1.6" />
+      ))}
+      <path d="M30 82 H140 C 200 82, 240 52, 296 44" fill="none" stroke={L} strokeWidth="2.4" />
+      <path d="M30 108 H140 C 200 108, 240 138, 296 146" fill="none" stroke={L} strokeWidth="2.4" />
+      <path d="M158 84 C 210 82, 244 60, 290 53" fill="none" stroke={G} strokeWidth="2.2" strokeDasharray="6 3" />
+      <path d="M158 106 C 210 108, 244 130, 290 137" fill="none" stroke={G} strokeWidth="2.2" strokeDasharray="6 3" />
+      <circle cx="146" cy="95" r="13" fill="#f9f1dc" stroke={G} strokeWidth="2.2" />
+      <path d="M140 95 l5 -6 l5 6 l-5 6 z" fill={G} />
+      <polygon points="296,44 282,40 286,52" fill={L} />
+      <polygon points="296,146 282,150 286,138" fill={L} />
+      <Label x={70} y={64} color={L}>الشريط الأصلي (القالب)</Label>
+      <Label x={70} y={130} color={L}>الشريط الأصلي</Label>
+      <Label x={238} y={30} color={G}>شريط جديد</Label>
+      <Label x={238} y={168} color={G}>شريط جديد</Label>
+      <Label x={146} y={128} color={G}>إنزيم فكّ الالتواء</Label>
+      <Label x={146} y={142} color={G}>(الهيليكيز)</Label>
+    </>
+  ),
+  /* Pedigree — X-linked recessive inheritance across three generations */
+  'pedigree': (
+    <>
+      <rect x="106" y="26" width="24" height="24" fill="#fff" stroke={INK} strokeWidth="1.8" />
+      <circle cx="182" cy="38" r="12" fill="#fff" stroke={INK} strokeWidth="1.8" />
+      <circle cx="182" cy="38" r="3.4" fill={G} />
+      <line x1="130" y1="38" x2="170" y2="38" stroke={INK} strokeWidth="1.6" />
+      <line x1="150" y1="38" x2="150" y2="66" stroke={INK} strokeWidth="1.6" />
+      <line x1="66" y1="66" x2="234" y2="66" stroke={INK} strokeWidth="1.6" />
+      <line x1="66" y1="66" x2="66" y2="80" stroke={INK} strokeWidth="1.6" />
+      <line x1="150" y1="66" x2="150" y2="80" stroke={INK} strokeWidth="1.6" />
+      <line x1="234" y1="66" x2="234" y2="80" stroke={INK} strokeWidth="1.6" />
+      <circle cx="66" cy="92" r="12" fill="#fff" stroke={INK} strokeWidth="1.8" />
+      <circle cx="150" cy="92" r="12" fill="#fff" stroke={INK} strokeWidth="1.8" />
+      <circle cx="150" cy="92" r="3.4" fill={G} />
+      <rect x="222" y="80" width="24" height="24" fill={L} stroke={INK} strokeWidth="1.8" />
+      <circle cx="282" cy="92" r="12" fill="#fff" stroke={INK} strokeWidth="1.8" />
+      <line x1="246" y1="92" x2="270" y2="92" stroke={INK} strokeWidth="1.6" />
+      <line x1="258" y1="92" x2="258" y2="118" stroke={INK} strokeWidth="1.6" />
+      <circle cx="258" cy="130" r="12" fill="#fff" stroke={INK} strokeWidth="1.8" />
+      <circle cx="258" cy="130" r="3.4" fill={G} />
+      <Label x={18} y={42}>I</Label>
+      <Label x={18} y={96}>II</Label>
+      <Label x={18} y={134}>III</Label>
+      <rect x="52" y="158" width="12" height="12" fill={L} stroke={INK} strokeWidth="1.4" />
+      <Label x={70} y={168} anchor="start">مصاب</Label>
+      <circle cx="140" cy="164" r="6" fill="#fff" stroke={INK} strokeWidth="1.4" />
+      <circle cx="140" cy="164" r="1.8" fill={G} />
+      <Label x={152} y={168} anchor="start">حاملة</Label>
+      <rect x="212" y="158" width="12" height="12" fill="#fff" stroke={INK} strokeWidth="1.4" />
+      <Label x={230} y={168} anchor="start">سليم</Label>
+    </>
+  ),
 };
 
 export default function Diagram({ name }: { name: string }) {
