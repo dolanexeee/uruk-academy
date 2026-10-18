@@ -131,10 +131,53 @@ body {
 }
 
 .press {
-  transition: transform 0.12s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 .press:active {
   transform: scale(0.975);
+}
+
+/* screen-entry transition — every view mounts with this */
+@keyframes screenIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.screen {
+  animation: screenIn 0.45s cubic-bezier(0.22, 0.9, 0.3, 1) both;
+}
+
+/* locked / coming-soon surface: fine diagonal hatch over deep lapis */
+.locked-pattern {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(246, 214, 124, 0.05) 0,
+      rgba(246, 214, 124, 0.05) 1px,
+      transparent 1px,
+      transparent 9px
+    ),
+    linear-gradient(160deg, rgba(18, 48, 100, 0.55), rgba(10, 28, 64, 0.75));
+}
+
+/* English quote / example card — a lapis-family paper tone (no periwinkle) */
+.paper-quote {
+  background: #e7edf6;
+  box-shadow: inset 0 0 0 1px rgba(29, 86, 180, 0.16);
+}
+
+/* quiet ground motif that fills tall screens (quiz / exam / cards) — the
+   brick texture of lapis walls as a faint host background */
+.ground {
+  background-image:
+    linear-gradient(rgba(246, 214, 124, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(246, 214, 124, 0.045) 1px, transparent 1px);
+  background-size: 100% 34px, 56px 100%;
 }
 
 ::selection {

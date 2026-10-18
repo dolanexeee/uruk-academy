@@ -20,6 +20,7 @@ import {
 } from './lib/store';
 import { liveUnit } from './content/curriculum';
 import { ZigguratMark } from './components/ui';
+import { IconHome, IconBook, IconCards, IconUser } from './components/icons';
 
 type Route =
   | { name: 'home' }
@@ -63,8 +64,8 @@ export default function App() {
   };
 
   const navBtn = (active: boolean) =>
-    `press flex flex-1 flex-col items-center gap-0.5 rounded-2xl py-2 text-[11px] font-bold ${
-      active ? 'text-gold-300' : 'text-lapis-100/70'
+    `press flex flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[11px] font-bold ${
+      active ? 'text-gold-300' : 'text-lapis-100/65 hover:text-lapis-100'
     }`;
 
   return (
@@ -129,24 +130,29 @@ export default function App() {
         />
       )}
 
-      {/* bottom navigation */}
-      <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-cream-100/10 bg-lapis-900/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-stretch gap-1 px-3 py-1.5">
+      {/* bottom navigation — a full-width bar on mobile; a centered floating
+          pill on desktop */}
+      <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-cream-100/10 bg-lapis-900/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:pointer-events-none lg:border-t-0 lg:bg-transparent lg:pb-0 lg:backdrop-blur-none">
+        <div className="mx-auto flex max-w-3xl items-stretch gap-1 px-3 py-1.5 lg:pointer-events-auto lg:mb-5 lg:max-w-xl lg:rounded-full lg:border lg:border-gold-300/25 lg:bg-lapis-900/95 lg:px-4 lg:py-2 lg:shadow-2xl lg:backdrop-blur">
           <button className={navBtn(route.name === 'home')} onClick={() => go({ name: 'home' })}>
-            <span className="text-lg">🏠</span> الرئيسية
+            <IconHome size={21} /> الرئيسية
           </button>
           <button className={navBtn(route.name === 'subject' || route.name === 'lesson')} onClick={() => go({ name: 'subject' })}>
-            <span className="text-lg">📚</span> المنهج
+            <IconBook size={21} /> المنهج
           </button>
           <span className="flex items-center px-1">
             <ZigguratMark size={30} />
           </span>
-          <button className={navBtn(route.name === 'cards')} onClick={() => go({ name: 'cards' })}>
-            <span className="text-lg">🃏</span> البطاقات
-            {dueCount > 0 && <span className="absolute" />}
+          <button className={`${navBtn(route.name === 'cards')} relative`} onClick={() => go({ name: 'cards' })}>
+            <IconCards size={21} /> البطاقات
+            {dueCount > 0 && (
+              <span className="absolute end-3 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold-500 px-1 text-[10px] font-black text-lapis-950">
+                {dueCount}
+              </span>
+            )}
           </button>
           <button className={navBtn(route.name === 'profile')} onClick={() => go({ name: 'profile' })}>
-            <span className="text-lg">🎓</span> حسابي
+            <IconUser size={21} /> حسابي
           </button>
         </div>
       </nav>

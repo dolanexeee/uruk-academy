@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { liveUnit } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
-import { dueVocabIds } from '../lib/store';
+import { dueVocabIds, todayStr } from '../lib/store';
+import { IconCheck, IconX, IconRefresh, IconIshtarStar, IconChevronStart } from '../components/icons';
+
+const BOX_COLORS = ['#1D56B4', '#2F6FD0', '#C99A5F', '#D9A441', '#F6D67C'];
 
 interface Props {
   state: AcademyState;
@@ -53,11 +56,18 @@ export default function Cards({ state, onBack, onEncounter, onAnswer }: Props) {
     setReviewAll(true);
   }
 
+  const today = todayStr();
   const boxesCount = [1, 2, 3, 4, 5].map((b) => allIds.filter((id) => (state.srs[id]?.box ?? 0) === b).length);
+  const boxesDue = [1, 2, 3, 4, 5].map(
+    (b) => allIds.filter((id) => state.srs[id]?.box === b && state.srs[id].due <= today).length,
+  );
+  const placed = boxesCount.reduce((a, n) => a + n, 0);
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5">
-      <button onClick={onBack} className="press text-[13px] font-bold text-gold-300">→ العودة</button>
+    <div className="screen ground mx-auto w-full max-w-3xl px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
+      <button onClick={onBack} className="press inline-flex items-center gap-1.5 text-[13px] font-bold text-gold-300">
+        <IconChevronStart size={15} /> العودة
+      </button>
 
       <header className="rise mt-3 flex items-end justify-between">
         <div>
@@ -68,30 +78,51 @@ export default function Cards({ state, onBack, onEncounter, onAnswer }: Props) {
         </div>
       </header>
 
-      {/* box distribution */}
-      <div className="rise rise-1 mt-4 flex items-end justify-between gap-1 rounded-3xl bg-lapis-900/70 px-4 py-3">
-        {boxesCount.map((n, i) => (
-          <div key={i} className="flex flex-1 flex-col items-center gap-1">
-            <div
-              className={`w-full max-w-10 rounded-t-lg ${i === 4 ? 'bg-gold-400' : 'bg-lapis-600'}`}
-              style={{ height: `${10 + n * 5}px` }}
-            />
-            <span className="text-[10.5px] font-bold text-lapis-100">ص{i + 1}: {n}</span>
-          </div>
-        ))}
+      {/* box distribution — one stacked bar + compact per-box rows */}
+      <div className="rise rise-1 mt-4 rounded-3xl bg-lapis-900/70 p-4 ring-1 ring-cream-100/10">
+        <div className="flex h-7 w-full overflow-hidden rounded-full bg-lapis-950/70 ring-1 ring-cream-100/10" dir="ltr">
+          {boxesCount.map((n, i) =>
+            n > 0 ? (
+              <div
+                key={i}
+                className="flex items-center justify-center text-[11px] font-black text-lapis-950 transition-all duration-500"
+                style={{ width: `${(n / Math.max(1, placed)) * 100}%`, background: BOX_COLORS[i] }}
+              >
+                {n / Math.max(1, placed) >= 0.09 ? n : ''}
+              </div>
+            ) : null,
+          )}
+          {placed === 0 && <div className="flex flex-1 items-center justify-center text-[11px] font-bold text-lapis-100/60">لا بطاقات بعد</div>}
+        </div>
+        <div className="mt-3 grid grid-cols-1 gap-y-1.5 lg:grid-cols-5 lg:gap-x-4">
+          {boxesCount.map((n, i) => (
+            <div key={i} className="flex items-center gap-2 text-[12px] lg:flex-wrap lg:gap-x-2">
+              <span className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-cream-100/20" style={{ background: BOX_COLORS[i] }} />
+                <span className="font-bold text-cream-50">صندوق {i + 1}</span>
+              </span>
+              <span className="ms-auto whitespace-nowrap text-lapis-100/75 lg:ms-0">
+                {n} بطاقة
+                {boxesDue[i] > 0 && <span className="font-bold text-gold-300"> · {boxesDue[i]} مستحقة</span>}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {done ? (
         <div className="pop mt-5 rounded-3xl bg-cream-50 p-6 text-center shadow-xl">
-          <div className="text-5xl">🎉</div>
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold-500/15 text-gold-600 ring-1 ring-gold-500/35">
+            <IconIshtarStar size={32} />
+          </span>
           <h3 className="font-display mt-3 text-xl font-black text-lapis-900">انتهت جلسة المراجعة</h3>
           <p className="mt-2 text-[14.5px] leading-7 text-ink-600">
             راجعت {queue.length} بطاقة، وأجبت بشكل صحيح عن {known} منها.
             الكلمات التي أخطأت فيها عادت إلى الصندوق الأول وستظهر لك غدًا من جديد.
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
-            <button onClick={restartAll} className="press rounded-full bg-lapis-700 px-6 py-3 font-display text-[15px] font-bold text-cream-50 shadow">
-              ↻ مراجعة كل الكلمات
+            <button onClick={restartAll} className="press inline-flex items-center gap-2 rounded-full bg-lapis-700 px-6 py-3 font-display text-[15px] font-bold text-cream-50 shadow">
+              <IconRefresh size={16} /> مراجعة كل الكلمات
             </button>
             <button onClick={onBack} className="press rounded-full border border-ink-900/15 px-6 py-3 font-display text-[15px] font-bold text-ink-900">
               العودة إلى الوحدة
@@ -110,12 +141,12 @@ export default function Cards({ state, onBack, onEncounter, onAnswer }: Props) {
               data-testid="flashcard"
               aria-label="بطاقة مفردات — اضغط للقلب"
             >
-              <span className="flip-face flex flex-col items-center justify-center rounded-[1.8rem] border-2 border-gold-500/50 bg-cream-50 p-6 shadow-xl">
+              <span className="flip-face flex flex-col items-center justify-center rounded-3xl border border-gold-500/60 bg-cream-50 p-6 shadow-xl">
                 <span className="en font-display text-4xl font-black text-lapis-900" dir="ltr">{word.word}</span>
-                <span className="mt-2 rounded-full bg-lapis-50 px-3 py-0.5 text-[12px] font-bold text-lapis-700">{word.pos}</span>
-                <span className="mt-6 text-[12.5px] text-ink-400">اضغط البطاقة لترى المعنى 👆</span>
+                <span className="paper-quote mt-2 rounded-full px-3 py-0.5 text-[12px] font-bold text-lapis-700">{word.pos}</span>
+                <span className="mt-6 text-[12.5px] text-ink-400">اضغط البطاقة لترى المعنى</span>
               </span>
-              <span className="flip-face flip-back flex flex-col items-center justify-center rounded-[1.8rem] bg-gradient-to-b from-lapis-700 to-lapis-900 p-6 text-center shadow-xl">
+              <span className="flip-face flip-back flex flex-col items-center justify-center rounded-3xl border border-gold-300/25 bg-gradient-to-b from-lapis-700 to-lapis-900 p-6 text-center shadow-xl">
                 <span className="text-[19px] font-bold leading-8 text-cream-50">{word.meaning}</span>
                 <span className="en mt-4 text-[14px] leading-6 text-lapis-100" dir="ltr">{word.example}</span>
                 <span className="mt-1 text-[12.5px] leading-5 text-lapis-100/75">{word.exampleAr}</span>
@@ -128,16 +159,16 @@ export default function Cards({ state, onBack, onEncounter, onAnswer }: Props) {
               <button
                 onClick={() => answer(false)}
                 data-testid="card-dontknow"
-                className="press rounded-full border-2 border-red-300 bg-red-50 px-4 py-3.5 font-display text-[15px] font-extrabold text-red-700 shadow"
+                className="press inline-flex items-center justify-center gap-2 rounded-full border-2 border-red-300 bg-red-50 px-4 py-3.5 font-display text-[15px] font-extrabold text-red-700 shadow"
               >
-                ✗ لا أعرفها
+                <IconX size={17} /> لا أعرفها
               </button>
               <button
                 onClick={() => answer(true)}
                 data-testid="card-know"
-                className="press rounded-full bg-tealdeep-500 px-4 py-3.5 font-display text-[15px] font-extrabold text-white shadow"
+                className="press inline-flex items-center justify-center gap-2 rounded-full bg-tealdeep-500 px-4 py-3.5 font-display text-[15px] font-extrabold text-white shadow"
               >
-                ✓ أعرفها
+                <IconCheck size={17} /> أعرفها
               </button>
             </div>
           ) : (
@@ -147,8 +178,8 @@ export default function Cards({ state, onBack, onEncounter, onAnswer }: Props) {
       ) : (
         <div className="mt-5 rounded-3xl bg-cream-50 p-6 text-center shadow">
           <p className="text-[15px] leading-7 text-ink-600">لا توجد بطاقات مستحقة الآن. عُد غدًا، أو راجع كل الكلمات متى شئت.</p>
-          <button onClick={restartAll} className="press mt-4 rounded-full bg-lapis-700 px-6 py-3 font-display text-[15px] font-bold text-cream-50 shadow">
-            ↻ مراجعة كل الكلمات ({allIds.length})
+          <button onClick={restartAll} className="press mt-4 inline-flex items-center gap-2 rounded-full bg-lapis-700 px-6 py-3 font-display text-[15px] font-bold text-cream-50 shadow">
+            <IconRefresh size={16} /> مراجعة كل الكلمات ({allIds.length})
           </button>
         </div>
       )}

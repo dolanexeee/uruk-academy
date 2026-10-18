@@ -1,6 +1,20 @@
 import { subjects, liveUnit } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
 import { Chip, pct } from '../components/ui';
+import {
+  IconBook,
+  IconPen,
+  IconType,
+  IconBulb,
+  IconCheck,
+  IconLock,
+  IconQuizMark,
+  IconCards,
+  IconClipboard,
+  IconChevronEnd,
+  IconChevronStart,
+} from '../components/icons';
+import type { ComponentType } from 'react';
 
 interface Props {
   state: AcademyState;
@@ -11,11 +25,11 @@ interface Props {
   onOpenExam: () => void;
 }
 
-const kindMeta: Record<string, { icon: string; label: string }> = {
-  reading: { icon: '📖', label: 'قراءة' },
-  grammar: { icon: '✒️', label: 'قواعد' },
-  vocab: { icon: '🔤', label: 'مفردات' },
-  explain: { icon: '💡', label: 'شرح' },
+const kindMeta: Record<string, { Icon: ComponentType<{ size?: number; className?: string }>; label: string }> = {
+  reading: { Icon: IconBook, label: 'قراءة' },
+  grammar: { Icon: IconPen, label: 'قواعد' },
+  vocab: { Icon: IconType, label: 'مفردات' },
+  explain: { Icon: IconBulb, label: 'شرح' },
 };
 
 export default function Subject({ state, onBack, onOpenLesson, onOpenQuiz, onOpenCards, onOpenExam }: Props) {
@@ -25,8 +39,10 @@ export default function Subject({ state, onBack, onOpenLesson, onOpenQuiz, onOpe
   const examBest = state.examBest[liveUnit.id];
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5">
-      <button onClick={onBack} className="press text-[13px] font-bold text-gold-300">→ العودة إلى الرئيسية</button>
+    <div className="screen mx-auto w-full max-w-3xl px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
+      <button onClick={onBack} className="press inline-flex items-center gap-1.5 text-[13px] font-bold text-gold-300">
+        <IconChevronStart size={15} /> العودة إلى الرئيسية
+      </button>
 
       <header className="rise mt-3 rounded-3xl bg-cream-50 p-5 shadow-lg">
         <div className="flex items-start justify-between gap-3">
@@ -44,7 +60,7 @@ export default function Subject({ state, onBack, onOpenLesson, onOpenQuiz, onOpe
         {subject.units.map((u) => {
           if (u.status === 'live') {
             return (
-              <section key={u.number} className="rise overflow-hidden rounded-3xl border-2 border-gold-500/50 bg-cream-50 shadow-lg">
+              <section key={u.number} className="rise overflow-hidden rounded-3xl border border-gold-500/60 bg-cream-50 shadow-lg">
                 <div className="brick bg-gradient-to-l from-lapis-800 to-lapis-700 px-5 py-4 text-cream-50">
                   <div className="flex items-center justify-between gap-2">
                     <h3 className="font-display text-[17px] font-extrabold">{u.titleAr}</h3>
@@ -64,14 +80,15 @@ export default function Subject({ state, onBack, onOpenLesson, onOpenQuiz, onOpe
                   {liveUnit.lessons.map((l, idx) => {
                     const isDone = !!state.lessonsDone[l.id];
                     const km = kindMeta[l.kind];
+                    const KindIcon = km.Icon;
                     return (
                       <button
                         key={l.id}
                         onClick={() => onOpenLesson(l.id)}
                         className="press flex w-full items-center gap-3 px-5 py-4 text-start hover:bg-cream-100/60"
                       >
-                        <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg ${isDone ? 'bg-tealdeep-500/15' : 'bg-lapis-50'}`}>
-                          {isDone ? '✅' : km.icon}
+                        <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${isDone ? 'bg-tealdeep-500/15 text-tealdeep-600' : 'paper-quote text-lapis-700'}`}>
+                          {isDone ? <IconCheck size={20} /> : <KindIcon size={20} />}
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className="font-display block truncate text-[15px] font-bold text-lapis-900">
@@ -81,7 +98,9 @@ export default function Subject({ state, onBack, onOpenLesson, onOpenQuiz, onOpe
                             {km.label} · {l.minutes} دقيقة {isDone ? '· منجز' : ''}
                           </span>
                         </span>
-                        <span className="text-lapis-600">‹</span>
+                        <span className="text-lapis-600">
+                          <IconChevronEnd size={17} />
+                        </span>
                       </button>
                     );
                   })}
@@ -89,17 +108,17 @@ export default function Subject({ state, onBack, onOpenLesson, onOpenQuiz, onOpe
 
                 <div className="grid grid-cols-3 gap-2 border-t border-cream-300/70 bg-cream-100/50 p-3">
                   <button onClick={onOpenQuiz} className="press rounded-2xl bg-lapis-700 px-2 py-3 text-center text-cream-50 shadow">
-                    <span className="block text-lg">🧠</span>
+                    <span className="flex justify-center text-gold-300"><IconQuizMark size={21} /></span>
                     <span className="font-display mt-1 block text-[13px] font-bold">اختبار الوحدة</span>
                     <span className="block text-[11px] text-lapis-100">{quizBest ? `الأفضل: ${quizBest.score}/${quizBest.total}` : `${liveUnit.quiz.length} سؤالًا مع الشرح`}</span>
                   </button>
-                  <button onClick={onOpenCards} className="press rounded-2xl bg-cream-50 px-2 py-3 text-center shadow ring-1 ring-cream-300">
-                    <span className="block text-lg">🃏</span>
+                  <button onClick={onOpenCards} className="press rounded-2xl bg-cream-50 px-2 py-3 text-center text-lapis-700 shadow ring-1 ring-cream-300">
+                    <span className="flex justify-center"><IconCards size={21} /></span>
                     <span className="font-display mt-1 block text-[13px] font-bold text-lapis-900">البطاقات</span>
                     <span className="block text-[11px] text-ink-600">{liveUnit.vocab.length} كلمة · لايتنر</span>
                   </button>
                   <button onClick={onOpenExam} className="press rounded-2xl bg-gold-500 px-2 py-3 text-center text-lapis-950 shadow">
-                    <span className="block text-lg">📝</span>
+                    <span className="flex justify-center"><IconClipboard size={21} /></span>
                     <span className="font-display mt-1 block text-[13px] font-bold">الامتحان</span>
                     <span className="block text-[11px] font-semibold text-lapis-900/80">{examBest ? `الأفضل: ${examBest.score}/${examBest.total}` : 'محاكاة وزارية'}</span>
                   </button>
@@ -108,14 +127,17 @@ export default function Subject({ state, onBack, onOpenLesson, onOpenQuiz, onOpe
             );
           }
           return (
-            <div key={u.number} aria-disabled="true" className="rise flex items-center justify-between rounded-3xl border border-cream-100/10 bg-lapis-900/60 px-5 py-4 opacity-75">
-              <div>
-                <p className="font-display text-[15px] font-bold text-cream-100">
+            <div key={u.number} aria-disabled="true" className="rise locked-pattern flex items-center gap-3.5 rounded-3xl border border-dashed border-cream-100/25 px-5 py-4">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-lapis-950/60 text-gold-300 ring-1 ring-gold-300/30">
+                <IconLock size={19} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-[15px] font-bold text-cream-50">
                   الوحدة {u.number} — {u.titleAr}
                 </p>
-                {u.titleEn && <p className="en mt-0.5 text-[11px] text-lapis-100/60" dir="ltr">{u.titleEn}</p>}
+                {u.titleEn && <p className="en mt-0.5 text-[11px] text-lapis-100/70" dir="ltr">{u.titleEn}</p>}
               </div>
-              <Chip tone="muted">{u.status === 'revision' ? 'مراجعة · قريبًا' : 'قريبًا'}</Chip>
+              <Chip tone="gold">{u.status === 'revision' ? 'مراجعة · قريبًا' : 'قريبًا'}</Chip>
             </div>
           );
         })}

@@ -2,6 +2,16 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { liveUnit } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
 import { ProgressRing, pct } from '../components/ui';
+import {
+  IconCheck,
+  IconX,
+  IconBulb,
+  IconClock,
+  IconClipboard,
+  IconRefresh,
+  IconChevronEnd,
+  IconChevronStart,
+} from '../components/icons';
 
 interface Props {
   state: AcademyState;
@@ -63,11 +73,15 @@ export default function Exam({ state, onBack, onFinish }: Props) {
   /* ------------------------------ intro ------------------------------ */
   if (phase === 'intro') {
     return (
-      <div className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5">
-        <button onClick={onBack} className="press text-[13px] font-bold text-gold-300">→ العودة إلى الوحدة</button>
-        <div className="rise mt-3 rounded-3xl bg-cream-50 p-6 shadow-xl">
+      <div className="screen ground mx-auto flex min-h-[calc(100dvh-2rem)] w-full max-w-3xl flex-col px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
+        <button onClick={onBack} className="press inline-flex items-center gap-1.5 self-start text-[13px] font-bold text-gold-300">
+          <IconChevronStart size={15} /> العودة إلى الوحدة
+        </button>
+        <div className="rise my-auto mt-3 w-full rounded-3xl bg-cream-50 p-6 shadow-xl lg:mx-auto lg:max-w-3xl">
           <div className="text-center">
-            <div className="text-5xl">📝</div>
+            <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-lapis-700 text-gold-300 shadow">
+              <IconClipboard size={32} />
+            </span>
             <h2 className="font-display mt-3 text-2xl font-black text-lapis-900">الامتحان الوزاري — الوحدة الأولى</h2>
             <p className="en mt-1 text-[12px] font-semibold text-ink-400" dir="ltr">English for Iraq · Sixth Preparatory · Unit One</p>
           </div>
@@ -98,9 +112,9 @@ export default function Exam({ state, onBack, onFinish }: Props) {
           <button
             onClick={() => { submitted.current = false; setAnswers({}); setIdx(0); setLeft(liveUnit.examMinutes * 60); setPhase('run'); }}
             data-testid="exam-start"
-            className="press font-display mt-6 w-full rounded-full bg-gold-500 py-3.5 text-[16px] font-black text-lapis-950 shadow"
+            className="press font-display mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold-500 py-3.5 text-[16px] font-black text-lapis-950 shadow"
           >
-            ابدأ الامتحان ⏱
+            ابدأ الامتحان <IconClock size={19} />
           </button>
         </div>
       </div>
@@ -120,8 +134,8 @@ export default function Exam({ state, onBack, onFinish }: Props) {
       }
     }
     return (
-      <div className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5">
-        <div className="pop rounded-3xl bg-cream-50 p-6 shadow-xl">
+      <div className="screen ground mx-auto w-full max-w-3xl px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
+        <div className="pop rounded-3xl bg-cream-50 p-6 shadow-xl lg:mx-auto lg:max-w-3xl">
           <h2 className="font-display text-center text-2xl font-black text-lapis-900">تقرير الامتحان</h2>
           <div className="mt-4 flex justify-center">
             <ProgressRing value={score / totalMarks} size={120} stroke={10} track="rgba(18,48,100,0.10)" bar="#D9A441">
@@ -146,19 +160,21 @@ export default function Exam({ state, onBack, onFinish }: Props) {
           </div>
         </div>
 
-        <h3 className="font-display mt-6 text-lg font-black text-cream-50">تصحيح الأسئلة سؤالًا سؤالًا</h3>
+        <h3 className="font-display mt-6 text-lg font-black text-cream-50 lg:mx-auto lg:max-w-3xl">تصحيح الأسئلة سؤالًا سؤالًا</h3>
         <div className="mt-3 space-y-3">
           {questions.map((q, i) => {
             const mine = answers[q.id];
             const ok = mine === q.answer;
             return (
-              <article key={q.id} className={`rise rounded-3xl border-2 p-4 shadow ${ok ? 'border-tealdeep-500/40 bg-cream-50' : 'border-red-300/70 bg-cream-50'}`}>
+              <article key={q.id} className={`rise rounded-3xl border-2 p-4 shadow lg:mx-auto lg:max-w-3xl ${ok ? 'border-tealdeep-500/40 bg-cream-50' : 'border-red-300/70 bg-cream-50'}`}>
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-[12px] font-bold text-ink-400">سؤال {i + 1} · {skillLabel[q.skill]} · {q.marks} درجات</span>
-                  <span className={`font-display text-[13px] font-extrabold ${ok ? 'text-tealdeep-600' : 'text-red-600'}`}>{ok ? '✓ صحيح' : '✗ خطأ'}</span>
+                  <span className={`font-display inline-flex items-center gap-1 text-[13px] font-extrabold ${ok ? 'text-tealdeep-600' : 'text-red-600'}`}>
+                    {ok ? <><IconCheck size={15} /> صحيح</> : <><IconX size={15} /> خطأ</>}
+                  </span>
                 </div>
                 <p className="mt-2 text-[14.5px] font-semibold leading-7 text-ink-900">{q.q}</p>
-                {q.qEn && <p className="en mt-1 text-[14.5px] font-semibold leading-6 text-lapis-900" dir="ltr">{q.qEn}</p>}
+                {q.qEn && <p className="en paper-quote mt-1 rounded-xl px-3 py-2 text-[14.5px] font-semibold leading-6 text-lapis-900" dir="ltr">{q.qEn}</p>}
                 <div className="mt-2 space-y-1 text-[13.5px] leading-6">
                   <p>
                     <span className="font-bold text-ink-600">إجابتك: </span>
@@ -172,7 +188,10 @@ export default function Exam({ state, onBack, onFinish }: Props) {
                       <span className="font-semibold text-tealdeep-600">{q.options[q.answer]}</span>
                     </p>
                   )}
-                  <p className="text-ink-600">💡 {q.explain}</p>
+                  <p className="flex gap-1.5 text-ink-600">
+                    <span className="mt-0.5 shrink-0 text-gold-600"><IconBulb size={16} /></span>
+                    <span>{q.explain}</span>
+                  </p>
                 </div>
               </article>
             );
@@ -180,8 +199,8 @@ export default function Exam({ state, onBack, onFinish }: Props) {
         </div>
 
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button onClick={() => setPhase('intro')} className="press rounded-full bg-gold-500 px-6 py-3 font-display text-[15px] font-extrabold text-lapis-950 shadow">
-            ↻ إعادة الامتحان
+          <button onClick={() => setPhase('intro')} className="press inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3 font-display text-[15px] font-extrabold text-lapis-950 shadow">
+            <IconRefresh size={16} /> إعادة الامتحان
           </button>
           <button onClick={onBack} className="press rounded-full bg-lapis-700 px-6 py-3 font-display text-[15px] font-bold text-cream-50 shadow">
             العودة إلى الوحدة
@@ -194,10 +213,10 @@ export default function Exam({ state, onBack, onFinish }: Props) {
   /* ------------------------------ run ------------------------------ */
   const q = questions[idx];
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5">
-      <div className="sticky top-3 z-10 flex items-center justify-between gap-2 rounded-full bg-lapis-900/95 py-2 pe-2 ps-4 shadow-lg backdrop-blur">
-        <span className={`font-display text-[15px] font-black tabular-nums ${left <= 60 ? 'text-red-300' : 'text-gold-300'}`} data-testid="exam-timer">
-          ⏱ {mm}:{ss}
+    <div className="screen ground mx-auto flex min-h-[calc(100dvh-2rem)] w-full max-w-3xl flex-col px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
+      <div className="sticky top-3 z-10 flex items-center justify-between gap-2 rounded-full bg-lapis-900/95 py-2 pe-2 ps-4 shadow-lg backdrop-blur lg:mx-auto lg:w-full lg:max-w-3xl">
+        <span className={`font-display inline-flex items-center gap-1.5 text-[15px] font-black tabular-nums ${left <= 60 ? 'text-red-300' : 'text-gold-300'}`} data-testid="exam-timer">
+          <IconClock size={17} /> {mm}:{ss}
         </span>
         <span className="text-[12.5px] font-bold text-lapis-100">أجبت عن {answeredCount} من {questions.length}</span>
         <button onClick={submit} data-testid="exam-submit" className="press rounded-full bg-gold-500 px-4 py-1.5 font-display text-[13.5px] font-extrabold text-lapis-950">
@@ -206,7 +225,7 @@ export default function Exam({ state, onBack, onFinish }: Props) {
       </div>
 
       {/* navigator */}
-      <div className="mt-4 flex flex-wrap gap-1.5">
+      <div className="mt-4 flex flex-wrap gap-1.5 lg:mx-auto lg:w-full lg:max-w-3xl">
         {questions.map((qq, i) => (
           <button
             key={qq.id}
@@ -224,13 +243,14 @@ export default function Exam({ state, onBack, onFinish }: Props) {
         ))}
       </div>
 
-      <div className="rise mt-4 rounded-3xl bg-cream-50 p-5 shadow-xl" key={q.id}>
+      <div className="flex flex-1 items-center justify-center py-4">
+      <div className="rise w-full max-w-3xl rounded-3xl bg-cream-50 p-5 shadow-xl" key={q.id}>
         <div className="flex items-center justify-between">
-          <span className="rounded-full bg-lapis-50 px-3 py-0.5 text-[11.5px] font-bold text-lapis-700">{skillLabel[q.skill]}</span>
+          <span className="paper-quote rounded-full px-3 py-0.5 text-[11.5px] font-bold text-lapis-700">{skillLabel[q.skill]}</span>
           <span className="text-[12px] font-bold text-ink-400">السؤال {idx + 1} · {q.marks} درجات</span>
         </div>
         <h3 className="mt-3 text-[16px] font-bold leading-8 text-ink-900">{q.q}</h3>
-        {q.qEn && <p className="en mt-1 rounded-2xl bg-lapis-50 px-4 py-3 text-[15.5px] font-semibold leading-6 text-lapis-900" dir="ltr">{q.qEn}</p>}
+        {q.qEn && <p className="en paper-quote mt-1 rounded-2xl px-4 py-3 text-[15.5px] font-semibold leading-6 text-lapis-900" dir="ltr">{q.qEn}</p>}
         <div className="mt-4 grid gap-2">
           {q.options.map((opt, i) => {
             const selected = answers[q.id] === i;
@@ -254,17 +274,17 @@ export default function Exam({ state, onBack, onFinish }: Props) {
           <button
             onClick={() => setIdx((i) => Math.max(0, i - 1))}
             disabled={idx === 0}
-            className="press rounded-full border border-ink-900/15 px-5 py-2.5 font-display text-[14px] font-bold text-ink-900 disabled:opacity-40"
+            className="press inline-flex items-center gap-1.5 rounded-full border border-ink-900/15 px-5 py-2.5 font-display text-[14px] font-bold text-ink-900 disabled:opacity-40"
           >
-            → السابق
+            <IconChevronStart size={15} /> السابق
           </button>
           {idx < questions.length - 1 ? (
             <button
               onClick={() => setIdx((i) => i + 1)}
               data-testid="exam-next"
-              className="press rounded-full bg-lapis-700 px-5 py-2.5 font-display text-[14px] font-bold text-cream-50 shadow"
+              className="press inline-flex items-center gap-1.5 rounded-full bg-lapis-700 px-5 py-2.5 font-display text-[14px] font-bold text-cream-50 shadow"
             >
-              التالي ←
+              التالي <IconChevronEnd size={15} />
             </button>
           ) : (
             <button onClick={submit} className="press rounded-full bg-gold-500 px-5 py-2.5 font-display text-[14px] font-extrabold text-lapis-950 shadow">
@@ -273,7 +293,8 @@ export default function Exam({ state, onBack, onFinish }: Props) {
           )}
         </div>
       </div>
-      <p className="mt-3 text-center text-[12px] text-lapis-100/60">لن يظهر أي تصحيح حتى تُسلّم الامتحان — تمامًا كالقاعة الحقيقية.</p>
+      </div>
+      <p className="text-center text-[12px] text-lapis-100/60">لن يظهر أي تصحيح حتى تُسلّم الامتحان — تمامًا كالقاعة الحقيقية.</p>
     </div>
   );
 }

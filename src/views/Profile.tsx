@@ -3,6 +3,7 @@ import { liveUnit, ABOUT_SOURCES } from '../content/curriculum';
 import type { AcademyState } from '../lib/store';
 import { streak, lastStudyDay } from '../lib/store';
 import { ProgressRing, fmtDate, pct, ZigguratMark } from '../components/ui';
+import { IconCheck, IconCircle, IconFlame, IconChevronStart } from '../components/icons';
 
 interface Props {
   state: AcademyState;
@@ -21,8 +22,10 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
   const examBest = state.examBest[liveUnit.id];
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5">
-      <button onClick={onBack} className="press text-[13px] font-bold text-gold-300">→ العودة إلى الرئيسية</button>
+    <div className="screen mx-auto w-full max-w-3xl px-4 pb-28 pt-5 lg:max-w-[1120px] lg:px-6">
+      <button onClick={onBack} className="press inline-flex items-center gap-1.5 text-[13px] font-bold text-gold-300">
+        <IconChevronStart size={15} /> العودة إلى الرئيسية
+      </button>
 
       <header className="rise mt-3 flex items-center gap-4 rounded-3xl bg-cream-50 p-5 shadow-lg">
         <ZigguratMark size={58} />
@@ -63,7 +66,9 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
           <div className="mt-2 space-y-1">
             {liveUnit.lessons.map((l) => (
               <p key={l.id} className="flex items-center gap-1.5 text-[12px] leading-5 text-ink-600">
-                <span>{state.lessonsDone[l.id] ? '✅' : '⬜'}</span>
+                <span className={state.lessonsDone[l.id] ? 'text-tealdeep-600' : 'text-ink-400'}>
+                  {state.lessonsDone[l.id] ? <IconCheck size={13} /> : <IconCircle size={13} />}
+                </span>
                 <span className="truncate">{l.title}</span>
               </p>
             ))}
@@ -72,7 +77,10 @@ export default function Profile({ state, onBack, onSetName, onReset }: Props) {
         <div className="space-y-3">
           <div className="rounded-3xl bg-cream-50 p-4 shadow-md">
             <p className="text-[12px] font-bold text-ink-400">سلسلة أيام الدراسة</p>
-            <p className="font-display mt-1 text-2xl font-black text-lapis-900">🔥 {streak(state)} <span className="text-sm text-ink-400">يوم متتالٍ</span></p>
+            <p className="font-display mt-1 flex items-center gap-2 text-2xl font-black text-lapis-900">
+              <span className="text-gold-600"><IconFlame size={24} /></span>
+              {streak(state)} <span className="text-sm text-ink-400">يوم متتالٍ</span>
+            </p>
             <p className="mt-1 text-[12px] text-ink-600">آخر يوم دراسة: {fmtDate(lastStudyDay(state))}</p>
           </div>
           <div className="rounded-3xl bg-cream-50 p-4 shadow-md">

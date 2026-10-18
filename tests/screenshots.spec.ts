@@ -10,6 +10,7 @@ test('screenshots: mobile flow + desktop home', async ({ page, browser }) => {
   await expect(page.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
   await page.waitForTimeout(700);
   await page.screenshot({ path: `${DIR}/01-home-mobile.png`, fullPage: true });
+  await page.screenshot({ path: `${DIR}/01-home-mobile-v2.png`, fullPage: true });
 
   await page.getByRole('button', { name: /اللغة الإنجليزية/ }).first().click();
   await expect(page.getByText('الوحدة الأولى')).toBeVisible();
@@ -20,6 +21,7 @@ test('screenshots: mobile flow + desktop home', async ({ page, browser }) => {
   await expect(page.getByText('القصة بملخّصنا')).toBeVisible();
   await page.waitForTimeout(300);
   await page.screenshot({ path: `${DIR}/03-lesson-mobile.png`, fullPage: true });
+  await page.screenshot({ path: `${DIR}/03-lesson-mobile-v2.png`, fullPage: true });
   await page.getByRole('button', { name: /العودة إلى الوحدة/ }).click();
   await expect(page.getByText('الوحدة الأولى')).toBeVisible();
 
@@ -37,6 +39,7 @@ test('screenshots: mobile flow + desktop home', async ({ page, browser }) => {
   await card.click();
   await page.waitForTimeout(800);
   await page.screenshot({ path: `${DIR}/05-flashcards-mobile.png` });
+  await page.screenshot({ path: `${DIR}/05-flashcards-mobile-v2.png` });
   await page.getByRole('button', { name: /العودة/ }).first().click();
   await expect(page.getByText('الوحدة الأولى')).toBeVisible();
 
@@ -52,6 +55,7 @@ test('screenshots: mobile flow + desktop home', async ({ page, browser }) => {
   await expect(desk.getByRole('heading', { name: 'أكاديمية أوروك' })).toBeVisible();
   await desk.waitForTimeout(700);
   await desk.screenshot({ path: `${DIR}/07-home-desktop.png`, fullPage: true });
+  await desk.screenshot({ path: `${DIR}/07-home-desktop-v2.png`, fullPage: true });
   await desk.getByRole('button', { name: /اللغة الإنجليزية/ }).first().click();
   await expect(desk.getByText('الوحدة الأولى')).toBeVisible();
   await desk.getByRole('button', { name: /القواعد — أزمنة/ }).click();
