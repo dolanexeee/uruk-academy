@@ -1,9 +1,19 @@
+<div align="center">
+
+<img src="public/icon.svg" width="96" alt="أكاديمية أوروك" />
+
 # أكاديمية أوروك — Uruk Academy
 
 **منصّة تعليمية تفاعلية مفتوحة المصدر للطلاب العراقيين** — عربية أولًا، تعمل بالكامل
 دون إنترنت بعد أول تحميل، وكل تقدّم الطالب محفوظ على جهازه فقط.
 
+[![الموقع الحي](https://img.shields.io/badge/live-uruk--academy.vercel.app-d9a441?style=flat-square)](https://uruk-academy.vercel.app)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](LICENSE)
+[![Tests](https://img.shields.io/badge/Playwright-52%2F52-brightgreen?style=flat-square)](#التقنية)
+
 🔗 **الموقع الحي:** https://uruk-academy.vercel.app
+
+</div>
 
 أكاديمية أوروك هي المشروع الثالث في ثلاثية أوروك مفتوحة المصدر
 (بعد [Uruk Cut](https://github.com/dolanexeee/uruk-cut) و[Uruk OS](https://github.com/dolanexeee/uruk-os)).
@@ -48,6 +58,17 @@
 - **بطاقات لايتنر** (٥ صناديق) بجدولة استحقاق يومية، و**حساب طالب محلي**: إنجاز كل
   كتاب، سلسلة أيام الدراسة، أفضل النتائج — على الجهاز فقط، بلا حسابات ولا خوادم.
 - **PWA قابلة للتثبيت** وتعمل offline بالكامل (تطبيق + محتوى + خطوط عربية مدمجة).
+
+## لقطات من المنصة
+
+|  |  |  |
+| --- | --- | --- |
+| ![الصفحة الرئيسية](qa/screenshots/01-home-mobile-v2.png) | ![صفحة المادة](qa/screenshots/02-subject-mobile.png) | ![درس تفاعلي](qa/screenshots/03-lesson-mobile-v2.png) |
+| الصفحة الرئيسية | صفحة المادة | درس تفاعلي |
+| ![اختبار فوري التصحيح](qa/screenshots/04-quiz-mobile.png) | ![بطاقات لايتنر](qa/screenshots/05-flashcards-mobile-v2.png) | ![الامتحان الوزاري الشامل](qa/screenshots/06-exam-mobile.png) |
+| اختبار فوري التصحيح | بطاقات لايتنر | الامتحان الوزاري الشامل |
+
+![المنصة على سطح المكتب](qa/screenshots/07-home-desktop-v2.png)
 
 ## عن المحتوى والمصادر
 
